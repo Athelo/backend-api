@@ -96,7 +96,7 @@ def init_db() -> sqlalchemy.engine.base.Engine:
     migrate_db(db)
 
 
-@app.route("/", methods=["GET"])
+@app.route("/votes", methods=["GET"])
 def render_index() -> str:
     """Serves the index page of the app."""
     context = get_index_context(db)
@@ -110,7 +110,7 @@ def cast_vote() -> Response:
     return save_vote(db, team)
 
 
-@app.route("/hello_world", methods=["GET"])
+@app.route("/", methods=["GET"])
 def hello_world():
     return "Hello World! This is Athelo Health's API"
 
