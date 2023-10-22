@@ -88,7 +88,7 @@ db = None
 # init_db lazily instantiates a database connection pool. Users of Cloud Run or
 # App Engine may wish to skip this lazy instantiation and connect as soon
 # as the function is loaded. This is primarily to help testing.
-# @app.before_first_request
+@app.before_first_request
 def init_db() -> sqlalchemy.engine.base.Engine:
     """Initiates connection to database and its structure."""
     global db
@@ -99,8 +99,6 @@ def init_db() -> sqlalchemy.engine.base.Engine:
 @app.route("/votes", methods=["GET"])
 def render_index() -> str:
     """Serves the index page of the app."""
-    if db is None:
-        init_db()
     context = get_index_context(db)
     return render_template("index.html", **context)
 
@@ -108,8 +106,6 @@ def render_index() -> str:
 @app.route("/votes", methods=["POST"])
 def cast_vote() -> Response:
     """Processes a single vote from user."""
-    if db is None:
-        init_db()
     team = request.form["team"]
     return save_vote(db, team)
 
