@@ -1,183 +1,456 @@
-# Cloud Run Template Microservice
+# Connecting to Cloud SQL - Postgres
 
-A template repository for a Cloud Run microservice, written in Python
+This demo application can be used to connect to Cloud SQL in two different ways:
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
+1. [The Cloud SQL Python Connector](https://github.com/GoogleCloudPlatform/cloud-sql-python-connector) (recommended)
 
-## Prerequisite
+2. [The Cloud SQL Auth Proxy](https://github.com/GoogleCloudPlatform/cloud-sql-proxy)
 
-* Enable the Cloud Run API via the [console](https://console.cloud.google.com/apis/library/run.googleapis.com?_ga=2.124941642.1555267850.1615248624-203055525.1615245957) or CLI:
+Using the Cloud SQL Python Connector library is recommended over the Cloud SQL Auth
+Proxy as it provides all the same functionality and features but as a native
+Python package. See [cloud-sql-python-connector package](https://pypi.org/project/cloud-sql-python-connector/).
 
-```bash
-gcloud services enable run.googleapis.com
+## Before you begin
+
+1. If you haven't already, set up a Python Development Environment by following the [python setup guide](https://cloud.google.com/python/setup) and
+[create a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project).
+
+1. Create a 2nd Gen Cloud SQL Instance by following these
+[instructions](https://cloud.google.com/sql/docs/postgres/create-instance). Note the connection
+string, database user, and database password that you create.
+
+1. Create a database for your application by following these
+[instructions](https://cloud.google.com/sql/docs/postgres/create-manage-databases). Note the database
+name.
+
+1. Create a service account with the 'Cloud SQL Client' permissions by following these
+[instructions](https://cloud.google.com/sql/docs/postgres/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
+Download a JSON key to use to authenticate your connection.
+
+## Cloud SQL Python Connector Usage
+
+### Run App Locally
+
+To run the demo application locally using the Cloud SQL Python Connector, set
+environment variables and install dependencies as shown below.
+
+Note: The `INSTANCE_CONNECTION_NAME` for your instance can be found on the
+**Overview** page for your instance in the
+[Google Cloud console](https://console.cloud.google.com/sql) or by running
+the following command:
+
+```sh
+gcloud sql instances describe <INSTANCE_NAME> --format='value(connectionName)'
 ```
 
-## Features
+#### Linux / Mac OS
 
-* **Flask**: Web server framework
-* **Buildpack support** Tooling to build production-ready container images from source code and without a Dockerfile
-* **Dockerfile**: Container build instructions, if needed to replace buildpack for custom build
-* **SIGTERM handler**: Catch termination signal for cleanup before Cloud Run stops the container
-* **Service metadata**: Access service metadata, project ID and region, at runtime
-* **Local development utilities**: Auto-restart with changes and prettify logs
-* **Structured logging w/ Log Correlation** JSON formatted logger, parsable by Cloud Logging, with [automatic correlation of container logs to a request log](https://cloud.google.com/run/docs/logging#correlate-logs).
-* **Unit and System tests**: Basic unit and system tests setup for the microservice
-* **Task definition and execution**: Uses [invoke](http://www.pyinvoke.org/) to execute defined tasks in `tasks.py`.
-
-## Local Development
-
-### Cloud Code
-
-This template works with [Cloud Code](https://cloud.google.com/code), an IDE extension
-to let you rapidly iterate, debug, and run code on Kubernetes and Cloud Run.
-
-Learn how to use Cloud Code for:
-
-* Local development - [VSCode](https://cloud.google.com/code/docs/vscode/developing-a-cloud-run-service), [IntelliJ](https://cloud.google.com/code/docs/intellij/developing-a-cloud-run-service)
-
-* Local debugging - [VSCode](https://cloud.google.com/code/docs/vscode/debugging-a-cloud-run-service), [IntelliJ](https://cloud.google.com/code/docs/intellij/debugging-a-cloud-run-service)
-
-* Deploying a Cloud Run service - [VSCode](https://cloud.google.com/code/docs/vscode/deploying-a-cloud-run-service), [IntelliJ](https://cloud.google.com/code/docs/intellij/deploying-a-cloud-run-service)
-* Creating a new application from a custom template (`.template/templates.json` allows for use as an app template) - [VSCode](https://cloud.google.com/code/docs/vscode/create-app-from-custom-template), [IntelliJ](https://cloud.google.com/code/docs/intellij/create-app-from-custom-template)
-
-### CLI tooling
-
-To run the `invoke` commands below, install [`invoke`](https://www.pyinvoke.org/index.html) system wide: 
+Use these terminal commands to initialize environment variables:
 
 ```bash
-pip install invoke
+export GOOGLE_APPLICATION_CREDENTIALS='/path/to/service/account/key.json'
+export INSTANCE_CONNECTION_NAME='<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>'
+export DB_USER='<YOUR_DB_USER_NAME>'
+export DB_PASS='<YOUR_DB_PASSWORD>'
+export DB_NAME='<YOUR_DB_NAME>'
 ```
 
-Invoke will handle establishing local virtual environments, etc. Task definitions can be found in `tasks.py`.
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
 
-#### Local development
+#### Windows/PowerShell
 
-1. Set Project Id:
-    ```bash
-    export GOOGLE_CLOUD_PROJECT=<GCP_PROJECT_ID>
-    ```
-2. Start the server with hot reload:
-    ```bash
-    invoke dev
-    ```
+Use these PowerShell commands to initialize environment variables:
 
-#### Deploying a Cloud Run service
+```powershell
+$env:GOOGLE_APPLICATION_CREDENTIALS="/path/to/service/account/key.json"
+$env:INSTANCE_CONNECTION_NAME="<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>"
+$env:DB_USER="<YOUR_DB_USER_NAME>"
+$env:DB_PASS="<YOUR_DB_PASSWORD>"
+$env:DB_NAME="<YOUR_DB_NAME>"
+```
 
-1. Set Project Id:
-    ```bash
-    export GOOGLE_CLOUD_PROJECT=<GCP_PROJECT_ID>
-    ```
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
 
-1. Enable the Artifact Registry API:
-    ```bash
-    gcloud services enable artifactregistry.googleapis.com
-    ```
+#### Install Dependencies
 
-1. Create an Artifact Registry repo:
-    ```bash
-    export REPOSITORY="samples"
-    export REGION=us-central1
-    gcloud artifacts repositories create $REPOSITORY --location $REGION --repository-format "docker"
-    ```
-  
-1. Use the gcloud credential helper to authorize Docker to push to your Artifact Registry:
-    ```bash
-    gcloud auth configure-docker
-    ```
+Next, install the requirements into a virtual environment:
 
-2. Build the container using a buildpack:
-    ```bash
-    invoke build
-    ```
-3. Deploy to Cloud Run:
-    ```bash
-    invoke deploy
-    ```
+```bash
+virtualenv --python python3 env
+source env/bin/activate
+pip install -r requirements.txt
+```
 
-### Run sample tests
+#### Test the Application
 
-1. [Pass credentials via `GOOGLE_APPLICATION_CREDENTIALS` env var](https://cloud.google.com/docs/authentication/production#passing_variable):
-    ```bash
-    export GOOGLE_APPLICATION_CREDENTIALS="[PATH]"
-    ```
+Finally, start the application:
 
-2. Set Project Id:
-    ```bash
-    export GOOGLE_CLOUD_PROJECT=<GCP_PROJECT_ID>
-    ```
-3. Run unit tests
-    ```bash
-    invoke test
-    ```
+```bash
+python app.py
+```
 
-4. Run system tests
-    ```bash
-    gcloud builds submit \
-        --config test/advance.cloudbuild.yaml \
-        --substitutions 'COMMIT_SHA=manual,REPO_NAME=manual'
-    ```
-    The Cloud Build configuration file will build and deploy the containerized service
-    to Cloud Run, run tests managed by pytest, then clean up testing resources. This configuration restricts public
-    access to the test service. Therefore, service accounts need to have the permission to issue ID tokens for request authorization:
-    * Enable Cloud Run, Cloud Build, Artifact Registry, and IAM APIs:
-        ```bash
-        gcloud services enable run.googleapis.com cloudbuild.googleapis.com iamcredentials.googleapis.com artifactregistry.googleapis.com
-        ```
-        
-    * Set environment variables.
-        ```bash
-        export PROJECT_ID="$(gcloud config get-value project)"
-        export PROJECT_NUMBER="$(gcloud projects describe $(gcloud config get-value project) --format='value(projectNumber)')"
-        ```
+Navigate towards `http://127.0.0.1:8080` to verify your application is running correctly.
 
-    * Create an Artifact Registry repo (or use another already created repo):
-        ```bash
-        export REPOSITORY="samples"
-        export REGION=us-central1
-        gcloud artifacts repositories create $REPOSITORY --location $REGION --repository-format "docker"
-        ```
-  
-    * Create service account `token-creator` with `Service Account Token Creator` and `Cloud Run Invoker` roles.
-        ```bash
-        gcloud iam service-accounts create token-creator
+### Deploy to App Engine Standard
 
-        gcloud projects add-iam-policy-binding $PROJECT_ID \
-            --member="serviceAccount:token-creator@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/iam.serviceAccountTokenCreator"
-        gcloud projects add-iam-policy-binding $PROJECT_ID \
-            --member="serviceAccount:token-creator@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/run.invoker"
-        ```
+To run on GAE-Standard, create an App Engine project by following the setup with these
+[instructions](https://cloud.google.com/appengine/docs/standard/python3/quickstart#before-you-begin).
 
-    * Add `Service Account Token Creator` role to the Cloud Build service account.
-        ```bash
-        gcloud projects add-iam-policy-binding $PROJECT_ID \
-            --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
-            --role="roles/iam.serviceAccountTokenCreator"
-        ```
-    
-    * Cloud Build also requires permission to deploy Cloud Run services and administer artifacts: 
+Update `app.standard.yaml` with the correct values to pass the environment
+variables into the runtime. Your `app.standard.yaml` file should look like this:
 
-        ```bash
-        gcloud projects add-iam-policy-binding $PROJECT_ID \
-            --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
-            --role="roles/run.admin"
-        gcloud projects add-iam-policy-binding $PROJECT_ID \
-            --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
-            --role="roles/iam.serviceAccountUser"
-        gcloud projects add-iam-policy-binding $PROJECT_ID \
-            --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
-            --role="roles/artifactregistry.repoAdmin"
-        ```
+Note: If you want to connect to Cloud SQL over Private IP, add the additional
+env variable `PRIVATE_IP: True` below.
 
-## Maintenance & Support
+```yaml
+runtime: python310
+entrypoint: gunicorn -b :$PORT app:app
 
-This repo performs basic periodic testing for maintenance. Please use the issue tracker for bug reports, features requests and submitting pull requests.
+env_variables:
+  INSTANCE_CONNECTION_NAME: <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
+  DB_USER: <YOUR_DB_USER_NAME>
+  DB_PASS: <YOUR_DB_PASSWORD>
+  DB_NAME: <YOUR_DB_NAME>
+```
 
-## Contributions
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
 
-Please see the [contributing guidelines](CONTRIBUTING.md)
+Next, the following command will deploy the application to your Google Cloud project:
 
-## License
+```bash
+gcloud app deploy app.standard.yaml
+```
 
-This library is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
+### Deploy to App Engine Flexible
+
+To run on GAE-Flexible, create an App Engine project by following the setup for these
+[instructions](https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin).
+
+First, update `app.flexible.yaml` with the correct values to pass the environment
+variables into the runtime. Your `app.flexible.yaml` file should look like this:
+
+Note: If you want to connect to Cloud SQL over Private IP, add the additional
+env variable `PRIVATE_IP: True` below.
+
+```yaml
+runtime: custom
+env: flex
+entrypoint: gunicorn -b :$PORT app:app
+
+env_variables:
+  INSTANCE_CONNECTION_NAME: <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
+  DB_USER: <YOUR_DB_USER_NAME>
+  DB_PASS: <YOUR_DB_PASSWORD>
+  DB_NAME: <YOUR_DB_NAME>
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
+
+Next, the following command will deploy the application to your Google Cloud project:
+
+```bash
+gcloud app deploy app.flexible.yaml
+```
+
+### Deploy to Cloud Run
+
+See the [Cloud Run documentation](https://cloud.google.com/sql/docs/postgres/connect-run)
+for more details on connecting a Cloud Run service to Cloud SQL.
+
+Note: If you want to connect to Cloud SQL over Private IP, add the additional
+env variable `--set-env-vars PRIVATE_IP=True` and
+flag `--vpc-connector <YOUR_VPC_CONNECTOR>` below.
+
+```sh
+gcloud run deploy cloud-sql-demo \
+  --allow-unauthenticated \
+  --set-env-vars INSTANCE_CONNECTION_NAME='<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>' \
+  --set-env-vars DB_USER='<YOUR_DB_USER_NAME>' \
+  --set-env-vars DB_PASS='<YOUR_DB_PASSWORD>' \
+  --set-env-vars DB_NAME='<YOUR_DB_NAME>'
+```
+
+Navigate your browser to the URL output at the end of the deployment process
+to view the demo app!
+
+It is recommended to use the [Secret Manager integration](https://cloud.google.com/run/docs/configuring/secrets) for Cloud Run instead
+of using environment variables for the SQL configuration. The service injects the SQL credentials from
+Secret Manager at runtime via an environment variable.
+
+Create secrets via the command line:
+
+```sh
+echo -n $INSTANCE_CONNECTION_NAME | \
+    gcloud secrets create [INSTANCE_CONNECTION_NAME_SECRET] --data-file=-
+```
+
+Deploy the service to Cloud Run specifying the env var name and secret name:
+
+```sh
+gcloud run deploy cloud-sql-demo \
+  --allow-unauthenticated \
+  --update-secrets INSTANCE_CONNECTION_NAME=[INSTANCE_CONNECTION_NAME_SECRET]:latest,\
+    DB_USER=[DB_USER_SECRET]:latest, \
+    DB_PASS=[DB_PASS_SECRET]:latest, \
+    DB_NAME=[DB_NAME_SECRET]:latest
+```
+
+### Deploy to Cloud Functions
+
+To deploy the service to [Cloud Functions](https://cloud.google.com/functions/docs) run the following command:
+
+Note: If you want to connect to Cloud SQL over Private IP, add the additional
+env variable `--set-env-vars PRIVATE_IP=True` and
+flag `--vpc-connector <YOUR_VPC_CONNECTOR>` below.
+
+```sh
+gcloud functions deploy votes --gen2 --runtime python310 --trigger-http \
+  --allow-unauthenticated \
+  --entry-point votes \
+  --region <INSTANCE_REGION> \
+  --set-env-vars INSTANCE_CONNECTION_NAME=<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> \
+  --set-env-vars DB_USER=$DB_USER \
+  --set-env-vars DB_PASS=$DB_PASS \
+  --set-env-vars DB_NAME=$DB_NAME
+```
+
+Take note of the URL output at the end of the deployment process to view your function!
+
+## Cloud SQL Auth Proxy Usage
+
+### Running locally
+
+To run this application locally, download and install the `cloud-sql-proxy` by
+following the instructions [here](https://cloud.google.com/sql/docs/postgres/sql-proxy#install).
+
+Instructions are provided below for using the proxy with a TCP connection or a Unix Domain Socket.
+On Linux or Mac OS you can use either option, but on Windows the proxy currently requires a TCP
+connection.
+
+#### Launch proxy with TCP
+
+To run the sample locally with a TCP connection, set environment variables and launch the proxy as
+shown below.
+
+##### Linux / Mac OS
+
+Use these terminal commands to initialize environment variables:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS='/path/to/service/account/key.json'
+export INSTANCE_HOST='127.0.0.1'
+export DB_PORT='5432'
+export DB_USER='<YOUR_DB_USER_NAME>'
+export DB_PASS='<YOUR_DB_PASSWORD>'
+export DB_NAME='<YOUR_DB_NAME>'
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
+
+Then use this command to launch the proxy in the background:
+
+```bash
+./cloud-sql-proxy <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
+```
+
+##### Windows/PowerShell
+
+Use these PowerShell commands to initialize environment variables:
+
+```powershell
+$env:GOOGLE_APPLICATION_CREDENTIALS="/path/to/service/account/key.json"
+$env:INSTANCE_HOST="127.0.0.1"
+$env:DB_PORT="5432"
+$env:DB_USER="<YOUR_DB_USER_NAME>"
+$env:DB_PASS="<YOUR_DB_PASSWORD>"
+$env:DB_NAME="<YOUR_DB_NAME>"
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
+
+Then use this command to launch the proxy in a separate PowerShell session:
+
+```powershell
+Start-Process -filepath "C:\<path to proxy exe>" -ArgumentList "<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>"
+```
+
+#### Launch proxy with Unix Domain Socket
+
+NOTE: this option is currently only supported on Linux and Mac OS. Windows users should use the
+[Launch proxy with TCP](#launch-proxy-with-tcp) option.
+
+To use a Unix socket, you'll need to create a directory and give write access to the user running
+the proxy. For example:
+
+```bash
+sudo mkdir /cloudsql
+sudo chown -R $USER /cloudsql
+```
+
+Use these terminal commands to initialize other environment variables as well:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS='/path/to/service/account/key.json'
+export INSTANCE_UNIX_SOCKET='/cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>'
+export DB_USER='<YOUR_DB_USER_NAME>'
+export DB_PASS='<YOUR_DB_PASSWORD>'
+export DB_NAME='<YOUR_DB_NAME>'
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
+
+Then use this command to launch the proxy in the background:
+
+```bash
+./cloud-sql-proxy --unix-socket /cloudsql <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
+```
+
+#### Testing the application
+
+Next, setup install the requirements into a virtual environment:
+
+```bash
+virtualenv --python python3 env
+source env/bin/activate
+pip install -r requirements.txt
+```
+
+Finally, start the application:
+
+```bash
+python app.py
+```
+
+Navigate towards `http://127.0.0.1:8080` to verify your application is running correctly.
+
+### Deploy to App Engine Standard
+
+To run on GAE-Standard, create an App Engine project by following the setup for these
+[instructions](https://cloud.google.com/appengine/docs/standard/python3/quickstart#before-you-begin).
+
+First, update `app.standard.yaml` with the correct values to pass the environment
+variables into the runtime. Your `app.standard.yaml` file should look like this:
+
+```yaml
+runtime: python37
+entrypoint: gunicorn -b :$PORT app:app
+
+env_variables:
+  INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
+  DB_USER: <YOUR_DB_USER_NAME>
+  DB_PASS: <YOUR_DB_PASSWORD>
+  DB_NAME: <YOUR_DB_NAME>
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
+
+Next, the following command will deploy the application to your Google Cloud project:
+
+```bash
+gcloud app deploy app.standard.yaml
+```
+
+### Deploy to App Engine Flexible
+
+To run on GAE-Flexible, create an App Engine project by following the setup for these
+[instructions](https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin).
+
+First, update `app.flexible.yaml` with the correct values to pass the environment
+variables into the runtime. Your `app.flexible.yaml` file should look like this:
+
+```yaml
+runtime: custom
+env: flex
+entrypoint: gunicorn -b :$PORT app:app
+
+env_variables:
+  INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
+  DB_USER: <YOUR_DB_USER_NAME>
+  DB_PASS: <YOUR_DB_PASSWORD>
+  DB_NAME: <YOUR_DB_NAME>
+
+beta_settings:
+  cloud_sql_instances: <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
+
+Next, the following command will deploy the application to your Google Cloud project:
+
+```bash
+gcloud app deploy app.flexible.yaml
+```
+
+### Deploy to Cloud Run
+
+See the [Cloud Run documentation](https://cloud.google.com/sql/docs/postgres/connect-run)
+for more details on connecting a Cloud Run service to Cloud SQL.
+
+```sh
+gcloud run deploy cloud-sql-demo \
+  --add-cloudsql-instances '<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>' \
+  --set-env-vars INSTANCE_UNIX_SOCKET='/cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>' \
+  --set-env-vars DB_USER='<YOUR_DB_USER_NAME>' \
+  --set-env-vars DB_PASS='<YOUR_DB_PASSWORD>' \
+  --set-env-vars DB_NAME='<YOUR_DB_NAME>'
+```
+
+Navigate your browser to the URL output at the end of the deployment process
+to view the demo app!
+
+It is recommended to use the [Secret Manager integration](https://cloud.google.com/run/docs/configuring/secrets) for Cloud Run instead
+of using environment variables for the SQL configuration. The service injects the SQL credentials from
+Secret Manager at runtime via an environment variable.
+
+Create secrets via the command line:
+
+```sh
+echo -n $INSTANCE_UNIX_SOCKET | \
+    gcloud secrets create [INSTANCE_UNIX_SOCKET_SECRET] --data-file=-
+```
+
+Deploy the service to Cloud Run specifying the env var name and secret name:
+
+```sh
+gcloud run deploy cloud-sql-demo \
+  --add-cloudsql-instances <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> \
+  --update-secrets INSTANCE_UNIX_SOCKET=[INSTANCE_UNIX_SOCKET_SECRET]:latest,\
+    DB_USER=[DB_USER_SECRET]:latest, \
+    DB_PASS=[DB_PASS_SECRET]:latest, \
+    DB_NAME=[DB_NAME_SECRET]:latest
+```
+
+### Deploy to Cloud Functions
+
+To deploy the service to [Cloud Functions](https://cloud.google.com/functions/docs) run the following command:
+
+```sh
+gcloud functions deploy votes --gen2 --runtime python310 --trigger-http \
+  --allow-unauthenticated \
+  --entry-point votes \
+  --region <INSTANCE-REGION> \
+  --set-env-vars INSTANCE_UNIX_SOCKET=/cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> \
+  --set-env-vars DB_USER=$DB_USER \
+  --set-env-vars DB_PASS=$DB_PASS \
+  --set-env-vars DB_NAME=$DB_NAME
+```
+
+Take note of the URL output at the end of the deployment process to view your function!
