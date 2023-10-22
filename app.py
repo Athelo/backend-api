@@ -33,25 +33,28 @@ logger = logging.getLogger()
 
 
 def init_connection_pool() -> sqlalchemy.engine.base.Engine:
+    logger.info("init connection pool")
     """Sets up connection pool for the app."""
     # use a TCP socket when INSTANCE_HOST (e.g. 127.0.0.1) is defined
     if os.environ.get("INSTANCE_HOST"):
         return connect_tcp_socket()
-
+    logger.info("\tgot host")
     # use a Unix socket when INSTANCE_UNIX_SOCKET (e.g. /cloudsql/project:region:instance) is defined
     if os.environ.get("INSTANCE_UNIX_SOCKET"):
         return connect_unix_socket()
-
+    logger.info("\tgot unix socket")
     # use the connector when INSTANCE_CONNECTION_NAME (e.g. project:region:instance) is defined
     if os.environ.get("INSTANCE_CONNECTION_NAME"):
         # Either a DB_USER or a DB_IAM_USER should be defined. If both are
         # defined, DB_IAM_USER takes precedence.
+        logger.info("\tinstance connection provided")
         return (
             connect_with_connector_auto_iam_authn()
             if os.environ.get("DB_IAM_USER")
             else connect_with_connector()
         )
 
+    logger.info("\t missing database connection type")
     raise ValueError(
         "Missing database connection type. Please define one of INSTANCE_HOST, INSTANCE_UNIX_SOCKET, or INSTANCE_CONNECTION_NAME"
     )
@@ -59,8 +62,10 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
 
 # create 'votes' table in database if it does not already exist
 def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
+    logger.info("migrate_db")
     """Creates the `votes` table if it doesn't exist."""
     with db.connect() as conn:
+        logger.info("\tgot connection")
         conn.execute(
             sqlalchemy.text(
                 "CREATE TABLE IF NOT EXISTS votes "
@@ -68,7 +73,9 @@ def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
                 "candidate VARCHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
             )
         )
+        logger.info("\tconnection executed")
         conn.commit()
+        logger.info("\tcommitted")
 
 
 # This global variable is declared with a value of `None`, instead of calling
@@ -103,6 +110,11 @@ def cast_vote() -> Response:
     return save_vote(db, team)
 
 
+@app.route("/hello_world", methods=["GET"])
+def hello_world():
+    return "Hello World! This is Athelo Health's API"
+
+
 # get_index_context gets data required for rendering HTML application
 def get_index_context(db: sqlalchemy.engine.base.Engine) -> dict:
     """Retrieves data from the database about the votes.
@@ -113,14 +125,16 @@ def get_index_context(db: sqlalchemy.engine.base.Engine) -> dict:
         A dictionary containing information about votes.
     """
     votes = []
-
+    logger.info("get index context")
     with db.connect() as conn:
         # Execute the query and fetch all results
+        logger.info("\tgot db connection")
         recent_votes = conn.execute(
             sqlalchemy.text(
                 "SELECT candidate, time_cast FROM votes ORDER BY time_cast DESC LIMIT 5"
             )
         ).fetchall()
+        logger.info("\tgot votes")
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
             votes.append({"candidate": row[0], "time_cast": row[1]})
@@ -128,10 +142,13 @@ def get_index_context(db: sqlalchemy.engine.base.Engine) -> dict:
         stmt = sqlalchemy.text(
             "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
         )
+        logger.info("\t built sql text")
         # Count number of votes for tabs
         tab_count = conn.execute(stmt, parameters={"candidate": "TABS"}).scalar()
+        logger.info("\tgot tab count")
         # Count number of votes for spaces
         space_count = conn.execute(stmt, parameters={"candidate": "SPACES"}).scalar()
+        logger.info("\tgot space count")
 
     return {
         "space_count": space_count,
