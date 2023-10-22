@@ -31,7 +31,7 @@ def hello() -> str:
     # https://cloud.google.com/run/docs/logging#correlate-logs
     logger.info("Child logger with trace Id.")
 
-    return "Hello, World!"
+    return "Hello, World! This is Athelo Health's API"
 
 
 def shutdown_handler(signal_int: int, frame: FrameType) -> None:
