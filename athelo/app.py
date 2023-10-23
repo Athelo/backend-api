@@ -9,6 +9,8 @@ from google.cloud.sql.connector import Connector, IPTypes
 from views.vote import vote_endpoints
 from views.main import main_endpoints
 
+# from flask_migrate import Migrate
+
 
 # initialize Python Connector object
 connector = Connector()
@@ -21,8 +23,9 @@ db_name = os.environ["DB_NAME"]
 
 # Python Connector database connection function
 def getconn():
+    instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]
     conn = connector.connect(
-        "test-deploy-402816:us-central1:quickstart-instance",  # Cloud SQL Instance Connection Name
+        f"test-deploy-402816:us-central1:{instance_connection_name}",  # Cloud SQL Instance Connection Name
         "pg8000",
         user=db_user,
         password=db_pass,
@@ -33,15 +36,22 @@ def getconn():
 
 
 app = Flask(__name__)
-app.register_blueprint(vote_endpoints)
-app.register_blueprint(main_endpoints)
 # configure Flask-SQLAlchemy to use Python Connector
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+pg8000://"
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"creator": getconn}
+if os.environ["ENVIRONMENT"] == "local":
+    app.config[
+        "SQLALCHEMY_DATABASE_URI"
+    ] = f"postgresql+pg8000://{db_user}:{db_pass}@db/{db_name}"
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+pg8000://"
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"creator": getconn}
 
 # initialize the app with the extension
 db = SQLAlchemy()
 db.init_app(app)
+# migrate = Migrate(app, db)
+
+app.register_blueprint(vote_endpoints)
+app.register_blueprint(main_endpoints)
 
 logger = logging.getLogger()
 
