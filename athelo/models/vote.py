@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from datetime import datetime
-from athelo.models.base import Base
+from models.base import Base
 
 
 class Vote(Base):

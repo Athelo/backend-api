@@ -6,8 +6,8 @@ from flask import Flask, render_template, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from google.cloud.sql.connector import Connector, IPTypes
-from athelo.views.vote import vote_endpoints
-from athelo.views.main import main_endpoints
+from views.vote import vote_endpoints
+from views.main import main_endpoints
 
 
 # initialize Python Connector object

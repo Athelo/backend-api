@@ -1,8 +1,8 @@
 import logging
 from flask import Blueprint, render_template, request, Response
 from sqlalchemy import func
-from athelo.app import db
-from athelo.models.vote import Vote
+from app import db
+from models.vote import Vote
 
 logger = logging.getLogger()
 # Create a user blueprint
