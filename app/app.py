@@ -124,7 +124,7 @@ old_db = init_connection_pool()
 
 
 @app.route("/votes_model", methods=["GET"])
-def render_index() -> str:
+def render_index_model() -> str:
     """Serves the index page of the app."""
     votes = []
     tab_count = Vote.query.filter_by(candidate="TABS").count()
@@ -139,7 +139,7 @@ def render_index() -> str:
 
 
 @app.route("/votes_model", methods=["POST"])
-def cast_vote() -> Response:
+def cast_vote_model() -> Response:
     """Processes a single vote from user."""
     team = request.form["team"]
     if team != "TABS" and team != "SPACES":
