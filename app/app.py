@@ -29,7 +29,7 @@ from connect_tcp import connect_tcp_socket
 from connect_unix import connect_unix_socket
 from typing import List
 from typing import Optional
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, func
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
@@ -159,13 +159,13 @@ def render_index_model() -> str:
     for vote in recent_votes:
         votes.append({"candidate": vote.candidate, "time_cast": vote.time_cast})
     # tab_count = Vote.query.filter_by(candidate="TABS").count()
-    tab_count = db.session.execute(
-        db.select(Vote).filter_by(candidate="TABS").count()
+    tab_count = db.session.scalar(
+        db.select(func.count().filter(Vote.candidate == "TABS"))
     ).scalar()
-    space_count = db.session.execute(
-        db.select(Vote).filter_by(candidate="SPACES").count()
-    ).scalar()
-
+    # space_count = db.session.execute(
+    #     db.select(Vote).filter_by(candidate="SPACES").count()
+    # ).scalar()
+    space_count = 0
     context = {
         "space_count": space_count,
         "recent_votes": [],
