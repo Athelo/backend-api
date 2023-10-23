@@ -28,7 +28,7 @@ RUN set -ex; \
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-COPY . ./
+COPY athelo-api/ ./
 
 # Copy any certificates if present.
 COPY ./certs /app/certs
