@@ -158,7 +158,6 @@ def render_index_model() -> str:
     ).all()
     for vote in recent_votes:
         votes.append({"candidate": vote.candidate, "time_cast": vote.time_cast})
-    # tab_count = Vote.query.filter_by(candidate="TABS").count()
     tab_count = db.session.scalar(
         db.select(func.count().filter(Vote.candidate == "TABS"))
     )
@@ -167,7 +166,7 @@ def render_index_model() -> str:
     )
     context = {
         "space_count": space_count,
-        "recent_votes": [],
+        "recent_votes": votes,
         "tab_count": tab_count,
     }
     return render_template("index.html", **context)
