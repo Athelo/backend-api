@@ -38,17 +38,45 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from google.cloud.sql.connector import Connector, IPTypes
+
+
+# initialize Python Connector object
+connector = Connector()
+
+project = "test-deploy-402816"
+region = "us-central1"
+instance_name = os.environ.get("INSTANCE_CONNECTION_NAME")
 db_user = os.environ["DB_USER"]
 db_pass = os.environ["DB_PASS"]
 db_name = os.environ["DB_NAME"]
-db_socket_dir = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
-instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]
-DB_URI = f"postgresql+pg8000://{db_user}:{db_pass}@/{db_name}?unix_sock={db_socket_dir}/{instance_connection_name}/.s.PGSQL.5432"
+
+
+# Python Connector database connection function
+def getconn():
+    conn = connector.connect(
+        "{project}:{region}:{instance_name}",  # Cloud SQL Instance Connection Name
+        "pg8000",
+        user=db_user,
+        password=db_pass,
+        db=db_name,
+        ip_type=IPTypes.PRIVATE,  # IPTypes.PRIVATE for private IP
+    )
+    return conn
+
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = DB_URI
 
-db = SQLAlchemy(app)
+# configure Flask-SQLAlchemy to use Python Connector
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+pg8000://"
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"creator": getconn}
+
+# initialize the app with the extension
+db = SQLAlchemy()
+db.init_app(app)
+
 logger = logging.getLogger()
 
 
