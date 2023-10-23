@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  athelo-backend-api:
+    restart: always
+    image: athelo-backend
+    volumes: 
+      - ./app:/app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5001:5000
+    env_file:
+      - ./.env.local
+    command: flask run --host=0.0.0.0
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=athelo
+      - POSTGRES_PASSWORD=athelo
+      - POSTGRES_DB=athelo
+
+volumes:
+  postgres_data:

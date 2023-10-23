@@ -21,15 +21,47 @@ import os
 from flask import Flask, render_template, request, Response
 
 import sqlalchemy
+from sqlalchemy.orm import DeclarativeBase
 
 from connect_connector import connect_with_connector
 from connect_connector_auto_iam_authn import connect_with_connector_auto_iam_authn
 from connect_tcp import connect_tcp_socket
 from connect_unix import connect_unix_socket
+from typing import List
+from typing import Optional
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
+
+db_user = os.environ["DB_USER"]
+db_pass = os.environ["DB_PASS"]
+db_name = os.environ["DB_NAME"]
+db_socket_dir = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
+instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]
+DB_URI = f"postgresql+pg8000://{db_user}:{db_pass}@/{db_name}?unix_sock={db_socket_dir}/{instance_connection_name}/.s.PGSQL.5432"
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = DB_URI
 
+db = SQLAlchemy(app)
 logger = logging.getLogger()
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class Vote(Base):
+    __tablename__ = "votes"
+
+    vote_id: Mapped[int] = mapped_column(primary_key=True)
+    time_cast: Mapped[datetime] = mapped_column(default=datetime.utcnow())
+    candidate: Mapped[str] = mapped_column(nullable=False)
 
 
 def init_connection_pool() -> sqlalchemy.engine.base.Engine:
@@ -82,7 +114,6 @@ def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
 # `init_db()` immediately, to simplify testing. In general, it
 # is safe to initialize your database connection pool when your script starts
 # -- there is no need to wait for the first request.
-db = None
 
 
 # init_db lazily instantiates a database connection pool. Users of Cloud Run or
@@ -91,15 +122,48 @@ db = None
 @app.before_first_request
 def init_db() -> sqlalchemy.engine.base.Engine:
     """Initiates connection to database and its structure."""
-    global db
-    db = init_connection_pool()
-    migrate_db(db)
+    global old_db
+    old_db = init_connection_pool()
+
+
+@app.route("/votes_model", methods=["GET"])
+def render_index() -> str:
+    """Serves the index page of the app."""
+    votes = []
+    tab_count = Vote.query.filter_by(candidate="TABS").count()
+    space_count = Vote.query.filter_by(candidate="SPACES").count()
+
+    context = {
+        "space_count": space_count,
+        "recent_votes": [],
+        "tab_count": tab_count,
+    }
+    return render_template("index.html", **context)
+
+
+@app.route("/votes_model", methods=["POST"])
+def cast_vote() -> Response:
+    """Processes a single vote from user."""
+    team = request.form["team"]
+    if team != "TABS" and team != "SPACES":
+        logger.warning(f"Received invalid 'team' property: '{team}'")
+        return Response(
+            response="Invalid team specified. Should be one of 'TABS' or 'SPACES'",
+            status=400,
+        )
+    vote = Vote(candidate=team)
+    db.session.add(vote)
+    db.session.commit(vote)
+    return Response(
+        status=200,
+        response=f"Vote successfully cast for '{vote.candidate}' at time {vote.time_cast}!",
+    )
 
 
 @app.route("/votes", methods=["GET"])
 def render_index() -> str:
     """Serves the index page of the app."""
-    context = get_index_context(db)
+    context = get_index_context(old_db)
     return render_template("index.html", **context)
 
 
@@ -107,7 +171,7 @@ def render_index() -> str:
 def cast_vote() -> Response:
     """Processes a single vote from user."""
     team = request.form["team"]
-    return save_vote(db, team)
+    return save_vote(old_db, team)
 
 
 @app.route("/", methods=["GET"])
