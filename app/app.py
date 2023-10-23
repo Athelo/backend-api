@@ -57,7 +57,7 @@ db_name = os.environ["DB_NAME"]
 # Python Connector database connection function
 def getconn():
     conn = connector.connect(
-        "{project}:{region}:{instance_name}",  # Cloud SQL Instance Connection Name
+        f"{project}:{region}:{instance_name}",  # Cloud SQL Instance Connection Name
         "pg8000",
         user=db_user,
         password=db_pass,
