@@ -238,7 +238,7 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
     Returns:
         A HTTP response that can be sent to the client.
     """
-    time_cast = datetime.datetime.now(tz=datetime.timezone.utc)
+    time_cast = datetime.now(tz=datetime.timezone.utc)
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
         logger.warning(f"Received invalid 'team' property: '{team}'")
