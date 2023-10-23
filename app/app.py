@@ -161,11 +161,10 @@ def render_index_model() -> str:
     # tab_count = Vote.query.filter_by(candidate="TABS").count()
     tab_count = db.session.scalar(
         db.select(func.count().filter(Vote.candidate == "TABS"))
-    ).scalar()
-    # space_count = db.session.execute(
-    #     db.select(Vote).filter_by(candidate="SPACES").count()
-    # ).scalar()
-    space_count = 0
+    )
+    space_count = db.session.scalar(
+        db.select(func.count().filter(Vote.candidate == "SPACES"))
+    )
     context = {
         "space_count": space_count,
         "recent_votes": [],
