@@ -1,4 +1,7 @@
 from athelo import app
+from flask import Blueprint
+
+main_endpoints = Blueprint("Main", __name__)
 
 
 @app.route("/", methods=["GET"])

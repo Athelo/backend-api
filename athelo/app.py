@@ -6,6 +6,8 @@ from flask import Flask, render_template, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from google.cloud.sql.connector import Connector, IPTypes
+from athelo.views.vote import vote_endpoints
+from athelo.views.main import main_endpoints
 
 
 # initialize Python Connector object
@@ -31,7 +33,8 @@ def getconn():
 
 
 app = Flask(__name__)
-
+app.register_blueprint(vote_endpoints)
+app.register_blueprint(main_endpoints)
 # configure Flask-SQLAlchemy to use Python Connector
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+pg8000://"
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"creator": getconn}
