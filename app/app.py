@@ -127,8 +127,18 @@ old_db = init_connection_pool()
 def render_index_model() -> str:
     """Serves the index page of the app."""
     votes = []
-    tab_count = Vote.query.filter_by(candidate="TABS").count()
-    space_count = Vote.query.filter_by(candidate="SPACES").count()
+    recent_votes = db.session.scalars(
+        db.select(Vote).order_by(Vote.time_cast).limit(5)
+    ).all()
+    for vote in recent_votes:
+        votes.append({"candidate": vote.candidate, "time_cast": vote.time_cast})
+    # tab_count = Vote.query.filter_by(candidate="TABS").count()
+    tab_count = db.session.execute(
+        db.select(Vote).filter_by(candidate="TABS").count()
+    ).scalar()
+    space_count = db.session.execute(
+        db.select(Vote).filter_by(candidate="SPACES").count()
+    ).scalar()
 
     context = {
         "space_count": space_count,
