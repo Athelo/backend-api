@@ -77,7 +77,7 @@ def render_index_model() -> str:
     """Serves the index page of the app."""
     votes = []
     recent_votes = db.session.scalars(
-        db.select(Vote).order_by(Vote.time_cast).limit(5)
+        db.select(Vote).order_by(Vote.time_cast.desc()).limit(5)
     ).all()
     for vote in recent_votes:
         votes.append({"candidate": vote.candidate, "time_cast": vote.time_cast})
