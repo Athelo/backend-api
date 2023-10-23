@@ -46,9 +46,7 @@ from google.cloud.sql.connector import Connector, IPTypes
 # initialize Python Connector object
 connector = Connector()
 
-project = "test-deploy-402816"
-region = "us-central1"
-instance_name = os.environ.get("INSTANCE_CONNECTION_NAME")
+
 db_user = os.environ["DB_USER"]
 db_pass = os.environ["DB_PASS"]
 db_name = os.environ["DB_NAME"]
@@ -57,7 +55,7 @@ db_name = os.environ["DB_NAME"]
 # Python Connector database connection function
 def getconn():
     conn = connector.connect(
-        f"{project}:{region}:{instance_name}",  # Cloud SQL Instance Connection Name
+        "test-deploy-402816:us-central1:quickstart-instance",  # Cloud SQL Instance Connection Name
         "pg8000",
         user=db_user,
         password=db_pass,
