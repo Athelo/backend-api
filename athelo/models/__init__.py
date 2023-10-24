@@ -36,3 +36,4 @@ else:
 
 # initialize the app with the extension
 db = SQLAlchemy()
+__all__ = ["vote", "base"]

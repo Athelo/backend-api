@@ -1,26 +1,22 @@
 from __future__ import annotations
 
-import logging
+from typing import Optional
 from flask import Flask, render_template, request, Response
-
-from models import db
-
-from views.vote import vote_endpoints
-from views.main import main_endpoints
-
-# from flask_migrate import Migrate
+from config.logging import setup_logging
 
 
-app = Flask(__name__)
-# configure Flask-SQLAlchemy to use Python Connector
+def create_app() -> Flask:
+    app = Flask(__name__)
+    setup_logging(app)
+    with app.app_context():
+        from models import db
 
-db.init_app(app)
-# migrate = Migrate(app, db)
+        db.init_app(app)
+        db.create_all()
 
-app.register_blueprint(vote_endpoints)
-app.register_blueprint(main_endpoints)
+        from api import blueprints
 
-logger = logging.getLogger()
-
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8080, debug=True)
+        for blueprint in blueprints:
+            app.register_blueprint(blueprint=blueprint)
+    app.logger.info("Running app!")
+    return app
