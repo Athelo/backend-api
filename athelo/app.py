@@ -21,12 +21,12 @@ def set_config(app: Flask):
     match environment.lower():
         case "local":
             config_module = f"{config_module}LocalConfig"
-            print(app.config_module)
+            print(config_module)
         case "production":
             config_module = f"{config_module}ProductionConfig"
         case "staging" | _:
             config_module = f"{config_module}StagingConfig"
-            print(config_module.config)
+            print(config_module)
 
     app.config.from_object(config_module)
     print(app.config)
