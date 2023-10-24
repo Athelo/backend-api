@@ -26,7 +26,7 @@ def getconn():
     return conn
 
 
-if os.environ["ENVIRONMENT"] == "local":
+if os.environ.get("ENVIRONMENT", None) == "local":
     current_app.config[
         "SQLALCHEMY_DATABASE_URI"
     ] = f"postgresql+pg8000://{db_user}:{db_pass}@db/{db_name}"
