@@ -11,9 +11,9 @@ connector = Connector()
 def getconn():
     project = current_app.config["PROJECT"]
     region = current_app.config["REGION"]
-    instance_connection_name = ["INSTANCE_CONNECTION_NAME"]
+    instance_name = current_app.config["INSTANCE_CONNECTION_NAME"]
     conn = connector.connect(
-        f"{project}:{region}:{instance_connection_name}",  # Cloud SQL Instance Connection Name
+        f"{project}:{region}:{instance_name}",  # Cloud SQL Instance Connection Name
         "pg8000",
         user=current_app.config.get("DB_USER"),
         password=current_app.config.get("DB_PASS"),
