@@ -30,10 +30,6 @@ limitations under the License.
 <body>
 <nav class="teal darken-3">
     <div class="nav-wrapper container"><a class="brand-logo center" href="#!">Tabs VS Spaces</a>
-    <ul class="left" id="nav-mobile">
-        <button class="waves-effect waves-light btn" id="signInButton">Sign In with Google</button>
-    </ul>
-    </div>
 </nav>
 <div class="section">
     <div class="center">
@@ -82,6 +78,25 @@ limitations under the License.
         {% endfor %}
     </ul>
 </div>
+<div>
+    <h4 class="header center">Account Info</h4>
+    <ul class="container collection center">
+        <!-- <form id="loginform">
+            <div class="container">
+              <label for="uname"><b>Username</b></label>
+              <input type="text" placeholder="Enter Username" name="uname" required>
+          
+              <label for="psw"><b>Password</b></label>
+              <input type="password" placeholder="Enter Password" name="psw" required>
+              <button class="waves-effect waves-light btn" id="submit">Login</button>
+            </div>
+        </form>   -->
+        <button class="waves-effect waves-light btn" id="signInButton">Sign In with Google</button>
+        
+    </ul>
+</div>
+
+
 <script>
     function vote(team) {
         var xhr = new XMLHttpRequest();
@@ -102,6 +117,8 @@ limitations under the License.
         vote("SPACES");
     });
     document.getElementById('signInButton').addEventListener("click", toggle);
+
+    // document.getElementById('submit').addEventListener("click", toggle2);
 </script>
 </body>
 </html>

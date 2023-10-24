@@ -21,11 +21,13 @@ function initApp() {
     if (user) {
       // User is signed in.
       document.getElementById('signInButton').innerText = 'Sign Out';
-      document.getElementById('form').style.display = '';
+      // document.getElementById('loginform').style.visibility = 'hidden';
+      // document.getElementById('submit').style.visibility = 'hidden';
     } else {
       // No user is signed in.
       document.getElementById('signInButton').innerText = 'Sign In with Google';
-      document.getElementById('form').style.display = 'none';
+      // document.getElementById('loginform').style.visibility = 'visible';
+      // document.getElementById('submit').style.visibility = 'visible';
     }
   });
 }
@@ -50,6 +52,19 @@ function signIn() {
     });
 }
 
+function signInUserPassword(username, password) {
+  firebase.auth.signInUserPassword(username, password)
+  .then(result => {
+    // Returns the signed in user along with the provider's credential
+    console.log(`${result.user.displayName} logged in.`);
+    window.alert(`Welcome ${result.user.displayName}!`);
+  })
+  .catch(err => {
+    console.log(`Error during sign in: ${err.message}`);
+    window.alert(`Sign in failed. Retry or check your browser logs.`);
+  });
+}
+
 function signOut() {
   firebase
     .auth()
@@ -70,6 +85,14 @@ function toggle() {
   }
 }
 
+// function toggle2() {
+//   if (!firebase.auth().currentUser) {
+//     signInUserPassword();
+//   } else {
+//     signOut();
+//   }
+// }
+
 async function vote(team) {
   if (firebase.auth().currentUser) {
     // Retrieve JWT to identify the user to the Identity Platform service.
@@ -77,11 +100,12 @@ async function vote(team) {
     // refresh the token and return a new one.
     try {
       const token = await firebase.auth().currentUser.getIdToken();
+      console.log(token)
       const response = await fetch('/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: 'team=' + team, // send application data (vote)
       });
