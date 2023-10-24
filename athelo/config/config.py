@@ -14,7 +14,7 @@ class CloudConfig(object):
     DB_USER = os.environ.get("DB_USER")
     DB_PASS = os.environ.get("DB_PASS")
     PROJECT = os.environ.get("PROJECT")
-    region = os.environ.get("REGION")
+    REGION = os.environ.get("REGION")
     INSTANCE_CONNECTION_NAME = os.environ.get("INSTANCE_CONNECTION_NAME")
 
 
