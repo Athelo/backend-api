@@ -11,6 +11,7 @@ from models.symptom import Symptom
 from models.vote import Vote
 from models.user_profile import UserProfile
 from models.user_symptom import UserSymptom
+from config.config import StagingConfig
 
 from api import blueprints
 
@@ -30,6 +31,7 @@ def set_config(app: Flask):
 
     app.config.from_object(config_module)
     print(app.config)
+    print(StagingConfig.__dict__)
 
 
 def create_app() -> Flask:
