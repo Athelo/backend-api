@@ -30,9 +30,6 @@ def set_config(app: Flask):
             print(config_module)
 
     app.config.from_object(config_module)
-    print(app.config)
-    print(StagingConfig.region)
-    print(os.environ)
 
 
 def create_app() -> Flask:
