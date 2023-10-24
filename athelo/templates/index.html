@@ -14,17 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <html lang="en">
-<head>
-    <title>Tabs VS Spaces</title>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-</head>
+    <head>
+        <title>TABS v SPACES</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <!-- Firebase App (the core Firebase SDK) is always required and must be listed first-->
+        <script src="https://www.gstatic.com/firebasejs/7.18/firebase-app.js"></script>
+        <!-- Add Firebase Auth service-->
+        <script src="https://www.gstatic.com/firebasejs/7.18/firebase-auth.js"></script>
+        <script src="../static/config.js"></script>
+        <script src="../static/firebase.js"></script>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+      </head>
 <body>
-<nav class="red lighten-1">
-    <div class="nav-wrapper">
-        <a href="#" class="brand-logo center">Tabs VS Spaces</a>
+<nav class="teal darken-3">
+    <div class="nav-wrapper container"><a class="brand-logo center" href="#!">Tabs VS Spaces</a>
+    <ul class="left" id="nav-mobile">
+        <button class="waves-effect waves-light btn" id="signInButton">Sign In with Google</button>
+    </ul>
     </div>
 </nav>
 <div class="section">
@@ -93,6 +101,7 @@ limitations under the License.
     document.getElementById("voteSpaces").addEventListener("click", function () {
         vote("SPACES");
     });
+    document.getElementById('signInButton').addEventListener("click", toggle);
 </script>
 </body>
 </html>

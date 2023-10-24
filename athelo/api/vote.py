@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, Response
 from sqlalchemy import func
 from models.database import db
 from models.vote import Vote
+from auth.middleware import jwt_authenticated
 
 logger = logging.getLogger()
 # Create a user blueprint
@@ -10,7 +11,7 @@ vote_endpoints = Blueprint("Vote", __name__, url_prefix="/votes")
 
 
 @vote_endpoints.route("/", methods=["GET"])
-def render_index_model() -> str:
+def render_index() -> str:
     """Serves the index page of the app."""
     votes = []
     recent_votes = db.session.scalars(
@@ -33,7 +34,8 @@ def render_index_model() -> str:
 
 
 @vote_endpoints.route("/", methods=["POST"])
-def cast_vote_model() -> Response:
+@jwt_authenticated
+def cast_vote() -> Response:
     """Processes a single vote from user."""
     team = request.form["team"]
     if team != "TABS" and team != "SPACES":
