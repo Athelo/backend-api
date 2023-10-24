@@ -82,7 +82,7 @@ limitations under the License.
                 window.location.reload();
             }
         };
-        xhr.open("POST", "/votes_model", true);
+        xhr.open("POST", "/votes", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.send("team=" + team);
     }
