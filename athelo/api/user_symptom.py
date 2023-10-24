@@ -4,7 +4,7 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from schemas.user_symptom import UserSymptomSchema, UserSymptomUpdateSchema
-from models import db
+from models.database import db
 from models.user_symptom import UserSymptom
 from api.utils import class_route
 
