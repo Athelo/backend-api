@@ -8,3 +8,6 @@ Werkzeug==2.3.7
 # Flask-Migrate==4.0.5
 marshmallow-sqlalchemy==0.29.0
 flask-marshmallow==0.15.0
+firebase-admin==6.2.0
+structlog==23.1.0
+urllib3<2.0.0 #https://stackoverflow.com/questions/76175361/firebase-authentication-httpresponse-object-has-no-attribute-strict-status

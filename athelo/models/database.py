@@ -25,4 +25,4 @@ def getconn():
 
 # initialize the app with the extension
 db = SQLAlchemy()
-__all__ = ["vote", "base"]
+__all__ = ["base"]

@@ -7,44 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "Votes",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "Votes",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "team",
-							"value": "TABS",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{baseUrl}}/votes",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"votes"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Symptoms",
 			"request": {
 				"method": "GET",
