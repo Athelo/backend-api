@@ -15,4 +15,6 @@ class SavedContent(Base):
     user_profile_id: Mapped[int] = mapped_column(
         ForeignKey("profiles.id"), nullable=False
     )
-    user_profile: Mapped["UserProfile"] = relationship(back_populates="saved_content")
+    user_profile: Mapped["UserProfile"] = relationship(
+        back_populates="saved_content", lazy="joined"
+    )
