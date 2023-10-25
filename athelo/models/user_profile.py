@@ -1,8 +1,7 @@
 from typing import List
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
+
 from models.base import Base, TimestampMixin
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 class UserProfile(TimestampMixin, Base):

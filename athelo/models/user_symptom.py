@@ -1,10 +1,9 @@
-from typing import Optional
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from models.base import Base, TimestampMixin
 from datetime import datetime
-from sqlalchemy.orm import relationship
+from typing import Optional
+
+from models.base import Base, TimestampMixin
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 class UserSymptom(TimestampMixin, Base):

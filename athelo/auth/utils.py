@@ -1,6 +1,6 @@
-from models.user_profile import UserProfile
-from models.database import db
 from flask import Request
+from models.database import db
+from models.user_profile import UserProfile
 from werkzeug.exceptions import Unauthorized
 
 

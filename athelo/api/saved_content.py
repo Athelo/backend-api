@@ -1,16 +1,15 @@
-from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY, NOT_FOUND, OK
 import logging
-from flask import Blueprint, abort, request
-from flask.views import MethodView
-from marshmallow import ValidationError
-from models.user_profile import UserProfile
-from auth.utils import get_user_from_request
-from schemas.saved_content import SavedContentSchema, SavedContentCreateUpdateSchema
-from models.database import db
-from models.saved_content import SavedContent
+from http.client import BAD_REQUEST, CREATED, NOT_FOUND, OK, UNPROCESSABLE_ENTITY
+
 from api.utils import class_route
 from auth.middleware import jwt_authenticated
-from auth.utils import is_current_user_or_403
+from auth.utils import get_user_from_request
+from flask import Blueprint, request
+from flask.views import MethodView
+from marshmallow import ValidationError
+from models.database import db
+from models.saved_content import SavedContent
+from schemas.saved_content import SavedContentCreateUpdateSchema, SavedContentSchema
 
 logger = logging.getLogger()
 

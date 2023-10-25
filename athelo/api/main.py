@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request
-from auth.middleware import jwt_authenticated
 from datetime import datetime
+
+from auth.middleware import jwt_authenticated
+from flask import Blueprint, render_template, request
 
 main_endpoints = Blueprint("Main", __name__)
 

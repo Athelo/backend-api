@@ -1,6 +1,6 @@
-from models.user_symptom import UserSymptom
-from marshmallow_sqlalchemy import auto_field, SQLAlchemyAutoSchema
 from marshmallow import Schema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
+from models.user_symptom import UserSymptom
 
 
 class UserSymptomSchema(SQLAlchemyAutoSchema):

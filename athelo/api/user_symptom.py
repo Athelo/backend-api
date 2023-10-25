@@ -1,15 +1,15 @@
-from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY, NOT_FOUND, ACCEPTED
 import logging
+from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
+
+from api.utils import class_route
+from auth.middleware import jwt_authenticated
+from auth.utils import get_user_from_request, is_current_user_or_403
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
-from auth.utils import get_user_from_request
-from schemas.user_symptom import UserSymptomSchema, UserSymptomUpdateSchema
 from models.database import db
 from models.user_symptom import UserSymptom
-from api.utils import class_route
-from auth.middleware import jwt_authenticated
-from auth.utils import is_current_user_or_403
+from schemas.user_symptom import UserSymptomSchema, UserSymptomUpdateSchema
 
 logger = logging.getLogger()
 

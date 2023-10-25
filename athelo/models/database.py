@@ -1,7 +1,8 @@
 import os
-from google.cloud.sql.connector import Connector, IPTypes
-from flask_sqlalchemy import SQLAlchemy
+
 from flask import current_app
+from flask_sqlalchemy import SQLAlchemy
+from google.cloud.sql.connector import Connector, IPTypes
 
 # initialize Python Connector object
 connector = Connector()

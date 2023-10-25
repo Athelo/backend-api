@@ -1,4 +1,4 @@
-from marshmallow_sqlalchemy import auto_field, SQLAlchemyAutoSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.user_profile import UserProfile
 
 

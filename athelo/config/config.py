@@ -1,6 +1,7 @@
 import logging
-from models.database import getconn
 import os
+
+from models.database import getconn
 
 
 class Config(object):

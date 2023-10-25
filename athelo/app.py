@@ -1,19 +1,18 @@
 from __future__ import annotations
+
 import os
 
-from flask import Flask
+from api import blueprints
+from config.config import StagingConfig
 from config.logging import setup_logging
+from flask import Flask
 from flask_marshmallow import Marshmallow
-from models.database import db
-from models.database import db
 from models.base import Base
+from models.database import db
+from models.saved_content import SavedContent
 from models.symptom import Symptom
 from models.user_profile import UserProfile
 from models.user_symptom import UserSymptom
-from config.config import StagingConfig
-from models.saved_content import SavedContent
-
-from api import blueprints
 
 
 def set_config(app: Flask):
