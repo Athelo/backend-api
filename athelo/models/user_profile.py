@@ -16,3 +16,6 @@ class UserProfile(TimestampMixin, Base):
     user_symptoms: Mapped[List["UserSymptom"]] = relationship(
         back_populates="user_profile"
     )
+    saved_content: Mapped[List["SavedContent"]] = relationship(
+        back_populates="user_profile"
+    )

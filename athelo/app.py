@@ -11,6 +11,7 @@ from models.symptom import Symptom
 from models.user_profile import UserProfile
 from models.user_symptom import UserSymptom
 from config.config import StagingConfig
+from models.saved_content import SavedContent
 
 from api import blueprints
 

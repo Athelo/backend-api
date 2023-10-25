@@ -146,14 +146,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/users/",
+					"raw": "{{baseUrl}}/api/users/1",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
 						"users",
-						""
+						"1"
 					]
 				}
 			},
@@ -245,6 +245,78 @@
 					"path": [
 						"api",
 						"my-symptoms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Saved Content",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/saved-content",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"saved-content"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Saved Content",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/saved-content",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"saved-content"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Saved Content",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/saved-content",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"saved-content"
 					]
 				}
 			},
