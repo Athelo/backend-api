@@ -1,12 +1,12 @@
 firebase.initializeApp(config);
 let token = null;
 function initApp() {
-  firebase.auth().onAuthStateChanged(user => {
+  firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       document.getElementById("message").innerHTML = "Welcome, " + user.email;
       document.getElementById('signInButton').innerText = 'Sign Out';
       document.getElementById('getTokenButton').disabled = false;
-      document.getElementById('tokenDisplay').innerText = ''
+      await getToken()
     }
     else {
       document.getElementById("message").innerHTML = "No user signed in.";
@@ -41,7 +41,6 @@ function signOut() {
   firebase
     .auth()
     .signOut()
-    .then(result => { })
     .catch(err => {
       console.log(`Error during sign out: ${err.message}`);
       window.alert(`Sign out failed. Retry or check your browser logs.`);
