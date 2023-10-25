@@ -12,7 +12,7 @@ from auth.middleware import jwt_authenticated
 from auth.utils import is_current_user_or_403
 
 logger = logging.getLogger()
-# Create a user blueprint
+
 user_symptom_endpoints = Blueprint(
     "My Symptoms", __name__, url_prefix="/api/my-symptoms"
 )

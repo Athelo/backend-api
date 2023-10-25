@@ -10,7 +10,7 @@ from api.utils import class_route
 from auth.middleware import jwt_authenticated
 
 logger = logging.getLogger()
-# Create a user blueprint
+
 my_profile_endpoints = Blueprint("My Profile", __name__, url_prefix="/api/me")
 
 

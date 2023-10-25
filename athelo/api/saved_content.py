@@ -13,7 +13,7 @@ from auth.middleware import jwt_authenticated
 from auth.utils import is_current_user_or_403
 
 logger = logging.getLogger()
-# Create a user blueprint
+
 saved_content_endpoints = Blueprint(
     "My Saved Content", __name__, url_prefix="/api/saved-content"
 )
