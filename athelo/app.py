@@ -3,7 +3,6 @@ from __future__ import annotations
 import os
 
 from api import blueprints
-from config.config import StagingConfig
 from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow

@@ -3,7 +3,7 @@ from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE
 
 from api.utils import class_route
 from auth.middleware import jwt_authenticated
-from flask import Blueprint, abort, request
+from flask import Blueprint, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
