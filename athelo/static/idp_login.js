@@ -80,7 +80,7 @@ async function getProtectedEndpoint() {
 async function performGetAndUpdateElements(element, endpoint) {
   document.getElementById(element).innerText = ''
   let req_headers = {}
-  if (token == null) {
+  if (token !== null) {
     req_headers = {
       'Authorization': `Bearer ${token}`,
     }
