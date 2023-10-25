@@ -13,7 +13,11 @@
  * limitations under the License.
  */
 
-const config = {
-  apiKey: 'AIzaSyAKQNr1R8Eu2SLYNJ71n6r4aUzjZuBDNco',
-  authDomain: 'test-deploy-402816.firebaseapp.com',
+const config =  {
+  apiKey: "AIzaSyAKQNr1R8Eu2SLYNJ71n6r4aUzjZuBDNco",
+  authDomain: "test-deploy-402816.firebaseapp.com",
+  projectId: "test-deploy-402816",
+  storageBucket: "test-deploy-402816.appspot.com",
+  messagingSenderId: "143608640465",
+  appId: "1:143608640465:web:6b9e51f5b7fcecf65566f0"
 };

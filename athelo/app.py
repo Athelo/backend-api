@@ -8,7 +8,6 @@ from models.database import db
 from models.database import db
 from models.base import Base
 from models.symptom import Symptom
-from models.vote import Vote
 from models.user_profile import UserProfile
 from models.user_symptom import UserSymptom
 from config.config import StagingConfig

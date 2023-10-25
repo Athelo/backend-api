@@ -1,0 +1,85 @@
+<html lang="en">
+
+<head>
+    <title>ATHLEO DEV TOOLS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first-->
+    <script src="https://www.gstatic.com/firebasejs/7.18/firebase-app.js"></script>
+    <!-- Add Firebase Auth service-->
+    <script src="https://www.gstatic.com/firebasejs/7.18/firebase-auth.js"></script>
+    <script src="../static/config.js"></script>
+    <script src="../static/idp_login.js"></script>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+</head>
+
+<body>
+    <nav class="teal darken-3">
+        <div class="nav-wrapper container"><a class="brand-logo center" href="#!">ATHELO DEV TOOLS</a>
+        </div>
+    </nav>
+    <div class="section">
+        <div class="center">
+            <h4 id="">
+
+            </h4>
+        </div>
+        <div class="section">
+            <div class="row center">
+                <div class="col s6 m5 offset-m1">
+                    <div class="card-panel">
+                        <h6 id="message"> No user signed in. </h6>
+                        <button class="waves-effect waves-light btn" id="signInButton">Sign In with Google</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="row center">
+            <div class="col s6 m5 offset-m1">
+                <div class="card-panel">
+                    <textarea id="message"> No token </textarea>
+                    <button id="getTokenButton" class="btn green">Get new token</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="row center">
+            <div class="col s6 m5 offset-m1">
+                <div class="card-panel">
+                    <h6 id="publicEndpointMessage"> </h6>
+                    <button class="btn green" id="getPublicButton">Try Public Endpoint</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="row center">
+            <div class="col s6 m5 offset-m1">
+                <div class="card-panel">
+                    <h6 id="protectedEndpointMessage"> </h6>
+                    <button class="btn green" id="getProtectedButton">Try Protected Endpoint</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        document.getElementById('getTokenButton').onclick = async () => {
+            token = await firebase.auth().currentUser.getIdToken().catch((error) => {
+                document.getElementById('tokenDisplay').innerText = error.message
+            })
+            document.getElementById('tokenDisplay').innerText = token
+        }
+        document.getElementById('signInButton').addEventListener("click", toggle)
+        document.getElementById('getPublicButton').onclick = getPublicEndpoint
+        document.getElementById('getProtectedButton').onclick = getProtectedEndpoint
+
+    </script>
+</body>
+
+</html>

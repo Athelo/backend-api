@@ -24,23 +24,22 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
 
     @wraps(func)
     def decorated_function(*args: a, **kwargs: a) -> a:
-        # import pdb
-
-        # pdb.set_trace()
         header = request.headers.get("Authorization", None)
-        logger.critical(header)
+        print(header)
         if header:
             token = header.split(" ")[1]
             try:
                 decoded_token = firebase_admin.auth.verify_id_token(token)
-                logger.critical(decoded_token)
+                print(decoded_token)
             except Exception as e:
                 logger.exception(e)
                 return Response(status=403, response=f"Error with authentication: {e}")
         else:
             return Response(status=401)
 
+        print(decoded_token)
         request.uid = decoded_token["uid"]
+        request.email = decoded_token["email"]
         return func(*args, **kwargs)
 
     return decorated_function
