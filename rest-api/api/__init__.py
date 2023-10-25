@@ -6,6 +6,8 @@ from api.saved_content import saved_content_endpoints
 from api.symptom import symptom_endpoints
 from api.user_profile import user_profile_endpoints
 from api.user_symptom import user_symptom_endpoints
+from api.message import message_endpoints
+from api.message_channel import message_channel_endpoints
 
 blueprints = [
     main_endpoints,
@@ -14,4 +16,6 @@ blueprints = [
     user_symptom_endpoints,
     my_profile_endpoints,
     saved_content_endpoints,
+    message_endpoints,
+    message_channel_endpoints,
 ]
