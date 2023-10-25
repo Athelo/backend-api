@@ -7,6 +7,7 @@ from schemas.symptom import SymptomSchema
 from models.database import db
 from models.symptom import Symptom
 from api.utils import class_route
+from auth.middleware import jwt_authenticated
 
 logger = logging.getLogger()
 # Create a user blueprint
@@ -15,11 +16,14 @@ symptom_endpoints = Blueprint("Symptom", __name__, url_prefix="/api/symptoms")
 
 @class_route(symptom_endpoints, "/", "symptoms")
 class SyptomsView(MethodView):
+    # TODO: admin perms?
+    @jwt_authenticated
     def get(self):
         symptoms = db.session.scalars(db.select(Symptom)).all()
         schema = SymptomSchema(many=True)
         return schema.dump(symptoms)
 
+    @jwt_authenticated
     def post(self):
         json_data = request.get_json()
         if not json_data:
@@ -36,17 +40,3 @@ class SyptomsView(MethodView):
         db.session.commit()
         result = schema.dump(symptom)
         return result, CREATED
-
-
-# @symptom_endpoints.route("/symptoms", methods=["GET"])
-# def symptoms():
-#     symptoms = db.session.scalars(db.select(Symptom)).all()
-#     schema = SymptomSchema()
-#     return schema.dump(symptoms)
-
-# @symptom_endpoints.route("/symptoms", methods=["POST"])
-# def create_symptom():
-#     symptom = S
-#     symptoms = db.session.scalars(db.select(Symptom)).all()
-#     schema = SymptomSchema()
-#     return schema.dump(symptoms)

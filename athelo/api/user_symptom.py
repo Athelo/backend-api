@@ -3,26 +3,35 @@ import logging
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
+from auth.utils import get_user_from_request
 from schemas.user_symptom import UserSymptomSchema, UserSymptomUpdateSchema
 from models.database import db
 from models.user_symptom import UserSymptom
 from api.utils import class_route
+from auth.middleware import jwt_authenticated
+from auth.utils import is_current_user_or_403
 
 logger = logging.getLogger()
 # Create a user blueprint
-user_symptom_endpoints = Blueprint("User Symptoms", __name__, url_prefix="/api/users")
+user_symptom_endpoints = Blueprint(
+    "My Symptoms", __name__, url_prefix="/api/my-symptoms"
+)
 
 
-@class_route(user_symptom_endpoints, "/<int:user_profile_id>/symptoms", "user_symptoms")
+@class_route(user_symptom_endpoints, "/", "my_symptoms")
 class UserSymptomsView(MethodView):
-    def get(self, user_profile_id: int):
-        users = db.session.scalars(
-            db.select(UserSymptom).filter_by(user_profile_id=user_profile_id)
+    @jwt_authenticated
+    def get(self):
+        user = get_user_from_request(request)
+        symptoms = db.session.scalars(
+            db.select(UserSymptom).filter_by(user_profile_id=user.id)
         ).all()
         schema = UserSymptomSchema(many=True)
-        return schema.dump(users)
+        return schema.dump(symptoms)
 
-    def post(self, user_profile_id):
+    @jwt_authenticated
+    def post(self):
+        user = get_user_from_request(request)
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
@@ -35,7 +44,7 @@ class UserSymptomsView(MethodView):
 
         symptom = UserSymptom(
             occurrence_date=data["occurrence_date"],
-            user_profile_id=user_profile_id,
+            user_profile_id=user.id,
             note=data.get("note", None),
             symptom_id=data["symptom_id"],
         )
@@ -48,21 +57,24 @@ class UserSymptomsView(MethodView):
 
 @class_route(
     user_symptom_endpoints,
-    "/<int:user_profile_id>/symptom/<int:symptom_id>",
+    "/<int:symptom_id>",
     "user_symptom_detail",
 )
 class UserSymptomDetailView(MethodView):
-    def get(self, user_profile_id, symptom_id):
+    @jwt_authenticated
+    def get(self, symptom_id):
+        user = get_user_from_request(request)
         symptom = db.session.get(UserSymptom, symptom_id)
-        if symptom.user_profile_id != user_profile_id:
+        if symptom.user_profile_id != user.id:
             return {
-                "message": f"User symptom {symptom_id} does not belong to User {user_profile_id}"
+                "message": f"User symptom {symptom_id} does not belong to User {user.email}"
             }, UNPROCESSABLE_ENTITY
 
         schema = UserSymptomSchema()
         return schema.dump(symptom)
 
-    def put(self, user_profile_id, symptom_id):
+    @jwt_authenticated
+    def put(self, symptom_id):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
@@ -74,10 +86,10 @@ class UserSymptomDetailView(MethodView):
             return err.messages, UNPROCESSABLE_ENTITY
 
         symptom = db.session.get(UserSymptom, symptom_id)
+        is_current_user_or_403(request, symptom.user_profile_id)
+
         if symptom is None:
-            return {
-                "message": f"User Symptom {user_profile_id} does not exist."
-            }, NOT_FOUND
+            return {"message": f"User Symptom {symptom_id} does not exist."}, NOT_FOUND
 
         if data.get("user_profile_id"):
             return {

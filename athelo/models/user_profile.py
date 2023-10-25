@@ -11,7 +11,7 @@ class UserProfile(TimestampMixin, Base):
     first_name: Mapped[str]
     last_name: Mapped[str]
     display_name: Mapped[str]
-    email: Mapped[str] = mapped_column(index=True)
+    email: Mapped[str] = mapped_column(index=True, unique=True)
     active: Mapped[bool] = mapped_column(default=True)
     user_symptoms: Mapped[List["UserSymptom"]] = relationship(
         back_populates="user_profile"

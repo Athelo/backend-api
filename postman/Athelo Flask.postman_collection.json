@@ -7,6 +7,47 @@
 	},
 	"item": [
 		{
+			"name": "Index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Protected",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjAzZDA3YmJjM2Q3NWM2OTQyNzUxMGY2MTc0ZWIyZjE2NTQ3ZDRhN2QiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NDc4MiwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNjk4MTk0NzgyLCJleHAiOjE2OTgxOTgzODIsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.Wu_moXmP_bKt7o55UJ63zz0WFFsll-gjobxbHX3WtrHpemhH3pbuUz94Fd4ymcRxV6sEaoRnhdTlzuIbH7XpPzMxopCBDtXk5xhCNUZLnf8kRpK3jkT_qb2dxcFGwYRNLU-_TVYsbdhaLx9zuQezSJPMPSVIXaUYHy0ElJzP1AtnfGzeo9fb97t8BGl_rkaC1xxgg7qu4wvXzsNzOvfdJXesu5v-a7pVoSWX7TREWV4QpqA36bB6IiYL9mE6-iM49ubv7wqX6uM3yrYzk6PSugNxfRKXv2DDBxrGkeVSuVdEzxEakoEBT7sHK_FPupwyXO731OBpZMLX5iv02LaNsA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/protected",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"protected"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Symptoms",
 			"request": {
 				"method": "GET",
@@ -31,7 +72,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Nausea\",\n    \"description\": \"\"\n}",
+					"raw": "{\n    \"name\": \"Issues gaining weight\",\n    \"description\": \"\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -39,13 +80,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/symptoms",
+					"raw": "{{baseUrl}}/api/symptoms/",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"symptoms"
+						"symptoms",
+						""
 					]
 				}
 			},
@@ -77,7 +119,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"display_name\": \"Jane Smith\",\n    \"email\": \"foo@bar.com\"\n}",
+					"raw": "{\n    \"first_name\": \"Stephanie\",\n    \"last_name\": \"Syed\",\n    \"display_name\": \"Stephanie S.\",\n    \"email\": \"stephaniemsyed@athelohealth.com\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -118,7 +160,26 @@
 			"response": []
 		},
 		{
-			"name": "User",
+			"name": "My profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/me/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"me",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "My profile",
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -132,14 +193,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/users/1",
+					"raw": "{{baseUrl}}/api/me",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"users",
-						"1"
+						"me"
 					]
 				}
 			},
@@ -151,15 +211,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/users/1/symptoms",
+					"raw": "{{baseUrl}}/api/my-symptoms",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"users",
-						"1",
-						"symptoms"
+						"my-symptoms"
 					]
 				}
 			},
@@ -172,7 +230,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"occurrence_date\": \"2023-10-24T04:50:44.819924\",\n    \"note\": \"This is a note\",\n    \"symptom_id\": 1\n}",
+					"raw": "{\n    \"occurrence_date\": \"2023-10-23T04:50:44.819924\",\n    \"note\": \"This is a note\",\n    \"symptom_id\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -180,19 +238,47 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/users/1/symptoms",
+					"raw": "{{baseUrl}}/api/my-symptoms",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"users",
-						"1",
-						"symptoms"
+						"my-symptoms"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjAzZDA3YmJjM2Q3NWM2OTQyNzUxMGY2MTc0ZWIyZjE2NTQ3ZDRhN2QiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NDc4MiwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNjk4MTk0NzgyLCJleHAiOjE2OTgxOTgzODIsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.Wu_moXmP_bKt7o55UJ63zz0WFFsll-gjobxbHX3WtrHpemhH3pbuUz94Fd4ymcRxV6sEaoRnhdTlzuIbH7XpPzMxopCBDtXk5xhCNUZLnf8kRpK3jkT_qb2dxcFGwYRNLU-_TVYsbdhaLx9zuQezSJPMPSVIXaUYHy0ElJzP1AtnfGzeo9fb97t8BGl_rkaC1xxgg7qu4wvXzsNzOvfdJXesu5v-a7pVoSWX7TREWV4QpqA36bB6IiYL9mE6-iM49ubv7wqX6uM3yrYzk6PSugNxfRKXv2DDBxrGkeVSuVdEzxEakoEBT7sHK_FPupwyXO731OBpZMLX5iv02LaNsA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
