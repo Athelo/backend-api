@@ -1,17 +1,19 @@
 firebase.initializeApp(config);
+let token = null;
 function initApp() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       document.getElementById("message").innerHTML = "Welcome, " + user.email;
       document.getElementById('signInButton').innerText = 'Sign Out';
-      document.getElementById('getTokenButton').disabled=false; 
+      document.getElementById('getTokenButton').disabled = false;
       document.getElementById('tokenDisplay').innerText = ''
-  }
-  else {
+    }
+    else {
       document.getElementById("message").innerHTML = "No user signed in.";
       document.getElementById('signInButton').innerText = 'Sign In with Google';
-      document.getElementById('getTokenButton').disabled=true;
-  }
+      document.getElementById('getTokenButton').disabled = true;
+      document.getElementById('tokenDisplay').innerText = ''
+    }
   });
 }
 window.onload = function () {
@@ -39,7 +41,7 @@ function signOut() {
   firebase
     .auth()
     .signOut()
-    .then(result => {})
+    .then(result => { })
     .catch(err => {
       console.log(`Error during sign out: ${err.message}`);
       window.alert(`Sign out failed. Retry or check your browser logs.`);
@@ -48,7 +50,6 @@ function signOut() {
 
 // Toggle Sign in/out button
 function toggle() {
-  console.log('toggle triggered')
   if (!firebase.auth().currentUser) {
     signIn();
   } else {
@@ -56,38 +57,51 @@ function toggle() {
   }
 }
 
+async function getToken() {
+  token = await firebase.auth().currentUser.getIdToken().catch((error) => {
+    document.getElementById('tokenDisplay').textContent = error.message
+  })
+  if (token) {
+    document.getElementById('tokenDisplay').textContent = `${token}`
+  } else {
+    document.getElementById('tokenDisplay').textContent = 'Unable to get token'
+  }
+
+}
+
 async function getPublicEndpoint() {
-  console.log('sending get to /public')
-  try {
-      const response = await fetch('/public', {
-        method: 'GET',
-      });
-      if (response.ok) {
-        const text = await response.text();
-        document.getElementById('publicEndpointMessage').innerText = text
-      }
-    } catch (err) {
-      document.getElementById('publicEndpointMessage').innerText= `Error when submitting vote: ${err}`
-      window.alert('Something went wrong... Please try again!');
-    }
-} 
+  await performGetAndUpdateElements('publicEndpointMessage', '/public')
+}
 
 async function getProtectedEndpoint() {
-  console.log('sending get to /protected')
-  console.log('sending get to /public')
-  try {
-      const response = await fetch('/protected', {
-        method: 'GET',
-        headers: {
-          Authorization: 'Bearer ${token}',
-        },
-      });
-      if (response.ok) {
-        const text = await response.text();
-        document.getElementById('protectedEndpointMessage').innerText = text
-      }
-    } catch (err) {
-      document.getElementById('protectedEndpointMessage').innerText= `Error when submitting vote: ${err}`
-      window.alert('Something went wrong... Please try again!');
+  await performGetAndUpdateElements('protectedEndpointMessage', '/protected')
+}
+
+async function performGetAndUpdateElements(element, endpoint) {
+  document.getElementById(element).innerText = ''
+  let req_headers = {}
+  if (token == null) {
+    req_headers = {
+      'Authorization': `Bearer ${token}`,
     }
+  }
+  try {
+    await fetch(endpoint, {
+      credentials: 'include',
+      method: 'GET',
+      headers: req_headers,
+    }).then(async (response) => {
+      if (response.ok) {
+        let text = await response.text();
+        document.getElementById(element).innerText = text
+      } else {
+        let text = await response.text();
+        document.getElementById(element).innerText = `${response.status}: ${response.statusText}\n${text}`
+      }
+    });
+
+  } catch (err) {
+    document.getElementById(element).innerText = `Error when submitting vote: ${err}`
+    window.alert('Something went wrong... Please try again!');
+  }
 }
