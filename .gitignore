@@ -24,4 +24,4 @@ htmlcov/
 .coverage.*
 *,cover
 
- application_default_credentials.json
+application_default_credentials.json

@@ -1,18 +1,20 @@
 firebase.initializeApp(config);
 let token = null;
+let curr_user = null;
 function initApp() {
   firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       document.getElementById("message").innerHTML = "Welcome, " + user.email;
       document.getElementById('signInButton').innerText = 'Sign Out';
-      document.getElementById('getTokenButton').disabled = false;
+      curr_user = user
       await getToken()
     }
     else {
       document.getElementById("message").innerHTML = "No user signed in.";
       document.getElementById('signInButton').innerText = 'Sign In with Google';
-      document.getElementById('getTokenButton').disabled = true;
       document.getElementById('tokenDisplay').innerText = ''
+      token = ''
+      curr_user = null
     }
   });
 }
@@ -57,6 +59,9 @@ function toggle() {
 }
 
 async function getToken() {
+  if (curr_user == null) {
+    window.alert("Please sign in to get a token.")
+  }
   token = await firebase.auth().currentUser.getIdToken().catch((error) => {
     document.getElementById('tokenDisplay').textContent = error.message
   })

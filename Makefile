@@ -15,3 +15,8 @@ flask-shell: ## Open flask shell in api container
 
 pdb: ## Attach to python container to debug (after adding import pdb; pdb.set_trace())
 	docker attach "$(docker-compose ps -q athelo-backend-api)"
+
+refresh-adc: ## refresh app default credentials so auth works
+	gcloud auth application-default login
+	cp ~/.config/gcloud/application_default_credentials.json ./
+	

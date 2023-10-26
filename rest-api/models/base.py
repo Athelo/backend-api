@@ -1,7 +1,10 @@
 from datetime import datetime
-
+from typing_extensions import Annotated
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import BigInteger
+
+bigint = Annotated[int, "bigint"]
 
 
 class Base(DeclarativeBase):
@@ -14,6 +17,7 @@ class Base(DeclarativeBase):
             "pk": "pk_%(table_name)s",
         }
     )
+    type_annotation_map = {bigint: BigInteger()}
 
 
 class TimestampMixin:

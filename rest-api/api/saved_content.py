@@ -64,11 +64,13 @@ class UserSymptomsView(MethodView):
         except ValidationError as err:
             return err.messages, UNPROCESSABLE_ENTITY
 
-        saved_content = db.session.scalars(
-            db.select(SavedContent).filter_by(
+        saved_content = (
+            db.session.query(SavedContent)
+            .filter_by(
                 user_profile_id=user.id, external_content_id=data["external_content_id"]
             )
-        ).one()
+            .one()
+        )
 
         db.session.delete(saved_content)
         db.session.commit()
