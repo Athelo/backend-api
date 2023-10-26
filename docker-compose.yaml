@@ -6,6 +6,7 @@ services:
     image: athelo-backend
     volumes: 
       - ./rest-api:/app
+      - ./application_default_credentials.json:/application_default_credentials.json
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -13,6 +14,8 @@ services:
       - 5001:5000
     environment:
     - ENVIRONMENT=local
+    - GOOGLE_APPLICATION_CREDENTIALS=/application_default_credentials.json
+    - GOOGLE_CLOUD_PROJECT=test-deploy-402816
     stdin_open: true
     tty: true 
     command: flask --debug run --host=0.0.0.0 --port=5000

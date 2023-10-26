@@ -23,9 +23,9 @@ class UserSymptomsView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
-        content = db.session.scalars(
-            db.select(SavedContent).filter_by(user_profile_id=user.id)
-        ).all()
+        content = (
+            db.session.query(SavedContent).filter_by(user_profile_id=user.id).all()
+        )
         schema = SavedContentSchema(many=True)
         return schema.dump(content)
 
