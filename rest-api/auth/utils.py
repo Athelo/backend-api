@@ -7,9 +7,7 @@ from sqlalchemy.exc import NoResultFound
 
 def get_user_from_request(request: Request):
     try:
-        user = db.session.execute(
-            db.select(UserProfile).filter_by(email=request.email)
-        ).scalar_one()
+        user = db.session.query(UserProfile).filter_by(email=request.email).one()
         return user
     except NoResultFound:
         raise NotFound()

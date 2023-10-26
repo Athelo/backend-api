@@ -9,6 +9,7 @@ from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.user_symptom import UserSymptom
+from models.symptom import Symptom
 from schemas.user_symptom import UserSymptomSchema, UserSymptomUpdateSchema
 
 logger = logging.getLogger()
@@ -23,9 +24,13 @@ class UserSymptomsView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
-        symptoms = db.session.scalars(
-            db.select(UserSymptom).filter_by(user_profile_id=user.id)
-        ).all()
+        symptoms = (
+            db.session.query(UserSymptom)
+            .filter_by(user_profile_id=user.id)
+            .join(Symptom)
+            .all()
+        )
+
         schema = UserSymptomSchema(many=True)
         return schema.dump(symptoms)
 

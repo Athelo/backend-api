@@ -11,6 +11,13 @@ make build-run
 ```
 to bring up a debug mode API container and a local postgres db container.
 
+If you want imports to be recognized by your IDE, create a virtual environment
+and install the dependecies locally. 
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 ### With GCP (*Untested*)
 
 To run the application locally using the Cloud SQL Python Connector, set

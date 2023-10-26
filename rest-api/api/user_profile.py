@@ -19,7 +19,7 @@ user_profile_endpoints = Blueprint("User Profiles", __name__, url_prefix="/api/u
 class UserProfilesView(MethodView):
     @jwt_authenticated
     def get(self):
-        users = db.session.scalars(db.select(UserProfile)).all()
+        users = db.session.scalars(db.select(UserProfile)).unique()
         schema = UserProfileSchema(many=True)
         return schema.dump(users)
 

@@ -53,6 +53,7 @@ class UserProfileDetailView(MethodView):
         if data.get("active"):
             user.active = (data.get("active", True),)
 
+        print(user)
         db.session.add(user)
         db.session.commit()
         result = schema.dump(user)
