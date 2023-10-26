@@ -29,17 +29,16 @@ class MessagesView(MethodView):
     @jwt_authenticated
     def get(self, message_channel_id):
         user = get_user_from_request(request)
-        try:
-            channel = db.session.get(MessageChannel, message_channel_id)
-        except NoResultFound as err:
+        channel = db.session.get(MessageChannel, message_channel_id)
+        if channel is None:
             abort(
                 BAD_REQUEST,
-                f"Cannot add message to channel id {channel.id} because it does not exist.",
+                f"Cannot add message to channel id {message_channel_id} because it does not exist or the current user is not a part of it.",
             )
 
         if user not in channel.users:
             return (
-                f"Cannot interact with a message channel that doesn't include the current user. Current user {user.id}.",
+                f"Cannot add message to channel id {message_channel_id} because it does not exist or the current user is not a part of it.",
                 UNAUTHORIZED,
             )
 

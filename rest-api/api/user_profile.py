@@ -8,7 +8,7 @@ from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.user_profile import UserProfile
-from schemas.user_profile import UserProfileSchema
+from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
 
 logger = logging.getLogger()
 
@@ -28,23 +28,32 @@ class UserProfilesView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserProfileSchema()
+        schema = UserProfileCreateSchema()
 
         try:
             data = schema.load(json_data)
         except ValidationError as err:
             return err.messages, UNPROCESSABLE_ENTITY
 
+        # check for existing user
+
+        user = (
+            db.session.query(UserProfile).filter_by(email=request.email).one_or_none()
+        )
+
+        if user is not None:
+            return "User with that email already exists", UNPROCESSABLE_ENTITY
+
         user_profile = UserProfile(
             first_name=data["first_name"],
             last_name=data["last_name"],
-            display_name=data.get("display_name", None),
-            email=data["email"],
+            display_name=data["display_name"],
+            email=request.email,
             active=data.get("active", True),
         )
         db.session.add(user_profile)
         db.session.commit()
-        result = schema.dump(user_profile)
+        result = UserProfileSchema().dump(user_profile)
         return result, CREATED
 
 

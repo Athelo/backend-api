@@ -47,13 +47,12 @@ class UserProfileDetailView(MethodView):
         if data.get("last_name"):
             user.last_name = data["last_name"]
         if data.get("display_name"):
-            user.display_name = (data.get("display_name", None),)
+            user.display_name = data["display_name"]
         if data.get("email"):
             user.email = (data["email"],)
         if data.get("active"):
             user.active = (data.get("active", True),)
 
-        print(user)
         db.session.add(user)
         db.session.commit()
         result = schema.dump(user)

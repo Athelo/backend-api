@@ -50,10 +50,9 @@ def validate_message_channel_request_participants(data: dict) -> List[UserProfil
             f"Message channels require at least two participants, request supplied {participants_length}.",
         )
     for user_id in data["users"]:
-        try:
-            requested_user = db.session.get(UserProfile, user_id)
-            participants.append(requested_user)
-        except NoResultFound:
+        requested_user = db.session.get(UserProfile, user_id)
+        participants.append(requested_user)
+        if requested_user is None:
             abort(
                 UNPROCESSABLE_ENTITY,
                 f"Cannot create or interact with channel because user {user_id} does not exist.",
@@ -65,12 +64,15 @@ def validate_message_channel_request_participants(data: dict) -> List[UserProfil
             f"Cannot interact with a message channel that doesn't include the current user. Current user {user.id}.",
         )
 
+    return participants
 
-def get_participants_hash(participants: List[int]) -> int:
+
+def get_participants_hash(participants: List[UserProfile]) -> int:
     user_ids = [u.id for u in participants]
     user_ids.sort()
     user_set = frozenset(user_ids)
-    return hash(user_set)
+    result = hash(user_set)
+    return result
 
 
 @class_route(message_channel_endpoints, "/", "message_channels")

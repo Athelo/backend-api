@@ -25,7 +25,13 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
     @wraps(func)
     def decorated_function(*args: a, **kwargs: a) -> a:
         header = request.headers.get("Authorization", None)
+        print(header)
         if header:
+            split_header = header.split(" ")
+            if len(split_header) != 2:
+                return Response(
+                    status=403, response=f"Error with authentication: malformed header."
+                )
             token = header.split(" ")[1]
             try:
                 decoded_token = firebase_admin.auth.verify_id_token(token)
