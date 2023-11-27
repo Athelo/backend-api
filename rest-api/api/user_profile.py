@@ -23,7 +23,6 @@ class UserProfilesView(MethodView):
         schema = UserProfileSchema(many=True)
         return schema.dump(users)
 
-    @jwt_authenticated
     def post(self):
         json_data = request.get_json()
         if not json_data:
@@ -38,7 +37,7 @@ class UserProfilesView(MethodView):
         # check for existing user
 
         user = (
-            db.session.query(UserProfile).filter_by(email=request.email).one_or_none()
+            db.session.query(UserProfile).filter_by(email=data["email"]).one_or_none()
         )
 
         if user is not None:
@@ -48,7 +47,7 @@ class UserProfilesView(MethodView):
             first_name=data["first_name"],
             last_name=data["last_name"],
             display_name=data["display_name"],
-            email=request.email,
+            email=data["email"],
             active=data.get("active", True),
         )
         db.session.add(user_profile)

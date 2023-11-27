@@ -25,7 +25,6 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
     @wraps(func)
     def decorated_function(*args: a, **kwargs: a) -> a:
         header = request.headers.get("Authorization", None)
-        print(header)
         if header:
             split_header = header.split(" ")
             if len(split_header) != 2:

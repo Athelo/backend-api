@@ -16,6 +16,7 @@ class UserProfileCreateSchema(Schema):
     first_name = fields.Str()
     last_name = fields.Str()
     display_name = fields.Str(allow_none=True)
+    email = fields.Str()
 
     @post_load
     def slugify_name(self, in_data, **kwargs):
