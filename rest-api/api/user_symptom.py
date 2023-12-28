@@ -1,5 +1,6 @@
 import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
+from sqlalchemy.sql import func
 
 from api.utils import class_route
 from auth.middleware import jwt_authenticated
@@ -11,15 +12,16 @@ from models.database import db
 from models.user_symptom import UserSymptom
 from models.symptom import Symptom
 from schemas.user_symptom import UserSymptomSchema, UserSymptomUpdateSchema
+from marshmallow import fields
 
 logger = logging.getLogger()
 
 user_symptom_endpoints = Blueprint(
-    "My Symptoms", __name__, url_prefix="/api/my-symptoms"
+    "My Symptoms", __name__, url_prefix="/api/v1/health/"
 )
 
 
-@class_route(user_symptom_endpoints, "/", "my_symptoms")
+@class_route(user_symptom_endpoints, "/user_symptoms", "my_symptoms")
 class UserSymptomsView(MethodView):
     @jwt_authenticated
     def get(self):
@@ -62,7 +64,7 @@ class UserSymptomsView(MethodView):
 
 @class_route(
     user_symptom_endpoints,
-    "/<int:symptom_id>",
+    "/user_symptoms/<int:symptom_id>",
     "user_symptom_detail",
 )
 class UserSymptomDetailView(MethodView):
@@ -129,3 +131,32 @@ class UserSymptomDetailView(MethodView):
         db.session.delete(symptom)
         db.session.commit()
         return schema.dump(symptom), ACCEPTED
+
+
+@class_route(user_symptom_endpoints, "/user_symptoms/summary", "my_symptoms_summary")
+class UserSymptomsSummaryView(MethodView):
+    @jwt_authenticated
+    def get(self):
+        user = get_user_from_request(request)
+      
+        symptoms = (
+            db.session.query(func.count(UserSymptom.symptom_id), Symptom.id, Symptom.name, Symptom.description)
+            .filter_by(user_profile_id=user.id)
+            .join(Symptom)
+            .group_by(UserSymptom.symptom_id, Symptom.id, Symptom.name, Symptom.description)
+            .all()
+        )
+
+        symptom_summary = []
+        for symptom_data in symptoms:
+            count, symptom_id, name, description = symptom_data
+            symptom_summary.append({
+                "occurrences_count": count,
+                "symptom": {
+                    "id": symptom_id,
+                    "name": name,
+                    "description": description
+                }
+            })
+
+        return symptom_summary

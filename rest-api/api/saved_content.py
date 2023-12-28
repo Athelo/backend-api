@@ -19,7 +19,7 @@ saved_content_endpoints = Blueprint(
 
 
 @class_route(saved_content_endpoints, "/", "saved_content")
-class UserSymptomsView(MethodView):
+class SavedContentView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)

@@ -12,7 +12,7 @@ from schemas.symptom import SymptomSchema
 
 logger = logging.getLogger()
 
-symptom_endpoints = Blueprint("Symptom", __name__, url_prefix="/api/symptoms")
+symptom_endpoints = Blueprint("Symptom", __name__, url_prefix="/api/v1/health/symptoms")
 
 
 @class_route(symptom_endpoints, "/", "symptoms")
