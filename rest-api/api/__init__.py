@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from api.main import main_endpoints
+from api.common import common_endpoints
 from api.my_profile import my_profile_endpoints
 from api.saved_content import saved_content_endpoints
 from api.symptom import symptom_endpoints
@@ -12,6 +13,7 @@ from api.message_channel import message_channel_endpoints
 
 blueprints = [
     main_endpoints,
+    common_endpoints,
     symptom_endpoints,
     user_feeling_endpoints,
     user_profile_endpoints,
