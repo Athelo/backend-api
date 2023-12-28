@@ -59,7 +59,7 @@ class UserProfileDetailView(MethodView):
         return result, ACCEPTED
 
 
-@class_route(my_profile_endpoints, "/delete", "delete-profile")
+@class_route(my_profile_endpoints, "/delete/", "delete-profile")
 class UserProfileDeleteView(MethodView):
     @jwt_authenticated
     def delete(self):

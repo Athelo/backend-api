@@ -24,7 +24,7 @@ logger = logging.getLogger()
 message_endpoints = Blueprint("Messages", __name__, url_prefix="/api/message-channels")
 
 
-@class_route(message_endpoints, "/<int:message_channel_id>/messages", "messages")
+@class_route(message_endpoints, "/<int:message_channel_id>/messages/", "messages")
 class MessagesView(MethodView):
     @jwt_authenticated
     def get(self, message_channel_id):

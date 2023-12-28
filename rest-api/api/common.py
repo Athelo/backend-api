@@ -10,7 +10,7 @@ logger = logging.getLogger()
 common_endpoints = Blueprint("Common", __name__, url_prefix="/api/v1/common")
 
 
-@class_route(common_endpoints, "/enums", "enums")
+@class_route(common_endpoints, "/enums/", "enums")
 class EnumsView(MethodView):
     def get(self):
         return {
