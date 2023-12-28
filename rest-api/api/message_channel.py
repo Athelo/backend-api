@@ -110,7 +110,7 @@ class MessageChannelsView(MethodView):
         return result, CREATED
 
 
-@message_channel_endpoints.route("/search", methods=["POST"])
+@message_channel_endpoints.route("/search/", methods=["POST"])
 @jwt_authenticated
 def find_channel_by_members():
     data = validate_message_channel_request_data()

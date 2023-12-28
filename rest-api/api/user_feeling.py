@@ -19,7 +19,7 @@ user_feeling_endpoints = Blueprint(
 )
 
 
-@class_route(user_feeling_endpoints, "/user_feeling", "my_feelings")
+@class_route(user_feeling_endpoints, "/user_feeling/", "my_feelings")
 class UserFeelingsView(MethodView):
     @jwt_authenticated
     def get(self):

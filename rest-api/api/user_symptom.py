@@ -21,7 +21,7 @@ user_symptom_endpoints = Blueprint(
 )
 
 
-@class_route(user_symptom_endpoints, "/user_symptoms", "my_symptoms")
+@class_route(user_symptom_endpoints, "/user_symptoms/", "my_symptoms")
 class UserSymptomsView(MethodView):
     @jwt_authenticated
     def get(self):
@@ -64,7 +64,7 @@ class UserSymptomsView(MethodView):
 
 @class_route(
     user_symptom_endpoints,
-    "/user_symptoms/<int:symptom_id>",
+    "/user_symptoms/<int:symptom_id>/",
     "user_symptom_detail",
 )
 class UserSymptomDetailView(MethodView):
@@ -133,7 +133,7 @@ class UserSymptomDetailView(MethodView):
         return schema.dump(symptom), ACCEPTED
 
 
-@class_route(user_symptom_endpoints, "/user_symptoms/summary", "my_symptoms_summary")
+@class_route(user_symptom_endpoints, "/user_symptoms/summary/", "my_symptoms_summary")
 class UserSymptomsSummaryView(MethodView):
     @jwt_authenticated
     def get(self):
