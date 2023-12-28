@@ -12,7 +12,7 @@ from schemas.user_profile import UserProfileSchema
 
 logger = logging.getLogger()
 
-my_profile_endpoints = Blueprint("My Profile", __name__, url_prefix="/api/me")
+my_profile_endpoints = Blueprint("My Profile", __name__, url_prefix="/api/v1/users/me")
 
 
 @class_route(my_profile_endpoints, "/", "my_profile_detail")
@@ -57,3 +57,13 @@ class UserProfileDetailView(MethodView):
         db.session.commit()
         result = schema.dump(user)
         return result, ACCEPTED
+
+
+@class_route(my_profile_endpoints, "/delete", "delete-profile")
+class UserProfileDeleteView(MethodView):
+    @jwt_authenticated
+    def delete(self):
+        user = get_user_from_request(request)
+        db.session.delete(user)
+        db.session.commit()
+        return {}, ACCEPTED

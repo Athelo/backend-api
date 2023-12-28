@@ -12,10 +12,10 @@ from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
 
 logger = logging.getLogger()
 
-user_profile_endpoints = Blueprint("User Profiles", __name__, url_prefix="/api/users")
+user_profile_endpoints = Blueprint("User Profiles", __name__, url_prefix="/api/v1/users")
 
 
-@class_route(user_profile_endpoints, "/", "user_profiles")
+@class_route(user_profile_endpoints, "/user-profiles", "user_profiles")
 class UserProfilesView(MethodView):
     @jwt_authenticated
     def get(self):
@@ -57,7 +57,7 @@ class UserProfilesView(MethodView):
         return result, CREATED
 
 
-@class_route(user_profile_endpoints, "/<user_profile_id>", "user_profile_detail")
+@class_route(user_profile_endpoints, "/user-profiles/<user_profile_id>", "user_profile_detail")
 class UserProfileDetailView(MethodView):
     @jwt_authenticated
     def get(self, user_profile_id):

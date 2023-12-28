@@ -15,11 +15,11 @@ from schemas.user_feeling import UserFeelingSchema, UserFeelingUpdateSchema
 logger = logging.getLogger()
 
 user_feeling_endpoints = Blueprint(
-    "My Feelings", __name__, url_prefix="/api/my-feelings"
+    "My Feelings", __name__, url_prefix="/api/v1/health/"
 )
 
 
-@class_route(user_feeling_endpoints, "/", "my_feelings")
+@class_route(user_feeling_endpoints, "/user_feeling", "my_feelings")
 class UserFeelingsView(MethodView):
     @jwt_authenticated
     def get(self):
