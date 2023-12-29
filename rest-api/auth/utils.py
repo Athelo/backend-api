@@ -4,9 +4,13 @@ from models.user_profile import UserProfile
 from werkzeug.exceptions import Unauthorized, NotFound
 from sqlalchemy.exc import NoResultFound
 
+import logging
+logger = logging.getLogger()
+
 
 def get_user_from_request(request: Request):
     try:
+        logger.info("here I am")
         user = db.session.query(UserProfile).filter_by(email=request.email).one()
         return user
     except NoResultFound:
