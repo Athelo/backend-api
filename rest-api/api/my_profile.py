@@ -9,6 +9,7 @@ from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from schemas.user_profile import UserProfileSchema
+from api.constants import USER_PROFILE_RETURN_SCHEMA
 
 logger = logging.getLogger()
 
@@ -20,8 +21,23 @@ class UserProfileDetailView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
-        schema = UserProfileSchema()
-        return schema.dump(user)
+        results = []
+
+        if user:
+            res = USER_PROFILE_RETURN_SCHEMA.copy()
+            res["id"] = user.id
+            res["first_name"] = user.first_name
+            res["last_name"] = user.last_name
+            res["display_name"] = user.display_name
+            res["email"] = user.email
+            results.append(res)
+    
+        return {
+            "count":len(results),
+            "next":None,
+            "previous":None,
+            "results": results 
+        }
 
     @jwt_authenticated
     def put(self):
