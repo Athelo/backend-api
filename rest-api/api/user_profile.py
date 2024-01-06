@@ -1,7 +1,7 @@
 import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route
+from api.utils import class_route, generate_paginated_dict
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, request
 from flask.views import MethodView
@@ -21,7 +21,8 @@ class UserProfilesView(MethodView):
     def get(self):
         users = db.session.scalars(db.select(UserProfile)).unique()
         schema = UserProfileSchema(many=True)
-        return schema.dump(users)
+        res = schema.dump(users)
+        return generate_paginated_dict(res)
 
     @jwt_authenticated
     def post(self):
