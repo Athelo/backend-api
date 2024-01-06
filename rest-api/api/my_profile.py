@@ -1,7 +1,7 @@
 import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route
+from api.utils import class_route, generate_paginated_dict
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
@@ -21,7 +21,6 @@ class UserProfileDetailView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
-        results = []
 
         if user:
             res = USER_PROFILE_RETURN_SCHEMA.copy()
@@ -30,14 +29,8 @@ class UserProfileDetailView(MethodView):
             res["last_name"] = user.last_name
             res["display_name"] = user.display_name
             res["email"] = user.email
-            results.append(res)
     
-        return {
-            "count":len(results),
-            "next":None,
-            "previous":None,
-            "results": results 
-        }
+        return generate_paginated_dict(res)
 
     @jwt_authenticated
     def put(self):

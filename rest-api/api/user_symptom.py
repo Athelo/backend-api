@@ -2,7 +2,7 @@ import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 from sqlalchemy.sql import func
 
-from api.utils import class_route
+from api.utils import class_route, generate_paginated_dict
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
 from flask import Blueprint, abort, request
@@ -34,7 +34,8 @@ class UserSymptomsView(MethodView):
         )
 
         schema = UserSymptomSchema(many=True)
-        return schema.dump(symptoms)
+        res = schema.dump(symptoms)
+        return generate_paginated_dict(res)
 
     @jwt_authenticated
     def post(self):
