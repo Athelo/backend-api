@@ -161,3 +161,36 @@ class UserSymptomsSummaryView(MethodView):
             })
 
         return symptom_summary
+
+@class_route(user_symptom_endpoints, "/user_feelings_and_symptoms_per_day/", "feelings_and_symptoms_per_day")
+class FeelingsSymptomsPerDay(MethodView):
+    @jwt_authenticated
+    def get(self):
+        by_symptoms = request.args.get('by_symptoms') is not None
+        by_feelings = request.args.get('by_feelings') is not None
+
+        if by_feelings:
+            return {"message": "Feelings by day is not supported"}, BAD_REQUEST
+
+        if not by_symptoms:
+            return generate_paginated_dict({})
+
+        user = get_user_from_request(request)
+        symptoms = (
+            db.session.query(UserSymptom)
+            .filter_by(user_profile_id=user.id)
+            .join(Symptom)
+            .all()
+        )
+
+        map_by_date = {}
+        date_format = '%Y-%m-%d'
+
+        for user_sym in symptoms:
+            symptom_date = user_sym.occurrence_date.strftime(date_format) 
+            if symptom_date not in map_by_date:
+                map_by_date[symptom_date] = set()
+            
+            map_by_date[symptom_date].add(user_sym.symptom.name)
+
+        return generate_paginated_dict({k: ', '.join(v) for k,v in map_by_date.items()})
