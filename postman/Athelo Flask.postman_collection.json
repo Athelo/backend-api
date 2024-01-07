@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "fe85d184-76e4-4af1-a78c-f479541353ee",
+		"_postman_id": "f6fa3ed3-b29a-48d2-aa5e-ba1ca3bf8267",
 		"name": "Athelo Flask",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28286974"
+		"_exporter_id": "4212763"
 	},
 	"item": [
 		{
@@ -31,7 +31,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjAzZDA3YmJjM2Q3NWM2OTQyNzUxMGY2MTc0ZWIyZjE2NTQ3ZDRhN2QiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NDc4MiwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNjk4MTk0NzgyLCJleHAiOjE2OTgxOTgzODIsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.Wu_moXmP_bKt7o55UJ63zz0WFFsll-gjobxbHX3WtrHpemhH3pbuUz94Fd4ymcRxV6sEaoRnhdTlzuIbH7XpPzMxopCBDtXk5xhCNUZLnf8kRpK3jkT_qb2dxcFGwYRNLU-_TVYsbdhaLx9zuQezSJPMPSVIXaUYHy0ElJzP1AtnfGzeo9fb97t8BGl_rkaC1xxgg7qu4wvXzsNzOvfdJXesu5v-a7pVoSWX7TREWV4QpqA36bB6IiYL9mE6-iM49ubv7wqX6uM3yrYzk6PSugNxfRKXv2DDBxrGkeVSuVdEzxEakoEBT7sHK_FPupwyXO731OBpZMLX5iv02LaNsA",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhM2JkODk4ZGE1MGE4OWViOWUxY2YwYjdhN2VmZTM1OTNkNDEwNjgiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NzA4NSwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzAyMTU5NTg2LCJleHAiOjE3MDIxNjMxODYsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.I7kpRZKo3Ji4XAVsJElab8Bc7zRqSl8Ug4-OJqCxyTyBrKvD7cyHvzvYQeIC9VMsuxTH-wDGv-pPVCR7P6P2l2FoBt6OW-lxVxAG2dqvPH4vwAVIlFTLqthftoQkYN3nOdhgn8lywEDVO-1ajVKmXxsekcu5jowG84SkVi5Qm4jjLakCWSW7fTse8gq3atlwY_fHHQADe6ew_ig-EEF4btFiW9yxv9PMOzhz59Khk71LmJT46zhcfebiYHLMj2NhgLRLWsuGTjqKqKCrOoSPP2XbDDvfuk7T2XKIl5QH23Jl_osUivtgU1_OmpqS6yXQn48Ef9Gws3V7eqgjvED3Xw",
 							"type": "string"
 						}
 					]
@@ -51,17 +51,50 @@
 			"response": []
 		},
 		{
-			"name": "Symptoms",
+			"name": "Common Enums",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhM2JkODk4ZGE1MGE4OWViOWUxY2YwYjdhN2VmZTM1OTNkNDEwNjgiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NzA4NSwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzAyMTU5NTg2LCJleHAiOjE3MDIxNjMxODYsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.I7kpRZKo3Ji4XAVsJElab8Bc7zRqSl8Ug4-OJqCxyTyBrKvD7cyHvzvYQeIC9VMsuxTH-wDGv-pPVCR7P6P2l2FoBt6OW-lxVxAG2dqvPH4vwAVIlFTLqthftoQkYN3nOdhgn8lywEDVO-1ajVKmXxsekcu5jowG84SkVi5Qm4jjLakCWSW7fTse8gq3atlwY_fHHQADe6ew_ig-EEF4btFiW9yxv9PMOzhz59Khk71LmJT46zhcfebiYHLMj2NhgLRLWsuGTjqKqKCrOoSPP2XbDDvfuk7T2XKIl5QH23Jl_osUivtgU1_OmpqS6yXQn48Ef9Gws3V7eqgjvED3Xw",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/symptoms",
+					"raw": "{{baseUrl}}/api/v1/common/enums/",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
+						"v1",
+						"common",
+						"enums",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Symptoms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/health/symptoms",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"health",
 						"symptoms"
 					]
 				}
@@ -102,12 +135,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/users/",
+					"raw": "{{baseUrl}}/api/v1/users/",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
+						"v1",
 						"users",
 						""
 					]
@@ -116,13 +150,13 @@
 			"response": []
 		},
 		{
-			"name": "Users",
+			"name": "User Profiles",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"first_name\": \"Stephanie\",\n    \"last_name\": \"Syed\",\n    \"display_name\": \"Stephanie S.\",\n    \"email\": \"stephanie@athelohealth.com\"\n}",
+					"raw": "{\n    \"first_name\": \"Marq\",\n    \"last_name\": \"Short\",\n    \"display_name\": \"Marq Short\"\n    // \"email\": \"marq@athelohealth.com\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -130,13 +164,15 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/users/",
+					"raw": "{{baseUrl}}/api/v1/users/user-profiles/",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
+						"v1",
 						"users",
+						"user-profiles",
 						""
 					]
 				}
@@ -149,14 +185,36 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/users/1",
+					"raw": "{{baseUrl}}/api/v1/users/1",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
+						"v1",
 						"users",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/users/user-profiles/5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"user-profiles",
+						"5"
 					]
 				}
 			},
@@ -209,18 +267,121 @@
 			"response": []
 		},
 		{
-			"name": "User Symptoms",
+			"name": "Delete Profile",
 			"request": {
-				"method": "GET",
+				"method": "DELETE",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{baseUrl}}/api/my-symptoms",
+					"raw": "{{baseUrl}}/api/v1/users/me/delete",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"my-symptoms"
+						"v1",
+						"users",
+						"me",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Feelings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/health/user_feeling/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"health",
+						"user_feeling",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Feelings and Symptoms Per Day",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/health/user_feeling/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"health",
+						"user_feeling",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Feelings",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"occurrence_date\": \"2023-10-22T04:50:44.819924\",\n    \"note\": \"This is a note\",\n    \"general_feeling\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/my-feelings/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"my-feelings",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Symptoms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/health/user-symptoms/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"health",
+						"user-symptoms",
+						""
 					]
 				}
 			},
@@ -249,6 +410,27 @@
 						"api",
 						"my-symptoms",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Symptoms Summary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/health/user_symptoms/summary",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"health",
+						"user_symptoms",
+						"summary"
 					]
 				}
 			},
@@ -307,7 +489,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n}",
+					"raw": "{\n   // \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n    \"external_content_id\": \"9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -377,7 +559,10 @@
 			"name": "Messages by Channel",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": ""
+				}
 			},
 			"response": []
 		},
@@ -416,7 +601,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjAzZDA3YmJjM2Q3NWM2OTQyNzUxMGY2MTc0ZWIyZjE2NTQ3ZDRhN2QiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODI4MTg4NSwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNjk4Mjk3NDQ3LCJleHAiOjE2OTgzMDEwNDcsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.a7vpu96FjvYtnWwDrpi_BB6qVQ_syGxNcskmImgy_C3Mc_1FZ0zMTEYEMvmw2M-08aRa0SVB19OZ-P4Ahd9LkPIXhAsnlF0ZdmsiYss_8QHy1kQbU-5v5SfMRCyzMc57YAsdRFu13gJyy48T7vkWwZ5g5xI5LZeWjPpcjFfOLatoIxEdGuzsli-42rcLZNh-T9QN9MeuNSNbxD7GjBesfPvao0j_jGfVMDWUlBbrapw5C8VseT7winlh-36NdJyGKEimTg0YPOqSO0gW-hVaJoHIMwxiJobT68cq8LoHZS04t_iyrxVgH3hJzMjCk6qfJ0C_E4KY6lBW1S_uvTF6WA",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQxNjg5NDE1ZWMyM2EzMzdlMmJiYWE1ZTNlNjhiNjZkYzk5MzY4ODQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTWFycSBTaG9ydCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJakJybUk3MjJRdVpYRXJ4Ny1vVTFSdDhuV1BsTUh6Vl9JSlRXZkhaUzc9czk2LWMiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGVzdC1kZXBsb3ktNDAyODE2IiwiYXVkIjoidGVzdC1kZXBsb3ktNDAyODE2IiwiYXV0aF90aW1lIjoxNzAxNzM0NDYxLCJ1c2VyX2lkIjoiQ21ERGs3YjVTZlN0T2JKVFdvUDE3Nld5Wk9HMyIsInN1YiI6IkNtRERrN2I1U2ZTdE9iSlRXb1AxNzZXeVpPRzMiLCJpYXQiOjE3MDQ2NDU3MTQsImV4cCI6MTcwNDY0OTMxNCwiZW1haWwiOiJtYXJxQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjExNzU1NzIxMDg1MzE4MDg2NjUxMCJdLCJlbWFpbCI6WyJtYXJxQGF0aGVsb2hlYWx0aC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.jf9B4IMU9fK9Mgq5T9Ukq1ryBvytg-tX1fwtzeHbDh1Pz0Ei-_F2tVLSE_NfZ6kmEorrSld3ymSrzSqsX14E_lHm3qvcdgA40mpVBkJroPiwTukeS2NiksDjHyptBIjxBNbanvjrBFarCL0yM5LNnuxcv8FJQWJR7UngwMBAh2qQiZuygF2aznDySmx1RgIaNS4zKG166HsDutKtz6CCxk4hU40bVmNTah6AmV7ipyPBrZJoMP7x4gQThU77JKXyNjqQSfXtm6Zyqc312S1V29NMWIg6Jt0A7yojwmDfvKx9jkU0O_2d24gDxbjnc-pw6WiUhQ9ID2_M3l2oRlD_rw",
 				"type": "string"
 			}
 		]
