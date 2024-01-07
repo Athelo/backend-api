@@ -33,5 +33,8 @@ COPY ./rest-api ./
 # Copy any certificates if present.
 COPY ./certs /app/certs
 
+# make start up script executable
+RUN chmod +x ../test/test.sh 
+
 
 CMD ["./start.sh"]
