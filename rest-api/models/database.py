@@ -2,7 +2,9 @@ import os
 
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from google.cloud.sql.connector import Connector, IPTypes
+from models.base import Base
 
 # initialize Python Connector object
 connector = Connector()
@@ -25,5 +27,6 @@ def getconn():
 
 
 # initialize the app with the extension
-db = SQLAlchemy()
+db = SQLAlchemy(model_class=Base)
+migrate = Migrate()
 __all__ = ["base"]
