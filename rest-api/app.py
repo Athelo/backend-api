@@ -6,13 +6,7 @@ from api import blueprints
 from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
-from models.base import Base
-from models.database import db
-from models.saved_content import SavedContent
-from models.symptom import Symptom
-from models.user_profile import UserProfile
-from models.user_symptom import UserSymptom
-from models.user_feeling import UserFeeling
+from models.database import db, migrate
 
 
 def set_config(app: Flask):
@@ -36,8 +30,7 @@ def create_app() -> Flask:
 
     with app.app_context():
         db.init_app(app)
-        Base.metadata.create_all(bind=db.engine)
-
+        migrate.init_app(app, db)
         for blueprint in blueprints:
             app.register_blueprint(blueprint=blueprint)
 
