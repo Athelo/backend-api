@@ -7,7 +7,6 @@ from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
-from flask_migrate import upgrade
 
 
 def set_config(app: Flask):
@@ -32,7 +31,7 @@ def create_app() -> Flask:
     with app.app_context():
         db.init_app(app)
         migrate.init_app(app, db)
-        upgrade()
+
         for blueprint in blueprints:
             app.register_blueprint(blueprint=blueprint)
 
