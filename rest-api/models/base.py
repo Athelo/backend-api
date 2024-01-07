@@ -17,7 +17,6 @@ class Base(DeclarativeBase):
             "pk": "pk_%(table_name)s",
         }
     )
-    # type_annotation_map = {bigint: BigInteger()}
 
 
 class TimestampMixin:

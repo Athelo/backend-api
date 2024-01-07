@@ -3,6 +3,7 @@ from typing import List
 from models.base import Base, TimestampMixin, bigint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Column, Table, ForeignKey
+from sqlalchemy.dialects.postgresql import BIGINT
 
 
 # note for a Core table, we use the sqlalchemy.Column construct,
@@ -24,4 +25,9 @@ class MessageChannel(TimestampMixin, Base):
         lazy="joined",
     )
     users: Mapped[List["UserProfile"]] = relationship(secondary=channel_members_table)
-    users_hash: Mapped[bigint] = mapped_column(nullable=False, index=True, unique=True)
+    users_hash: Mapped[int] = mapped_column(
+        BIGINT,
+        nullable=False,
+        index=True,
+        unique=True,
+    )
