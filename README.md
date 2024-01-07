@@ -18,6 +18,13 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+#### Migrations
+1. Make your changes to files in `rest-api/models`. Any new models must extend Base from models.base
+2. Import any new models in `rest-api/models/__init__.py`
+3. Run `make bash-shell`
+4. In the shell, run `flask db migrate -m "<migration description>"`
+5. Still in the shell, test upgrade (`flask db upgrade`) and downgrade (`flask db downgrade`)
+
 ### With GCP (*Untested*)
 
 To run the application locally using the Cloud SQL Python Connector, set
