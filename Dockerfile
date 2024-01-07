@@ -34,7 +34,7 @@ COPY ./rest-api ./
 COPY ./certs /app/certs
 
 # make start up script executable
-RUN chmod +x ../test/test.sh 
+RUN chmod +x ./start.sh 
 
 
 CMD ["./start.sh"]
