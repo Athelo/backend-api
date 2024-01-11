@@ -13,7 +13,7 @@ from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
 logger = logging.getLogger()
 
 user_profile_endpoints = Blueprint("User Profiles", __name__, url_prefix="/api/v1/users")
-
+# rule change
 
 @class_route(user_profile_endpoints, "/user-profiles/", "user_profiles")
 class UserProfilesView(MethodView):
