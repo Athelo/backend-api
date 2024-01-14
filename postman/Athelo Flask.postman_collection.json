@@ -71,8 +71,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"common",
 						"enums",
 						""
@@ -92,8 +90,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"health",
 						"symptoms"
 					]
@@ -121,7 +117,7 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
+						"health",
 						"symptoms",
 						""
 					]
@@ -140,8 +136,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"users",
 						""
 					]
@@ -169,8 +163,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"users",
 						"user-profiles",
 						""
@@ -190,8 +182,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"users",
 						"1"
 					]
@@ -210,8 +200,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"users",
 						"user-profiles",
 						"5"
@@ -231,7 +219,7 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
+						"users",
 						"me"
 					]
 				}
@@ -258,7 +246,7 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
+						"users",
 						"me",
 						""
 					]
@@ -286,8 +274,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"users",
 						"me",
 						"delete"
@@ -307,8 +293,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"health",
 						"user_feeling",
 						""
@@ -328,10 +312,8 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"health",
-						"user_feeling",
+						"user_feelings_and_symptoms_per_day",
 						""
 					]
 				}
@@ -358,7 +340,7 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
+						"health",
 						"my-feelings",
 						""
 					]
@@ -377,10 +359,8 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"health",
-						"user-symptoms",
+						"user_symptoms",
 						""
 					]
 				}
@@ -407,8 +387,8 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"my-symptoms",
+						"health",
+						"user_symptoms",
 						""
 					]
 				}
@@ -426,8 +406,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
 						"health",
 						"user_symptoms",
 						"summary"
@@ -447,7 +425,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"saved-content"
 					]
 				}
@@ -474,7 +451,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"saved-content",
 						""
 					]
@@ -502,7 +478,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"saved-content",
 						""
 					]
@@ -521,7 +496,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"message-channels"
 					]
 				}
@@ -548,7 +522,6 @@
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"message-channels"
 					]
 				}
@@ -581,12 +554,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/message-channels/21/messages",
+					"raw": "{{baseUrl}}/message-channels/21/messages",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
 						"message-channels",
 						"21",
 						"messages"
