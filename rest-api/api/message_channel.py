@@ -22,7 +22,7 @@ from sqlalchemy.exc import IntegrityError, NoResultFound
 logger = logging.getLogger()
 
 message_channel_endpoints = Blueprint(
-    "Message Channels", __name__, url_prefix="/api/message-channels"
+    "Message Channels", __name__, url_prefix="/api/v1/message-channels"
 )
 
 

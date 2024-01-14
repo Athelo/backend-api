@@ -14,7 +14,7 @@ from schemas.saved_content import SavedContentCreateUpdateSchema, SavedContentSc
 logger = logging.getLogger()
 
 saved_content_endpoints = Blueprint(
-    "My Saved Content", __name__, url_prefix="/api/saved-content"
+    "My Saved Content", __name__, url_prefix="/api/v1/saved-content"
 )
 
 

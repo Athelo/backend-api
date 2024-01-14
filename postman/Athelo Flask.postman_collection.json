@@ -66,7 +66,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/common/enums/",
+					"raw": "{{baseUrl}}/common/enums/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -87,7 +87,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/health/symptoms",
+					"raw": "{{baseUrl}}/health/symptoms",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -116,7 +116,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/symptoms/",
+					"raw": "{{baseUrl}}/health/symptoms/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -135,7 +135,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/users/",
+					"raw": "{{baseUrl}}/users/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -164,7 +164,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/users/user-profiles/",
+					"raw": "{{baseUrl}}/users/user-profiles/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -185,7 +185,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/users/1",
+					"raw": "{{baseUrl}}/users/1",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -205,7 +205,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/users/user-profiles/5",
+					"raw": "{{baseUrl}}/users/user-profiles/5",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -226,7 +226,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/me",
+					"raw": "{{baseUrl}}/users/me",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -253,7 +253,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/me/",
+					"raw": "{{baseUrl}}/users/me/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -281,7 +281,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/users/me/delete",
+					"raw": "{{baseUrl}}/users/me/delete",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -302,7 +302,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/health/user_feeling/",
+					"raw": "{{baseUrl}}/health/user_feeling/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -323,7 +323,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/health/user_feeling/",
+					"raw": "{{baseUrl}}/health/user_feelings_and_symptoms_per_day/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -353,7 +353,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/my-feelings/",
+					"raw": "{{baseUrl}}/health/user_feeling/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -372,7 +372,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/health/user-symptoms/",
+					"raw": "{{baseUrl}}/health/user_symptoms/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -402,7 +402,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/my-symptoms/",
+					"raw": "{{baseUrl}}/health/user_symptoms/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -421,7 +421,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/health/user_symptoms/summary",
+					"raw": "{{baseUrl}}/health/user_symptoms/summary",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -442,7 +442,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/saved-content",
+					"raw": "{{baseUrl}}/saved-content",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -469,7 +469,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/saved-content/",
+					"raw": "{{baseUrl}}/saved-content/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -497,7 +497,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/saved-content/",
+					"raw": "{{baseUrl}}/saved-content/",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -516,7 +516,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/message-channels",
+					"raw": "{{baseUrl}}/message-channels",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -543,7 +543,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/message-channels",
+					"raw": "{{baseUrl}}/message-channels",
 					"host": [
 						"{{baseUrl}}"
 					],
