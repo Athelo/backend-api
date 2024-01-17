@@ -1,10 +1,10 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from models.user_feeling import UserFeeling
+from models.patient_feelings import PatientFeelings
 
 
 class UserFeelingSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = UserFeeling 
+        model = PatientFeelings 
         load_instance = True
 
     created_at = auto_field(dump_only=True)
@@ -14,5 +14,5 @@ class UserFeelingSchema(SQLAlchemyAutoSchema):
 
 class UserFeelingUpdateSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = UserFeeling 
+        model = PatientFeelings 
         exclude = ("id", "created_at", "updated_at", "user_profile_id")

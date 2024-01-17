@@ -9,7 +9,7 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from models.user_feeling import UserFeeling
+from models.patient_feelings import PatientFeelings
 from schemas.user_feeling import UserFeelingSchema, UserFeelingUpdateSchema
 
 logger = logging.getLogger()
@@ -25,7 +25,7 @@ class UserFeelingsView(MethodView):
     def get(self):
         user = get_user_from_request(request)
         feelings = (
-            db.session.query(UserFeeling)
+            db.session.query(PatientFeelings)
             .filter_by(user_profile_id=user.id)
             .all()
         )
@@ -47,7 +47,7 @@ class UserFeelingsView(MethodView):
         except ValidationError as err:
             return err.messages, UNPROCESSABLE_ENTITY
 
-        feeling = UserFeeling(
+        feeling = PatientFeelings(
             occurrence_date=data["occurrence_date"],
             user_profile_id=user.id,
             note=data.get("note", None),

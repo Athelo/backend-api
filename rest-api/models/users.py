@@ -15,7 +15,7 @@ class Users(TimestampMixin, Base):
     active: Mapped[bool] = mapped_column(default=True)
     birthday: Mapped[str] = mapped_column(default="")
     phone: Mapped[str] = mapped_column(default="")
-    user_feelings: Mapped[List["UserFeeling"]] = relationship(
+    patient_feelings: Mapped[List["PatientFeelings"]] = relationship(
         back_populates="users", lazy="joined"
     )
     patient_symptoms: Mapped[List["PatientSymptoms"]] = relationship(
