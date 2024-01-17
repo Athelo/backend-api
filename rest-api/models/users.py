@@ -18,7 +18,7 @@ class Users(TimestampMixin, Base):
     user_feelings: Mapped[List["UserFeeling"]] = relationship(
         back_populates="users", lazy="joined"
     )
-    user_symptoms: Mapped[List["UserSymptom"]] = relationship(
+    patient_symptoms: Mapped[List["PatientSymptoms"]] = relationship(
         back_populates="users", lazy="joined"
     )
     saved_content: Mapped[List["SavedContent"]] = relationship(

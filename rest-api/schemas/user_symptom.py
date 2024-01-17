@@ -1,13 +1,13 @@
 from marshmallow import Schema
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from models.user_symptom import UserSymptom
+from models.patient_symptoms import PatientSymptoms
 from schemas.symptom import SymptomSchema
 from marshmallow import fields
 
 
 class UserSymptomSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = UserSymptom
+        model = PatientSymptoms
         load_instance = True
 
     symptom = fields.Pluck(SymptomSchema, "name")
@@ -18,6 +18,6 @@ class UserSymptomSchema(SQLAlchemyAutoSchema):
 
 class UserSymptomUpdateSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = UserSymptom
+        model = PatientSymptoms
         include_fk = True
         exclude = ("id", "created_at", "updated_at", "user_profile_id")
