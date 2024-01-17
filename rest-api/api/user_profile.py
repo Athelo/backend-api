@@ -7,7 +7,7 @@ from flask import Blueprint, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from models.user_profile import UserProfile
+from models.users import Users
 from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
 
 logger = logging.getLogger()
@@ -19,7 +19,7 @@ user_profile_endpoints = Blueprint("User Profiles", __name__, url_prefix="/api/v
 class UserProfilesView(MethodView):
     @jwt_authenticated
     def get(self):
-        users = db.session.scalars(db.select(UserProfile)).unique()
+        users = db.session.scalars(db.select(Users)).unique()
         schema = UserProfileSchema(many=True)
         res = schema.dump(users)
         return generate_paginated_dict(res)
@@ -39,13 +39,13 @@ class UserProfilesView(MethodView):
         # check for existing user
 
         user = (
-            db.session.query(UserProfile).filter_by(email=request.email).one_or_none()
+            db.session.query(Users).filter_by(email=request.email).one_or_none()
         )
 
         if user is not None:
             return "User with that email already exists", UNPROCESSABLE_ENTITY
 
-        user_profile = UserProfile(
+        user_profile = Users(
             first_name=data["first_name"],
             last_name=data["last_name"],
             display_name=data["display_name"],
@@ -62,6 +62,6 @@ class UserProfilesView(MethodView):
 class UserProfileDetailView(MethodView):
     @jwt_authenticated
     def get(self, user_profile_id):
-        user = db.session.get(UserProfile, user_profile_id)
+        user = db.session.get(Users, user_profile_id)
         schema = UserProfileSchema()
         return schema.dump(user)

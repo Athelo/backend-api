@@ -1,11 +1,11 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from models.user_profile import UserProfile
+from models.users import Users
 from marshmallow import Schema, fields, post_load
 
 
 class UserProfileSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = UserProfile
+        model = Users
 
     created_at = auto_field(dump_only=True)
     updated_at = auto_field(dump_only=True)

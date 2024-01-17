@@ -10,8 +10,8 @@ class UserFeeling(TimestampMixin, Base):
     __tablename__ = "user_feelings"
     id: Mapped[int] = mapped_column(primary_key=True)
     occurrence_date: Mapped[datetime] = mapped_column(index=True)
-    user_profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
-    user_profile: Mapped["UserProfile"] = relationship(
+    users_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    users: Mapped["Users"] = relationship(
         back_populates="user_feelings", lazy="joined"
     )
     note: Mapped[str] = mapped_column(nullable=True)

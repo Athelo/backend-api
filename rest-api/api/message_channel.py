@@ -15,7 +15,7 @@ from marshmallow import ValidationError
 from models.database import db
 from schemas.message_channel import MessageChannelSchema, MessageChannelRequestSchema
 from models.message_channel import MessageChannel
-from models.user_profile import UserProfile
+from models.users import Users
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 
@@ -40,7 +40,7 @@ def validate_message_channel_request_data() -> dict:
     return data
 
 
-def validate_message_channel_request_participants(data: dict) -> List[UserProfile]:
+def validate_message_channel_request_participants(data: dict) -> List[Users]:
     user = get_user_from_request(request)
     participants = []
     participants_length = len(data.get("users", None))
@@ -50,7 +50,7 @@ def validate_message_channel_request_participants(data: dict) -> List[UserProfil
             f"Message channels require at least two participants, request supplied {participants_length}.",
         )
     for user_id in data["users"]:
-        requested_user = db.session.get(UserProfile, user_id)
+        requested_user = db.session.get(Users, user_id)
         participants.append(requested_user)
         if requested_user is None:
             abort(
@@ -67,7 +67,7 @@ def validate_message_channel_request_participants(data: dict) -> List[UserProfil
     return participants
 
 
-def get_participants_hash(participants: List[UserProfile]) -> int:
+def get_participants_hash(participants: List[Users]) -> int:
     user_ids = [u.id for u in participants]
     user_ids.sort()
     user_set = frozenset(user_ids)
@@ -83,7 +83,7 @@ class MessageChannelsView(MethodView):
         query = (
             db.session.query(MessageChannel)
             .join(MessageChannel.users)
-            .filter(UserProfile.id == user.id)
+            .filter(Users.id == user.id)
         )
 
         channel = db.session.scalars(query).all()
