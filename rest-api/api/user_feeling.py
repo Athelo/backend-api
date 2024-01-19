@@ -10,14 +10,13 @@ from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.patient_feelings import PatientFeelings
-from schemas.user_feeling import UserFeelingSchema, UserFeelingUpdateSchema
+from schemas.patient_feelings import PatientFeelingSchema, PatientFeelingUpdateSchema
 
 logger = logging.getLogger()
 
 user_feeling_endpoints = Blueprint(
     "My Feelings", __name__, url_prefix="/api/v1/health/"
 )
-
 
 @class_route(user_feeling_endpoints, "/user_feeling/", "my_feelings")
 class UserFeelingsView(MethodView):
@@ -30,7 +29,7 @@ class UserFeelingsView(MethodView):
             .all()
         )
 
-        schema = UserFeelingSchema(many=True)
+        schema = PatientFeelingSchema(many=True)
         res = schema.dump(feelings)
         return generate_paginated_dict(res)
 
@@ -40,7 +39,7 @@ class UserFeelingsView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserFeelingUpdateSchema()
+        schema = PatientFeelingUpdateSchema()
 
         try:
             data = schema.load(json_data)
