@@ -8,7 +8,7 @@ from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.users import Users
-from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
+from schemas.patient_profile import PatientProfileSchema, PatientProfileCreateSchema
 
 logger = logging.getLogger()
 
@@ -20,7 +20,7 @@ class UserProfilesView(MethodView):
     @jwt_authenticated
     def get(self):
         users = db.session.scalars(db.select(Users)).unique()
-        schema = UserProfileSchema(many=True)
+        schema = PatientProfileSchema(many=True)
         res = schema.dump(users)
         return generate_paginated_dict(res)
 
@@ -29,7 +29,7 @@ class UserProfilesView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserProfileCreateSchema()
+        schema = PatientProfileCreateSchema()
 
         try:
             data = schema.load(json_data)
@@ -54,7 +54,7 @@ class UserProfilesView(MethodView):
         )
         db.session.add(user_profile)
         db.session.commit()
-        result = UserProfileSchema().dump(user_profile)
+        result = PatientProfileSchema().dump(user_profile)
         return result, CREATED
 
 
@@ -63,5 +63,5 @@ class UserProfileDetailView(MethodView):
     @jwt_authenticated
     def get(self, user_profile_id):
         user = db.session.get(Users, user_profile_id)
-        schema = UserProfileSchema()
+        schema = PatientProfileSchema()
         return schema.dump(user)

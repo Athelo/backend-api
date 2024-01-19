@@ -11,7 +11,7 @@ from marshmallow import ValidationError
 from models.database import db
 from models.patient_symptoms import PatientSymptoms
 from models.symptom import Symptom
-from schemas.user_symptom import UserSymptomSchema, UserSymptomUpdateSchema
+from schemas.patient_symptom import PatientSymptomSchema, PatientSymptomUpdateSchema
 from marshmallow import fields
 
 logger = logging.getLogger()
@@ -33,7 +33,7 @@ class UserSymptomsView(MethodView):
             .all()
         )
 
-        schema = UserSymptomSchema(many=True)
+        schema = PatientSymptomSchema(many=True)
         res = schema.dump(symptoms)
         return generate_paginated_dict(res)
 
@@ -43,7 +43,7 @@ class UserSymptomsView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserSymptomUpdateSchema()
+        schema = PatientSymptomUpdateSchema()
 
         try:
             data = schema.load(json_data)
@@ -78,7 +78,7 @@ class UserSymptomDetailView(MethodView):
                 "message": f"User symptom {symptom_id} does not belong to User {user.email}"
             }, UNPROCESSABLE_ENTITY
 
-        schema = UserSymptomSchema()
+        schema = PatientSymptomSchema()
         return schema.dump(symptom)
 
     @jwt_authenticated
@@ -86,7 +86,7 @@ class UserSymptomDetailView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserSymptomUpdateSchema(partial=True)
+        schema = PatientSymptomUpdateSchema(partial=True)
 
         try:
             data = schema.load(json_data)
@@ -117,7 +117,7 @@ class UserSymptomDetailView(MethodView):
         return result, ACCEPTED
 
     def delete(self, user_profile_id, symptom_id):
-        schema = UserSymptomSchema()
+        schema = PatientSymptomSchema()
         symptom = db.session.get(PatientSymptoms, symptom_id)
         if symptom is None:
             return {
