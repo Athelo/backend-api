@@ -2,7 +2,6 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.users import Users
 from marshmallow import Schema, fields, post_load
 
-
 class UserProfileSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Users
@@ -10,7 +9,6 @@ class UserProfileSchema(SQLAlchemyAutoSchema):
     created_at = auto_field(dump_only=True)
     updated_at = auto_field(dump_only=True)
     id = auto_field(dump_only=True)
-
 
 class UserProfileCreateSchema(Schema):
     first_name = fields.Str()
