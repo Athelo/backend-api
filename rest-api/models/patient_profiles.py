@@ -17,7 +17,7 @@ class PatientProfiles(TimestampMixin, Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["Users"] = relationship(
-        back_populates="user_feelings", lazy="joined"
+        back_populates="patient_profiles", lazy="joined"
     )
     active: Mapped[bool] = mapped_column(default=True)
     cancer_status: Mapped[CancerStatus]

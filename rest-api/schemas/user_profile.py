@@ -1,4 +1,5 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
+from marshmallow_sqlalchemy.fields import Nested
 from models.users import Users
 from marshmallow import Schema, fields, post_load
 
@@ -9,6 +10,8 @@ class UserProfileSchema(SQLAlchemyAutoSchema):
     created_at = auto_field(dump_only=True)
     updated_at = auto_field(dump_only=True)
     id = auto_field(dump_only=True)
+    patient_profile = Nested('PatientProfileSchema', many=False, exclude=('user',))
+
 
 class UserProfileCreateSchema(Schema):
     first_name = fields.Str()

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from models.base import Base, TimestampMixin
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.types import Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -14,4 +14,4 @@ class ProviderProfiles(TimestampMixin, Base):
         back_populates="provider_profiles", lazy="joined"
     )
     active: Mapped[bool] = mapped_column(default=True)
-    appointment_buffer_sec: Mapped[int] = mapped_column(Integer)
+    appointment_buffer_sec: Mapped[int] = mapped_column(Integer())

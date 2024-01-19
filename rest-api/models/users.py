@@ -24,3 +24,16 @@ class Users(TimestampMixin, Base):
     saved_content: Mapped[List["SavedContent"]] = relationship(
         back_populates="users", lazy="joined"
     )
+    patient_profiles: Mapped["PatientProfiles"] = relationship(
+        "PatientProfiles", back_populates="user", uselist=False, lazy="joined"
+    )
+    admin_profiles: Mapped["AdminProfiles"] = relationship(
+        "AdminProfiles", back_populates="user", uselist=False, lazy="joined"
+    )
+    caregiver_profiles: Mapped["CaregiverProfiles"] = relationship(
+        "CaregiverProfiles", back_populates="user", uselist=False, lazy="joined"
+    )
+   
+    provider_profiles: Mapped["ProviderProfiles"] = relationship(
+        "ProviderProfiles", back_populates="user", uselist=False, lazy="joined"
+    )
