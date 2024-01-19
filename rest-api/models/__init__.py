@@ -5,3 +5,7 @@ from models.patient_symptoms import PatientSymptoms
 from models.patient_feelings import PatientFeelings
 from models.message_channel import MessageChannel
 from models.message import Message
+from models.caregiver_profiles import CaregiverProfiles
+from models.patient_profiles import PatientProfiles
+from models.provider_profiles import ProviderProfiles
+from models.admin_profiles import AdminProfiles
