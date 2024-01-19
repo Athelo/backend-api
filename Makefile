@@ -24,5 +24,5 @@ pdb: ## Attach to python container to debug (after adding import pdb; pdb.set_tr
 
 refresh-adc: ## refresh app default credentials so auth works
 	gcloud auth application-default login
-	cp ~/.config/gcloud/application_default_credentials.json ./
+	cp ~/.config/gcloud/application_default_credentials.json .
 	
