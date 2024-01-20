@@ -14,7 +14,6 @@ logger = logging.getLogger()
 
 user_profile_endpoints = Blueprint("User Profiles", __name__, url_prefix="/api/v1/users")
 
-
 @class_route(user_profile_endpoints, "/user-profiles/", "user_profiles")
 class UserProfilesView(MethodView):
     @jwt_authenticated

@@ -35,13 +35,11 @@ class UserFeelingsView(MethodView):
 
     @jwt_authenticated
     def post(self):
-        print('route hit')
         user = get_user_from_request(request)
-        print(user)
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        print(json_data)
+    
         schema = PatientFeelingUpdateSchema()
 
         try:

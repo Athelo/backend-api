@@ -11,6 +11,6 @@ class AdminProfiles(TimestampMixin, Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["Users"] = relationship(
-        back_populates="admin_profiles", lazy="joined"
+        back_populates="admin_profiles", lazy="joined", single_parent=True
     )
     active: Mapped[bool] = mapped_column(default=True)

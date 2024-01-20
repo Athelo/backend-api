@@ -15,9 +15,9 @@ class CancerStatus(enum.Enum):
 class PatientProfiles(TimestampMixin, Base):
     __tablename__ = "patient_profiles"
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True)
     user: Mapped["Users"] = relationship(
-        back_populates="patient_profiles", lazy="joined"
+        back_populates="patient_profiles", lazy="joined", single_parent=True
     )
     active: Mapped[bool] = mapped_column(default=True)
     cancer_status: Mapped[CancerStatus]
