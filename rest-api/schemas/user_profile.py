@@ -2,15 +2,30 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from marshmallow_sqlalchemy.fields import Nested
 from models.users import Users
 from marshmallow import Schema, fields, post_load
+# from schemas.
 
 class UserProfileSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Users
 
+    id = auto_field(dump_only=True)
+    first_name = auto_field(dump_only=True)
+    last_name = auto_field(dump_only=True)
+    display_name = auto_field(dump_only=True)
+    email = auto_field(dump_only=True)
+    active = auto_field(dump_only=True)
+    birthday = auto_field(dump_only=True)
+    phone = auto_field(dump_only=True) 
+    
+    patient_feelings = Nested("PatientFeelingsSchema", many=True, exclude=('user',), dump_only=True)
+    patient_symptoms = Nested("PatientSymptomsSchema", many=True, exclude=('user',), dump_only=True)
+    saved_content = Nested("SavedContentSchema", many=True, exclude=('user',), dump_only=True)
+    patient_profiles = Nested("PatientProfilesSchema", many=False, exclude=('user',), dump_only=True)
+    admin_profiles = Nested("AdminProfilesSchema", many=False, exclude=('user',), dump_only=True)
+    caregiver_profiles = Nested("CaregiverProfilesSchema", many=False, exclude=('user',), dump_only=True)
+    provider_profiles = Nested("ProviderProfilesSchema", many=False, exclude=('user',), dump_only=True)
     created_at = auto_field(dump_only=True)
     updated_at = auto_field(dump_only=True)
-    id = auto_field(dump_only=True)
-    patient_profile = Nested('PatientProfileSchema', many=False, exclude=('user',))
 
 
 class UserProfileCreateSchema(Schema):
