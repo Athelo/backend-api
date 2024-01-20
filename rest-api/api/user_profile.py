@@ -8,7 +8,7 @@ from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.users import Users
-from schemas.patient_profile import PatientProfileSchema, PatientProfileCreateSchema
+from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
 
 logger = logging.getLogger()
 
@@ -19,8 +19,8 @@ user_profile_endpoints = Blueprint("User Profiles", __name__, url_prefix="/api/v
 class UserProfilesView(MethodView):
     @jwt_authenticated
     def get(self):
-        users = db.session.scalars(db.select(Users)).unique()
-        schema = PatientProfileSchema(many=True)
+        users = db.session.scalars(db.select(UserProfile)).unique()
+        schema = UserProfileSchema(many=True)
         res = schema.dump(users)
         return generate_paginated_dict(res)
 
@@ -29,7 +29,7 @@ class UserProfilesView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = PatientProfileCreateSchema()
+        schema = UserProfileCreateSchema()
 
         try:
             data = schema.load(json_data)
@@ -54,7 +54,7 @@ class UserProfilesView(MethodView):
         )
         db.session.add(user_profile)
         db.session.commit()
-        result = PatientProfileSchema().dump(user_profile)
+        result = UserProfileSchema().dump(user_profile)
         return result, CREATED
 
 
@@ -63,5 +63,5 @@ class UserProfileDetailView(MethodView):
     @jwt_authenticated
     def get(self, user_profile_id):
         user = db.session.get(Users, user_profile_id)
-        schema = PatientProfileSchema()
+        schema = UserProfileSchema()
         return schema.dump(user)
