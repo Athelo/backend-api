@@ -29,7 +29,11 @@ class UserProfileDetailView(MethodView):
             res["last_name"] = user.last_name
             res["display_name"] = user.display_name
             res["email"] = user.email
-    
+            res["is_caregiver"] = user.caregiver_profiles is not None
+            res["is_patient"] = user.patient_profiles is not None
+            res["is_provider"] = user.patient_profiles is not None
+            res["is_admin"] = user.patient_profiles is not None
+
         return generate_paginated_dict(res)
 
     @jwt_authenticated
