@@ -4,8 +4,9 @@ from http.client import (
     CREATED,
     UNAUTHORIZED,
     UNPROCESSABLE_ENTITY,
+    CONFLICT,
+    NOT_FOUND,
 )
-from typing import List
 from api.utils import class_route
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
@@ -13,104 +14,161 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from schemas.community_thread import CommunityThreadSchema, CommunityThreadListSchema
+from schemas.community_thread import (
+    CommunityThreadSchema,
+    CommunityThreadCreateSchema,
+    group_message_schema_from_community_thread,
+)
 from models.community_thread import CommunityThread
-from models.user_profile import UserProfile
-from sqlalchemy.exc import IntegrityError, NoResultFound
+from sqlalchemy.exc import IntegrityError
 from api.constants import V1_API_PREFIX
+from api.utils import generate_paginated_dict
 
 
 logger = logging.getLogger()
 
-message_channel_endpoints = Blueprint(
-    "Community Threads", __name__, url_prefix=f"{V1_API_PREFIX}/community-threads"
+community_thread_endpoints = Blueprint(
+    # "Community Threads", __name__, url_prefix=f"{V1_API_PREFIX}/community-threads"
+    "Community Threads",
+    __name__,
+    url_prefix=f"{V1_API_PREFIX}/chats/group-conversations",
 )
 
 
-def validate_message_channel_request_data() -> dict:
-    json_data = request.get_json()
-    if not json_data:
-        abort(BAD_REQUEST, "No input data provided.")
-    schema = MessageChannelRequestSchema()
-
-    try:
-        data = schema.load(json_data)
-    except ValidationError as err:
-        abort(UNPROCESSABLE_ENTITY, err.messages)
-
-    return data
-
-
-def validate_message_channel_request_participants(data: dict) -> List[UserProfile]:
-    user = get_user_from_request(request)
-    participants = []
-    participants_length = len(data.get("users", None))
-    if participants_length < 2:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Message channels require at least two participants, request supplied {participants_length}.",
-        )
-    for user_id in data["users"]:
-        requested_user = db.session.get(UserProfile, user_id)
-        participants.append(requested_user)
-        if requested_user is None:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create or interact with channel because user {user_id} does not exist.",
-            )
-
-    if user not in participants:
-        abort(
-            UNAUTHORIZED,
-            f"Cannot interact with a message channel that doesn't include the current user. Current user {user.id}.",
-        )
-
-    return participants
-
-
-@class_route(message_channel_endpoints, "/", "")
-class CommunityThreadView(MethodView):
+@class_route(community_thread_endpoints, "/", "")
+class CommunityThreadListView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
+        # TODO: optimize to pull the set of joined/unjoined from the db instead of filtering in python
         community_threads = (
             db.session.query(CommunityThread).join(CommunityThread.users).all()
         )
-        joined = [thread for thread in community_threads if user in thread.participants]
-        not_joined = set(community_threads) - set(joined)
-        schema = CommunityThreadListSchema()
-        return schema.dump(
-            {"joined_community_threads": joined, "other_community_threads": not_joined}
-        )
+
+        joined = [
+            group_message_schema_from_community_thread(thread, True)
+            for thread in community_threads
+            if user in thread.participants
+        ]
+        not_joined = [
+            group_message_schema_from_community_thread(thread, False)
+            for thread in set(community_threads) - set(joined)
+        ]
+        results = joined + not_joined
+        generate_paginated_dict(results)
 
     @jwt_authenticated
     def post(self):
-        data = validate_message_channel_request_data()
-        participants = validate_message_channel_request_participants(data)
-        channel = MessageChannel(
-            users=participants,
-            users_hash=hash(get_participants_hash(participants)),
+        user = get_user_from_request(request)
+        if user.admin_profiles is None:
+            abort(UNAUTHORIZED, "Only admins can create new community threads")
+
+        json_data = request.get_json()
+        if not json_data:
+            abort(BAD_REQUEST, "No input data provided.")
+
+        schema = CommunityThreadCreateSchema()
+
+        try:
+            data = schema.load(json_data)
+        except ValidationError as err:
+            abort(UNPROCESSABLE_ENTITY, err.messages)
+
+        thread = CommunityThread(
+            display_name=data["display_name"], owner=user, participants=[user]
         )
         try:
-            db.session.add(channel)
+            db.session.add(thread)
             db.session.commit()
         except IntegrityError as e:
             abort(
                 UNPROCESSABLE_ENTITY,
                 f"Cannot create chat because {e.orig.args[0]['M']}",
             )
-        result = MessageChannelSchema().dump(channel)
+        result = CommunityThreadSchema().dump(thread)
         return result, CREATED
 
 
-@message_channel_endpoints.route("/search/", methods=["POST"])
-@jwt_authenticated
-def find_channel_by_members():
-    data = validate_message_channel_request_data()
-    participants = validate_message_channel_request_participants(data)
-    channel = (
-        db.session.query(MessageChannel)
-        .filter(MessageChannel.users_hash == get_participants_hash(participants))
+@community_thread_endpoints.route("/<int:thread_id>", methods=["GET"])
+def get_community_thread(thread_id: int):
+    user = get_user_from_request(request)
+    community_thread = (
+        db.session.query(CommunityThread)
+        .where(CommunityThread.id == thread_id)
+        .join(CommunityThread.users)
         .one_or_none()
     )
-    return MessageChannelSchema().dump(channel)
+
+    belong_to = any(
+        participant
+        for participant in community_thread.participants
+        if participant.id == user.id
+    )
+
+    return group_message_schema_from_community_thread(community_thread, belong_to)
+
+
+@jwt_authenticated
+@community_thread_endpoints.route("/<int:thread_id>/join", methods=["GET"])
+def join_community_thread(thread_id: int):
+    user = get_user_from_request(request)
+    community_thread = (
+        db.session.query(CommunityThread)
+        .where(CommunityThread.id == thread_id)
+        .join(CommunityThread.users)
+        .one_or_none()
+    )
+
+    if community_thread is None:
+        abort(NOT_FOUND, f"thread {thread_id} does not exist")
+
+    if any(
+        participant
+        for participant in community_thread.participants
+        if participant.id == user.id
+    ):
+        abort(CONFLICT, "user is already in the thread")
+
+    community_thread.participants.append(user)
+
+    try:
+        db.session.add(community_thread)
+        db.session.commit()
+    except IntegrityError as e:
+        abort(
+            UNPROCESSABLE_ENTITY,
+            f"Cannot join community thread because {e.orig.args[0]['M']}",
+        )
+
+
+@jwt_authenticated
+@community_thread_endpoints.route("/<int:thread_id>/leave", methods=["GET"])
+def leave_community_thread(thread_id: int):
+    user = get_user_from_request(request)
+    community_thread = (
+        db.session.query(CommunityThread)
+        .where(CommunityThread.id == thread_id)
+        .join(CommunityThread.users)
+        .one_or_none()
+    )
+
+    if community_thread is None:
+        abort(NOT_FOUND, f"thread {thread_id} does not exist")
+
+    if not any(
+        participant
+        for participant in community_thread.participants
+        if participant.id == user.id
+    ):
+        abort(CONFLICT, "user is not in thread")
+
+    community_thread.participants.remove(user)
+
+    try:
+        db.session.add(community_thread)
+        db.session.commit()
+    except IntegrityError as e:
+        abort(
+            UNPROCESSABLE_ENTITY,
+            f"Cannot join community thread because {e.orig.args[0]['M']}",
+        )
