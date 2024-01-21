@@ -7,7 +7,6 @@ from marshmallow import Schema, fields, post_load
 class AdminProfileSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = AdminProfile
-        include_fk = True
 
     id = auto_field(dump_only=True)
 

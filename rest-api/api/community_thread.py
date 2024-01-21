@@ -19,7 +19,7 @@ from schemas.community_thread import (
     CommunityThreadCreateSchema,
     group_message_schema_from_community_thread,
 )
-from models.community_thread import CommunityThread
+from models.community_thread import CommunityThread, ThreadParticipants
 from sqlalchemy.exc import IntegrityError
 from api.constants import V1_API_PREFIX
 from api.utils import generate_paginated_dict
@@ -41,26 +41,39 @@ class CommunityThreadListView(MethodView):
     def get(self):
         user = get_user_from_request(request)
         # TODO: optimize to pull the set of joined/unjoined from the db instead of filtering in python
-        community_threads = (
-            db.session.query(CommunityThread).join(CommunityThread.users).all()
+        user_threads = (
+            db.session.query(ThreadParticipants.thread_id)
+            .where(ThreadParticipants.user_profile_id == user.id)
+            .all()
+        )
+        user_thread_ids = [thread[0] for thread in user_threads]
+        joined_community_threads = (
+            db.session.query(CommunityThread)
+            .where(CommunityThread.id.in_(user_thread_ids))
+            .all()
         )
 
-        joined = [
+        unjoined_community_threads = (
+            db.session.query(CommunityThread)
+            .where(CommunityThread.id.notin_(user_thread_ids))
+            .all()
+        )
+
+        joined_group_messages = [
             group_message_schema_from_community_thread(thread, True)
-            for thread in community_threads
-            if user in thread.participants
+            for thread in joined_community_threads
         ]
-        not_joined = [
+        not_joined_group_messagees = [
             group_message_schema_from_community_thread(thread, False)
-            for thread in set(community_threads) - set(joined)
+            for thread in unjoined_community_threads
         ]
-        results = joined + not_joined
-        generate_paginated_dict(results)
+        results = joined_group_messages + not_joined_group_messagees
+        return generate_paginated_dict(results)
 
     @jwt_authenticated
-    def post(self):
+    def put(self):
         user = get_user_from_request(request)
-        if user.admin_profiles is None:
+        if user.admin_profiles is None or not user.admin_profiles.active:
             abort(UNAUTHORIZED, "Only admins can create new community threads")
 
         json_data = request.get_json()
@@ -75,7 +88,10 @@ class CommunityThreadListView(MethodView):
             abort(UNPROCESSABLE_ENTITY, err.messages)
 
         thread = CommunityThread(
-            display_name=data["display_name"], owner=user, participants=[user]
+            display_name=data["display_name"],
+            description=data["description"],
+            owner_id=user.admin_profiles.id,
+            participants=[user],
         )
         try:
             db.session.add(thread)

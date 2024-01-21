@@ -19,7 +19,7 @@ def group_message_schema_from_community_thread(
     return {
         "id": thread.id,
         "name": thread.display_name,
-        "owner": thread.owner,
+        "owner": UserProfileSchema().dump(thread.owner.user),
         "chat_room_identifier": thread.id,
         "user_profiles": UserProfileSchema(many=True).dump(thread.participants),
         "chat_room_type": 2,

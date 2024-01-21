@@ -1,571 +1,761 @@
 {
 	"info": {
-		"_postman_id": "f6fa3ed3-b29a-48d2-aa5e-ba1ca3bf8267",
+		"_postman_id": "ff6b410a-17b4-49ce-b27a-12d2bec5424e",
 		"name": "Athelo Flask",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "4212763"
+		"_exporter_id": "28286974"
 	},
 	"item": [
 		{
-			"name": "Index",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/public",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"public"
-					]
+			"name": "Profiles",
+			"item": [
+				{
+					"name": "Users Profiles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/user-profiles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"user-profiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Profiles",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Stephanie NOT ADMIN\",\n    \"last_name\": \"Syed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/user-profiles/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"user-profiles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/user-profiles/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"user-profiles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Stephanie NOT ADMIN\",\n    \"last_name\": \"Syed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/me/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Profile",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/me/delete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Saved Content",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/saved-content",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"saved-content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Saved Content",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n    \"external_content_id\": \"9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\" // 9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/saved-content/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"saved-content",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Saved Content",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   // \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n    \"external_content_id\": \"9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/saved-content/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"saved-content",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me/admin/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"admin",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me/admin/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"admin",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Protected",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
+			"name": "Debug",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/public",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Protected",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhM2JkODk4ZGE1MGE4OWViOWUxY2YwYjdhN2VmZTM1OTNkNDEwNjgiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NzA4NSwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzAyMTU5NTg2LCJleHAiOjE3MDIxNjMxODYsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.I7kpRZKo3Ji4XAVsJElab8Bc7zRqSl8Ug4-OJqCxyTyBrKvD7cyHvzvYQeIC9VMsuxTH-wDGv-pPVCR7P6P2l2FoBt6OW-lxVxAG2dqvPH4vwAVIlFTLqthftoQkYN3nOdhgn8lywEDVO-1ajVKmXxsekcu5jowG84SkVi5Qm4jjLakCWSW7fTse8gq3atlwY_fHHQADe6ew_ig-EEF4btFiW9yxv9PMOzhz59Khk71LmJT46zhcfebiYHLMj2NhgLRLWsuGTjqKqKCrOoSPP2XbDDvfuk7T2XKIl5QH23Jl_osUivtgU1_OmpqS6yXQn48Ef9Gws3V7eqgjvED3Xw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/protected",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"protected"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Common Enums",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhM2JkODk4ZGE1MGE4OWViOWUxY2YwYjdhN2VmZTM1OTNkNDEwNjgiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NzA4NSwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzAyMTU5NTg2LCJleHAiOjE3MDIxNjMxODYsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.I7kpRZKo3Ji4XAVsJElab8Bc7zRqSl8Ug4-OJqCxyTyBrKvD7cyHvzvYQeIC9VMsuxTH-wDGv-pPVCR7P6P2l2FoBt6OW-lxVxAG2dqvPH4vwAVIlFTLqthftoQkYN3nOdhgn8lywEDVO-1ajVKmXxsekcu5jowG84SkVi5Qm4jjLakCWSW7fTse8gq3atlwY_fHHQADe6ew_ig-EEF4btFiW9yxv9PMOzhz59Khk71LmJT46zhcfebiYHLMj2NhgLRLWsuGTjqKqKCrOoSPP2XbDDvfuk7T2XKIl5QH23Jl_osUivtgU1_OmpqS6yXQn48Ef9Gws3V7eqgjvED3Xw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/common/enums/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"common",
+								"enums",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Symptoms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health/symptoms",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"symptoms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Symptoms",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Issues gaining weight\",\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/health/symptoms/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"symptoms",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Feelings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health/user_feeling/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"user_feeling",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Feelings and Symptoms Per Day",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health/user_feelings_and_symptoms_per_day/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"user_feelings_and_symptoms_per_day",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Feelings",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"occurrence_date\": \"2023-10-22T04:50:44.819924\",\n    \"note\": \"This is a note\",\n    \"general_feeling\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/health/my-feelings/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"my-feelings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Symptoms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health/user_symptoms/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"user_symptoms",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Symptoms",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"occurrence_date\": \"2023-10-22T04:50:44.819924\",\n    \"note\": \"This is a note\",\n    \"symptom_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/health/user_symptoms/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"user_symptoms",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Symptoms Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health/user_symptoms/summary",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"user_symptoms",
+								"summary"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages/Threads",
+			"item": [
+				{
+					"name": "Message Channels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/message-channels",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"message-channels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Message Channel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"users\": [\n        1,\n        4\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/message-channels",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"message-channels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Messages by Channel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Messages by channel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Hello\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/message-channels/21/messages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"message-channels",
+								"21",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Community Threads",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/group-conversations/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								"group-conversations",
+								""
+							]
+						}
+					},
+					"response": [
 						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhM2JkODk4ZGE1MGE4OWViOWUxY2YwYjdhN2VmZTM1OTNkNDEwNjgiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NzA4NSwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzAyMTU5NTg2LCJleHAiOjE3MDIxNjMxODYsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.I7kpRZKo3Ji4XAVsJElab8Bc7zRqSl8Ug4-OJqCxyTyBrKvD7cyHvzvYQeIC9VMsuxTH-wDGv-pPVCR7P6P2l2FoBt6OW-lxVxAG2dqvPH4vwAVIlFTLqthftoQkYN3nOdhgn8lywEDVO-1ajVKmXxsekcu5jowG84SkVi5Qm4jjLakCWSW7fTse8gq3atlwY_fHHQADe6ew_ig-EEF4btFiW9yxv9PMOzhz59Khk71LmJT46zhcfebiYHLMj2NhgLRLWsuGTjqKqKCrOoSPP2XbDDvfuk7T2XKIl5QH23Jl_osUivtgU1_OmpqS6yXQn48Ef9Gws3V7eqgjvED3Xw",
-							"type": "string"
+							"name": "New Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/chats/group-conversations/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chats",
+										"group-conversations",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.7 Python/3.11.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Jan 2024 06:16:33 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1052"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 1,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"belong_to\": true,\n            \"chat_room_identifier\": 1,\n            \"chat_room_type\": 2,\n            \"id\": 1,\n            \"is_public\": true,\n            \"name\": \"Remission\",\n            \"owner\": {\n                \"active\": true,\n                \"birthday\": \"\",\n                \"created_at\": \"2024-01-21T04:52:35.260303\",\n                \"display_name\": \"Stephanie Syed\",\n                \"email\": \"stephanie@athelohealth.com\",\n                \"first_name\": \"Stephanie\",\n                \"id\": 1,\n                \"last_name\": \"Syed\",\n                \"phone\": \"\",\n                \"updated_at\": \"2024-01-21T04:52:35.260750\"\n            },\n            \"user_profiles\": [\n                {\n                    \"active\": true,\n                    \"birthday\": \"\",\n                    \"created_at\": \"2024-01-21T04:52:35.260303\",\n                    \"display_name\": \"Stephanie Syed\",\n                    \"email\": \"stephanie@athelohealth.com\",\n                    \"first_name\": \"Stephanie\",\n                    \"id\": 1,\n                    \"last_name\": \"Syed\",\n                    \"phone\": \"\",\n                    \"updated_at\": \"2024-01-21T04:52:35.260750\"\n                }\n            ],\n            \"user_profiles_count\": 1\n        }\n    ]\n}"
 						}
 					]
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/protected",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"protected"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Common Enums",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
+				{
+					"name": "Community Threads",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"display_name\": \"Fake thread\",\n    \"description\": \"this should not work\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/chats/group-conversations/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								"group-conversations",
+								""
+							]
+						}
+					},
+					"response": [
 						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhM2JkODk4ZGE1MGE4OWViOWUxY2YwYjdhN2VmZTM1OTNkNDEwNjgiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODE5NzA4NSwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzAyMTU5NTg2LCJleHAiOjE3MDIxNjMxODYsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.I7kpRZKo3Ji4XAVsJElab8Bc7zRqSl8Ug4-OJqCxyTyBrKvD7cyHvzvYQeIC9VMsuxTH-wDGv-pPVCR7P6P2l2FoBt6OW-lxVxAG2dqvPH4vwAVIlFTLqthftoQkYN3nOdhgn8lywEDVO-1ajVKmXxsekcu5jowG84SkVi5Qm4jjLakCWSW7fTse8gq3atlwY_fHHQADe6ew_ig-EEF4btFiW9yxv9PMOzhz59Khk71LmJT46zhcfebiYHLMj2NhgLRLWsuGTjqKqKCrOoSPP2XbDDvfuk7T2XKIl5QH23Jl_osUivtgU1_OmpqS6yXQn48Ef9Gws3V7eqgjvED3Xw",
-							"type": "string"
+							"name": "Non admin",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"display_name\": \"Fake thread\",\n    \"description\": \"this should not work\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/chats/group-conversations/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chats",
+										"group-conversations",
+										""
+									]
+								}
+							},
+							"status": "UNAUTHORIZED",
+							"code": 401,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.7 Python/3.11.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Jan 2024 06:25:16 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "137"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "<!doctype html><html lang=en><title>401 Unauthorized</title><h1>Unauthorized</h1><p>Only admins can create new community threads</p>"
 						}
 					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/common/enums/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"common",
-						"enums",
-						""
-					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Symptoms",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/health/symptoms",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"health",
-						"symptoms"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Symptoms",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Issues gaining weight\",\n    \"description\": \"\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/health/symptoms/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"health",
-						"symptoms",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Users",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/users/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"users",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Profiles",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"first_name\": \"Marq\",\n    \"last_name\": \"Short\",\n    \"display_name\": \"Marq Short\"\n    // \"email\": \"marq@athelohealth.com\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/users/user-profiles/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"users",
-						"user-profiles",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/users/1",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"users",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Profile",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/users/user-profiles/5",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"users",
-						"user-profiles",
-						"5"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "My profile",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/users/me",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"users",
-						"me"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "My profile",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"first_name\": \"Stephanie\",\n    \"last_name\": \"Syed\",\n    \"display_name\": \"Stephanie\",\n    \"email\": \"stephanie@athelohealth.com\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/users/me/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"users",
-						"me",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Profile",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id\": 4\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/users/me/delete",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"users",
-						"me",
-						"delete"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Feelings",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/health/user_feeling/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"health",
-						"user_feeling",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Feelings and Symptoms Per Day",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/health/user_feelings_and_symptoms_per_day/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"health",
-						"user_feelings_and_symptoms_per_day",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Feelings",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"occurrence_date\": \"2023-10-22T04:50:44.819924\",\n    \"note\": \"This is a note\",\n    \"general_feeling\": 2\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/health/user_feeling/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"health",
-						"my-feelings",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Symptoms",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/health/user_symptoms/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"health",
-						"user_symptoms",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Symptoms",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"occurrence_date\": \"2023-10-22T04:50:44.819924\",\n    \"note\": \"This is a note\",\n    \"symptom_id\": 2\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/health/user_symptoms/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"health",
-						"user_symptoms",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Symptoms Summary",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/health/user_symptoms/summary",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"health",
-						"user_symptoms",
-						"summary"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Saved Content",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/saved-content",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"saved-content"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Saved Content",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    // \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n    \"external_content_id\": \"9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\" // 9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/saved-content/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"saved-content",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Saved Content",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n   // \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n    \"external_content_id\": \"9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/saved-content/",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"saved-content",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Message Channels",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/message-channels",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"message-channels"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Message Channel",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"users\": [\n        1,\n        4\n    ]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/message-channels",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"message-channels"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Messages by Channel",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": ""
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Messages by channel",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"content\": \"Hello\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/message-channels/21/messages",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"message-channels",
-						"21",
-						"messages"
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	],
 	"auth": {
@@ -573,7 +763,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQxNjg5NDE1ZWMyM2EzMzdlMmJiYWE1ZTNlNjhiNjZkYzk5MzY4ODQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTWFycSBTaG9ydCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJakJybUk3MjJRdVpYRXJ4Ny1vVTFSdDhuV1BsTUh6Vl9JSlRXZkhaUzc9czk2LWMiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGVzdC1kZXBsb3ktNDAyODE2IiwiYXVkIjoidGVzdC1kZXBsb3ktNDAyODE2IiwiYXV0aF90aW1lIjoxNzAxNzM0NDYxLCJ1c2VyX2lkIjoiQ21ERGs3YjVTZlN0T2JKVFdvUDE3Nld5Wk9HMyIsInN1YiI6IkNtRERrN2I1U2ZTdE9iSlRXb1AxNzZXeVpPRzMiLCJpYXQiOjE3MDQ2NDU3MTQsImV4cCI6MTcwNDY0OTMxNCwiZW1haWwiOiJtYXJxQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjExNzU1NzIxMDg1MzE4MDg2NjUxMCJdLCJlbWFpbCI6WyJtYXJxQGF0aGVsb2hlYWx0aC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.jf9B4IMU9fK9Mgq5T9Ukq1ryBvytg-tX1fwtzeHbDh1Pz0Ei-_F2tVLSE_NfZ6kmEorrSld3ymSrzSqsX14E_lHm3qvcdgA40mpVBkJroPiwTukeS2NiksDjHyptBIjxBNbanvjrBFarCL0yM5LNnuxcv8FJQWJR7UngwMBAh2qQiZuygF2aznDySmx1RgIaNS4zKG166HsDutKtz6CCxk4hU40bVmNTah6AmV7ipyPBrZJoMP7x4gQThU77JKXyNjqQSfXtm6Zyqc312S1V29NMWIg6Jt0A7yojwmDfvKx9jkU0O_2d24gDxbjnc-pw6WiUhQ9ID2_M3l2oRlD_rw",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdjZjdmODcyNzA5MWU0Yzc3YWE5OTVkYjYwNzQzYjdkZDJiYjcwYjUiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTY5ODMzNTY1NCwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzA1ODE3OTIyLCJleHAiOjE3MDU4MjE1MjIsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.SLUorsSIQsnXnKLFDD5I5DJbaScZwPON-xkZLuC94owAhjxsXi1xCUXVV7Atr0vtlkLQto77EGGTxHHagKRnEorVOSQQ0Ym5PULT8rTFdbJWjBs2RZpnEQEuNCxl_ql_UnCHX5gZVYefLocvAxCaYbMNRM8WXC3rD8Jx0uhOkeHVFDTiABzTnpbPG2A9o4koXWkrGdcb6-3yKyS4QQ5STImzBUITmUM_b_TdPy67gy3FQVTZMZ7lnuRCCtP5TPWrThZtDUw4MTwmPwsqH1MKKpTpsmRXHRzp776Jgpy8Yw3kFVwIOY9r8Shek2t4knSwelUcMlzCa-0XehgDcBXIUQ",
 				"type": "string"
 			}
 		]

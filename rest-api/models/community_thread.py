@@ -2,17 +2,16 @@ from typing import List
 
 from models.base import Base, TimestampMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Column, Table, ForeignKey
+from sqlalchemy import ForeignKey, UniqueConstraint
 
 
-# note for a Core table, we use the sqlalchemy.Column construct,
-# not sqlalchemy.orm.mapped_column
-thread_participants_table = Table(
-    "thread_participants",
-    Base.metadata,
-    Column("user_profile_id", ForeignKey("users.id")),
-    Column("thread_id", ForeignKey("community_threads.id")),
-)
+# created as a class so we can query it easier
+class ThreadParticipants(Base):
+    __tablename__ = "thread_participants"
+    user_profile_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    thread_id: Mapped[int] = mapped_column(ForeignKey("community_threads.id"))
+    __table_args__ = (UniqueConstraint("user_profile_id", "thread_id"),)
+    __mapper_args__ = {"primary_key": [user_profile_id, thread_id]}
 
 
 class CommunityThread(TimestampMixin, Base):
@@ -25,9 +24,7 @@ class CommunityThread(TimestampMixin, Base):
         back_populates="thread",
         lazy="joined",
     )
-    participants: Mapped[List["Users"]] = relationship(
-        secondary=thread_participants_table
-    )
+    participants: Mapped[List["Users"]] = relationship(secondary="thread_participants")
     owner_id: Mapped[int] = mapped_column(ForeignKey("admin_profiles.id"), unique=True)
     owner: Mapped["AdminProfile"] = relationship(
         back_populates="owned_threads", lazy="joined"

@@ -1,8 +1,8 @@
 """add community threads
 
-Revision ID: 676689db42df
+Revision ID: ede1cb1a0274
 Revises: da15cb874d6d
-Create Date: 2024-01-21 04:48:23.187509
+Create Date: 2024-01-21 05:59:15.571034
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = "676689db42df"
+revision = "ede1cb1a0274"
 down_revision = "da15cb874d6d"
 branch_labels = None
 depends_on = None
@@ -37,8 +37,8 @@ def upgrade():
     )
     op.create_table(
         "thread_participants",
-        sa.Column("user_profile_id", sa.Integer(), nullable=True),
-        sa.Column("thread_id", sa.Integer(), nullable=True),
+        sa.Column("user_profile_id", sa.Integer(), nullable=False),
+        sa.Column("thread_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["thread_id"],
             ["community_threads.id"],
@@ -48,6 +48,11 @@ def upgrade():
             ["user_profile_id"],
             ["users.id"],
             name=op.f("fk_thread_participants_user_profile_id_users"),
+        ),
+        sa.UniqueConstraint(
+            "user_profile_id",
+            "thread_id",
+            name=op.f("uq_thread_participants_user_profile_id"),
         ),
     )
     op.create_table(
@@ -68,6 +73,11 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_thread_posts")),
     )
+    with op.batch_alter_table("admin_profiles", schema=None) as batch_op:
+        batch_op.create_unique_constraint(
+            batch_op.f("uq_admin_profiles_user_id"), ["user_id"]
+        )
+
     with op.batch_alter_table("caregiver_profiles", schema=None) as batch_op:
         batch_op.create_unique_constraint(
             batch_op.f("uq_caregiver_profiles_user_id"), ["user_id"]
@@ -147,6 +157,11 @@ def downgrade():
     with op.batch_alter_table("caregiver_profiles", schema=None) as batch_op:
         batch_op.drop_constraint(
             batch_op.f("uq_caregiver_profiles_user_id"), type_="unique"
+        )
+
+    with op.batch_alter_table("admin_profiles", schema=None) as batch_op:
+        batch_op.drop_constraint(
+            batch_op.f("uq_admin_profiles_user_id"), type_="unique"
         )
 
     op.drop_table("thread_posts")
