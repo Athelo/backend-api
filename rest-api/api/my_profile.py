@@ -105,9 +105,7 @@ class AdminProfileView(MethodView):
     def get(self):
         user = get_user_from_request(request)
         admin_profile = (
-            db.session.query(AdminProfile)
-            .filter_by(user_profile_id=user.id)
-            .one_or_none()
+            db.session.query(AdminProfile).filter_by(user_id=user.id).one_or_none()
         )
         if admin_profile is None:
             return {}
@@ -119,7 +117,7 @@ class AdminProfileView(MethodView):
     def put(self):
         user = get_user_from_request(request)
 
-        domain = user.email.split["@"][2]
+        domain = user.email.split("@")[1]
 
         if not any(
             allowed_domain
@@ -128,7 +126,7 @@ class AdminProfileView(MethodView):
         ):
             abort(UNAUTHORIZED, "user's email is not on a valid admin domain")
 
-        admin_profile = AdminProfile()
+        admin_profile = AdminProfile(user_id=user.id)
 
         db.session.add(admin_profile)
         db.session.commit()
