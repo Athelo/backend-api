@@ -8,6 +8,8 @@ from flask import Flask
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
 
+from flask_socketio import SocketIO
+
 
 def set_config(app: Flask):
     environment = os.environ.get("ENVIRONMENT", "")
@@ -23,6 +25,9 @@ def set_config(app: Flask):
     app.config.from_object(config_module)
 
 
+socketio = SocketIO()
+
+
 def create_app() -> Flask:
     app = Flask(__name__)
     set_config(app)
@@ -31,6 +36,7 @@ def create_app() -> Flask:
     with app.app_context():
         db.init_app(app)
         migrate.init_app(app, db)
+        socketio.init_app(app)
 
         for blueprint in blueprints:
             app.register_blueprint(blueprint=blueprint)

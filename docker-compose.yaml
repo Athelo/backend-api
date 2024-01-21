@@ -5,7 +5,7 @@ services:
     restart: always
     image: athelo-backend
     volumes: 
-      - ./rest-api:/app
+      - ./src:/app
       - ./application_default_credentials.json:/application_default_credentials.json
     build:
       context: .
