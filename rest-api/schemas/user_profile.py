@@ -9,13 +9,13 @@ class UserProfileSchema(SQLAlchemyAutoSchema):
         model = Users
 
     id = auto_field(dump_only=True)
-    first_name = auto_field(dump_only=True)
-    last_name = auto_field(dump_only=True)
-    display_name = auto_field(dump_only=True)
-    email = auto_field(dump_only=True)
-    active = auto_field(dump_only=True)
-    birthday = auto_field(dump_only=True)
-    phone = auto_field(dump_only=True) 
+    first_name = fields.Str(required=True)
+    last_name = fields.Str(required=True)
+    display_name = fields.Str(allow_none=True)
+    email = fields.Email(required=True)
+    active = fields.Bool(missing=True) 
+    birthday = fields.Str(allow_none=True)
+    phone = fields.Str(allow_none=True)
     
     patient_feelings = Nested("PatientFeelingsSchema", many=True, exclude=('user',), dump_only=True)
     patient_symptoms = Nested("PatientSymptomsSchema", many=True, exclude=('user',), dump_only=True)

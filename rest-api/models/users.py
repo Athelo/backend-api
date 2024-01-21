@@ -5,7 +5,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 class Users(TimestampMixin, Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
-    test: Mapped[str] 
     first_name: Mapped[str]
     last_name: Mapped[str]
     display_name: Mapped[str]
