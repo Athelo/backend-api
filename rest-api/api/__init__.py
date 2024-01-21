@@ -10,6 +10,7 @@ from api.user_feeling import user_feeling_endpoints
 from api.user_symptom import user_symptom_endpoints
 from api.message import message_endpoints
 from api.message_channel import message_channel_endpoints
+from api.community_thread import community_thread_endpoints
 
 blueprints = [
     main_endpoints,
@@ -22,4 +23,5 @@ blueprints = [
     saved_content_endpoints,
     message_endpoints,
     message_channel_endpoints,
+    community_thread_endpoints,
 ]

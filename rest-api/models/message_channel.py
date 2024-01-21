@@ -1,6 +1,6 @@
 from typing import List
 
-from models.base import Base, TimestampMixin, bigint
+from models.base import Base, TimestampMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Column, Table, ForeignKey
 from sqlalchemy.dialects.postgresql import BIGINT
