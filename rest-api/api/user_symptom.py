@@ -9,9 +9,9 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from models.user_symptom import UserSymptom
+from models.patient_symptoms import PatientSymptoms
 from models.symptom import Symptom
-from schemas.user_symptom import UserSymptomSchema, UserSymptomUpdateSchema
+from schemas.patient_symptom import PatientSymptomSchema, PatientSymptomUpdateSchema
 from marshmallow import fields
 
 logger = logging.getLogger()
@@ -27,13 +27,13 @@ class UserSymptomsView(MethodView):
     def get(self):
         user = get_user_from_request(request)
         symptoms = (
-            db.session.query(UserSymptom)
+            db.session.query(PatientSymptoms)
             .filter_by(user_profile_id=user.id)
             .join(Symptom)
             .all()
         )
 
-        schema = UserSymptomSchema(many=True)
+        schema = PatientSymptomSchema(many=True)
         res = schema.dump(symptoms)
         return generate_paginated_dict(res)
 
@@ -43,14 +43,14 @@ class UserSymptomsView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserSymptomUpdateSchema()
+        schema = PatientSymptomUpdateSchema()
 
         try:
             data = schema.load(json_data)
         except ValidationError as err:
             return err.messages, UNPROCESSABLE_ENTITY
 
-        symptom = UserSymptom(
+        symptom = PatientSymptoms(
             occurrence_date=data["occurrence_date"],
             user_profile_id=user.id,
             note=data.get("note", None),
@@ -72,13 +72,13 @@ class UserSymptomDetailView(MethodView):
     @jwt_authenticated
     def get(self, symptom_id):
         user = get_user_from_request(request)
-        symptom = db.session.get(UserSymptom, symptom_id)
+        symptom = db.session.get(PatientSymptoms, symptom_id)
         if symptom.user_profile_id != user.id:
             return {
                 "message": f"User symptom {symptom_id} does not belong to User {user.email}"
             }, UNPROCESSABLE_ENTITY
 
-        schema = UserSymptomSchema()
+        schema = PatientSymptomSchema()
         return schema.dump(symptom)
 
     @jwt_authenticated
@@ -86,14 +86,14 @@ class UserSymptomDetailView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserSymptomUpdateSchema(partial=True)
+        schema = PatientSymptomUpdateSchema(partial=True)
 
         try:
             data = schema.load(json_data)
         except ValidationError as err:
             return err.messages, UNPROCESSABLE_ENTITY
 
-        symptom = db.session.get(UserSymptom, symptom_id)
+        symptom = db.session.get(PatientSymptoms, symptom_id)
         is_current_user_or_403(request, symptom.user_profile_id)
 
         if symptom is None:
@@ -117,8 +117,8 @@ class UserSymptomDetailView(MethodView):
         return result, ACCEPTED
 
     def delete(self, user_profile_id, symptom_id):
-        schema = UserSymptomSchema()
-        symptom = db.session.get(UserSymptom, symptom_id)
+        schema = PatientSymptomSchema()
+        symptom = db.session.get(PatientSymptoms, symptom_id)
         if symptom is None:
             return {
                 "message": f"User Symptom {user_profile_id} does not exist."
@@ -141,10 +141,10 @@ class UserSymptomsSummaryView(MethodView):
         user = get_user_from_request(request)
       
         symptoms = (
-            db.session.query(func.count(UserSymptom.symptom_id), Symptom.id, Symptom.name, Symptom.description)
+            db.session.query(func.count(PatientSymptoms.symptom_id), Symptom.id, Symptom.name, Symptom.description)
             .filter_by(user_profile_id=user.id)
             .join(Symptom)
-            .group_by(UserSymptom.symptom_id, Symptom.id, Symptom.name, Symptom.description)
+            .group_by(PatientSymptoms.symptom_id, Symptom.id, Symptom.name, Symptom.description)
             .all()
         )
 
@@ -177,7 +177,7 @@ class FeelingsSymptomsPerDay(MethodView):
 
         user = get_user_from_request(request)
         symptoms = (
-            db.session.query(UserSymptom)
+            db.session.query(PatientSymptoms)
             .filter_by(user_profile_id=user.id)
             .join(Symptom)
             .all()

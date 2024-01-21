@@ -9,8 +9,8 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from models.user_feeling import UserFeeling
-from schemas.user_feeling import UserFeelingSchema, UserFeelingUpdateSchema
+from models.patient_feelings import PatientFeelings
+from schemas.patient_feeling import PatientFeelingSchema, PatientFeelingUpdateSchema
 
 logger = logging.getLogger()
 
@@ -18,19 +18,18 @@ user_feeling_endpoints = Blueprint(
     "My Feelings", __name__, url_prefix="/api/v1/health/"
 )
 
-
 @class_route(user_feeling_endpoints, "/user_feeling/", "my_feelings")
 class UserFeelingsView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
         feelings = (
-            db.session.query(UserFeeling)
+            db.session.query(PatientFeelings)
             .filter_by(user_profile_id=user.id)
             .all()
         )
 
-        schema = UserFeelingSchema(many=True)
+        schema = PatientFeelingSchema(many=True)
         res = schema.dump(feelings)
         return generate_paginated_dict(res)
 
@@ -40,14 +39,15 @@ class UserFeelingsView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserFeelingUpdateSchema()
+    
+        schema = PatientFeelingUpdateSchema()
 
         try:
             data = schema.load(json_data)
         except ValidationError as err:
             return err.messages, UNPROCESSABLE_ENTITY
 
-        feeling = UserFeeling(
+        feeling = PatientFeelings(
             occurrence_date=data["occurrence_date"],
             user_profile_id=user.id,
             note=data.get("note", None),

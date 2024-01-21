@@ -9,7 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 class Message(TimestampMixin, Base):
     __tablename__ = "messages"
     id: Mapped[int] = mapped_column(primary_key=True)
-    author_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=False)
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     content: Mapped[str] = mapped_column(nullable=False)
     channel_id: Mapped[int] = mapped_column(
         ForeignKey("message_channels.id"), nullable=False

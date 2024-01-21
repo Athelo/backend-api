@@ -11,7 +11,7 @@ from sqlalchemy.dialects.postgresql import BIGINT
 channel_members_table = Table(
     "channel_members",
     Base.metadata,
-    Column("user_profile_id", ForeignKey("profiles.id")),
+    Column("user_profile_id", ForeignKey("users.id")),
     Column("message_channel_id", ForeignKey("message_channels.id")),
 )
 
@@ -24,7 +24,7 @@ class MessageChannel(TimestampMixin, Base):
         back_populates="channel",
         lazy="joined",
     )
-    users: Mapped[List["UserProfile"]] = relationship(secondary=channel_members_table)
+    users: Mapped[List["Users"]] = relationship(secondary=channel_members_table)
     users_hash: Mapped[int] = mapped_column(
         BIGINT,
         nullable=False,
