@@ -20,3 +20,6 @@ USER_PROFILE_RETURN_SCHEMA = {
 }
 
 V1_API_PREFIX = "/api/v1"
+
+
+ALLOWED_ADMIN_DOMAINS = ["athelohealth.com"]
