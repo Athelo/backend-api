@@ -2,6 +2,7 @@ from typing import List
 from models.base import Base, TimestampMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 class Users(TimestampMixin, Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -24,8 +25,8 @@ class Users(TimestampMixin, Base):
     patient_profiles: Mapped["PatientProfiles"] = relationship(
         "PatientProfiles", back_populates="user", uselist=False, lazy="joined"
     )
-    admin_profiles: Mapped["AdminProfiles"] = relationship(
-        "AdminProfiles", back_populates="user", uselist=False, lazy="joined"
+    admin_profiles: Mapped["AdminProfile"] = relationship(
+        "AdminProfile", back_populates="user", uselist=False, lazy="joined"
     )
     caregiver_profiles: Mapped["CaregiverProfiles"] = relationship(
         "CaregiverProfiles", back_populates="user", uselist=False, lazy="joined"

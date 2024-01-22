@@ -8,6 +8,8 @@ from models.message import Message
 from models.caregiver_profiles import CaregiverProfiles
 from models.patient_profiles import PatientProfiles
 from models.provider_profiles import ProviderProfiles
-from models.admin_profiles import AdminProfiles
+from models.admin_profile import AdminProfile
 from models.appointments import Appointments
 from models.provider_availability import ProviderAvailability
+from models.community_thread import CommunityThread
+from models.thread_post import ThreadPost
