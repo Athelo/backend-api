@@ -9,7 +9,7 @@ import logging
 logger = logging.getLogger()
 
 
-def get_user_from_request(request: Request):
+def get_user_from_request(request: Request) -> Users:
     try:
         user = db.session.query(Users).filter_by(email=request.email).one()
         return user

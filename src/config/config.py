@@ -16,6 +16,7 @@ class CloudConfig(object):
     DB_PASS = os.environ.get("DB_PASS")
     PROJECT = os.environ.get("PROJECT")
     REGION = os.environ.get("REGION")
+    SECRET_KEY = os.environ.get("SECRET_KEY")
     INSTANCE_CONNECTION_NAME = os.environ.get("INSTANCE_CONNECTION_NAME")
 
 
@@ -35,6 +36,7 @@ class LocalConfig(Config):
     PORT = 8000
     SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@db/{DB_NAME}"
     LOG_LEVEL = logging.DEBUG
+    SECRET_KEY = "dev_secret"
 
 
 class TestingConfig(Config):

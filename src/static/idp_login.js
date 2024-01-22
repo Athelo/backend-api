@@ -108,4 +108,9 @@ async function performGetAndUpdateElements(element, endpoint) {
     document.getElementById(element).innerText = `Error when submitting vote: ${err}`
     window.alert('Something went wrong... Please try again!');
   }
+
+  function refreshPage() {
+    window.location.reload();
+  }
+
 }

@@ -1,7 +1,7 @@
 <html lang="en">
 
 <head>
-    <title>ATHLEO DEV TOOLS</title>
+    <title>ATHLEO LIVE CHAT</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -12,12 +12,12 @@
     <script src="../static/config.js"></script>
     <script src="../static/idp_login.js"></script>
     <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
 </head>
 
 <body>
     <nav class="teal darken-3">
-        <div class="nav-wrapper container"><a class="brand-logo center" href="#!">ATHELO DEV TOOLS</a>
+        <div class="nav-wrapper container"><a class="brand-logo center" href="#!">ATHELO LIVE CHAT</a>
         </div>
     </nav>
     <div class="section">
@@ -41,36 +41,20 @@
         <div class="row center">
             <div class="col s6 m10 offset-m1">
                 <div class="card-panel">
-                    <h6 id="publicEndpointMessage"> </h6>
-                    <button class="btn green" id="getPublicButton">Try Public Endpoint</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="section">
-        <div class="row center">
-            <div class="col s6 m10 offset-m1">
-                <div class="card-panel">
-                    <h6 id="protectedEndpointMessage"> </h6>
-                    <button class="btn green" id="getProtectedButton">Try Protected Endpoint</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="section">
-        <div class="row center">
-            <div class="col s6 m10 offset-m1">
-                <div class="card-panel">
-                    <textarea id="tokenDisplay"> No token </textarea>
-                    <button id="getTokenButton" class="btn green" onclick="refreshPage">Get new token</button>
+                    <h6>Join a chatroom </h6>
+                    <form method="post">
+                        <label for="displayName">Display Name:</label><br>
+                        <input type="text" id="displayName" name="displayName"> <br>
+                        <label for="roomname">Room Name:</label><br>
+                        <input type="text" id="roomname" name="roomname"><br>
+                        <button class="btn green" name="joinChatButton" id="joinChatButton">Join</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
     <script>
         document.getElementById('signInButton').addEventListener("click", toggle)
-        document.getElementById('getPublicButton').onclick = getPublicEndpoint
-        document.getElementById('getProtectedButton').onclick = getProtectedEndpoint
     </script>
 </body>
 
