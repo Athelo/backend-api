@@ -1,3 +1,5 @@
+import enum
+
 from datetime import datetime
 from typing import Optional
 
@@ -23,5 +25,5 @@ class Appointments(TimestampMixin, Base):
     status: Mapped[AppointmentStatus]
     start_time: Mapped[datetime]
     end_time: Mapped[datetime]
-    patient_start_time: Mapped[datetime]
-    provider_start_time: Mapped[datetime]
+    patient_start_time: Mapped[datetime] = mapped_column(nullable=True)
+    provider_start_time: Mapped[datetime] = mapped_column(nullable=True)
