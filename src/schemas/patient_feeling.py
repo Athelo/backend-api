@@ -4,7 +4,7 @@ from models.patient_feelings import PatientFeelings
 
 class PatientFeelingSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = PatientFeelings 
+        model = PatientFeelings
         load_instance = True
 
     created_at = auto_field(dump_only=True)
@@ -14,5 +14,5 @@ class PatientFeelingSchema(SQLAlchemyAutoSchema):
 
 class PatientFeelingUpdateSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = PatientFeelings 
+        model = PatientFeelings
         exclude = ("id", "created_at", "updated_at", "user_profile_id")

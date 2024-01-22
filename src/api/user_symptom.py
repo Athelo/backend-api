@@ -139,35 +139,52 @@ class UserSymptomsSummaryView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
-      
+
         symptoms = (
-            db.session.query(func.count(PatientSymptoms.symptom_id), Symptom.id, Symptom.name, Symptom.description)
+            db.session.query(
+                func.count(PatientSymptoms.symptom_id),
+                Symptom.id,
+                Symptom.name,
+                Symptom.description,
+            )
             .filter_by(user_profile_id=user.id)
             .join(Symptom)
-            .group_by(PatientSymptoms.symptom_id, Symptom.id, Symptom.name, Symptom.description)
+            .group_by(
+                PatientSymptoms.symptom_id,
+                Symptom.id,
+                Symptom.name,
+                Symptom.description,
+            )
             .all()
         )
 
         symptom_summary = []
         for symptom_data in symptoms:
             count, symptom_id, name, description = symptom_data
-            symptom_summary.append({
-                "occurrences_count": count,
-                "symptom": {
-                    "id": symptom_id,
-                    "name": name,
-                    "description": description
+            symptom_summary.append(
+                {
+                    "occurrences_count": count,
+                    "symptom": {
+                        "id": symptom_id,
+                        "name": name,
+                        "description": description,
+                    },
                 }
-            })
+            )
 
         return symptom_summary
 
-@class_route(user_symptom_endpoints, "/user_feelings_and_symptoms_per_day/", "feelings_and_symptoms_per_day")
+
+@class_route(
+    user_symptom_endpoints,
+    "/user_feelings_and_symptoms_per_day/",
+    "feelings_and_symptoms_per_day",
+)
 class FeelingsSymptomsPerDay(MethodView):
     @jwt_authenticated
     def get(self):
-        by_symptoms = request.args.get('by_symptoms') is not None
-        by_feelings = request.args.get('by_feelings') is not None
+        by_symptoms = request.args.get("by_symptoms") is not None
+        by_feelings = request.args.get("by_feelings") is not None
 
         if by_feelings:
             return {"message": "Feelings by day is not supported"}, BAD_REQUEST
@@ -184,13 +201,15 @@ class FeelingsSymptomsPerDay(MethodView):
         )
 
         map_by_date = {}
-        date_format = '%Y-%m-%d'
+        date_format = "%Y-%m-%d"
 
         for user_sym in symptoms:
-            symptom_date = user_sym.occurrence_date.strftime(date_format) 
+            symptom_date = user_sym.occurrence_date.strftime(date_format)
             if symptom_date not in map_by_date:
                 map_by_date[symptom_date] = set()
-            
+
             map_by_date[symptom_date].add(user_sym.symptom.name)
 
-        return generate_paginated_dict({k: ', '.join(v) for k,v in map_by_date.items()})
+        return generate_paginated_dict(
+            {k: ", ".join(v) for k, v in map_by_date.items()}
+        )

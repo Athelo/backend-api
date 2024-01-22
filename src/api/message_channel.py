@@ -13,7 +13,10 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from schemas.message_channel import MessageChannelSchema, MessageChannelRequestSchema
+from schemas.message_channel import (
+    MessageChannelSchema,
+    MessageChannelRequestSchema,
+)
 from models.message_channel import MessageChannel
 from models.users import Users
 from sqlalchemy.exc import IntegrityError, NoResultFound

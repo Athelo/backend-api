@@ -25,13 +25,18 @@ def set_config(app: Flask):
     app.config.from_object(config_module)
 
 
-socketio = SocketIO(async_mode="eventlet")
+socketio = SocketIO(
+    async_="eventlet",
+    logger=True,
+    engineio_logger=True,
+)
 
 
-def create_app() -> Flask:
+def create_app(debug=False):
     app = Flask(__name__)
     set_config(app)
     setup_logging(app)
+    app.debug = debug
 
     with app.app_context():
         db.init_app(app)

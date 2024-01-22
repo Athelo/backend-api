@@ -8,9 +8,11 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.types import Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 class CancerStatus(enum.Enum):
     ACTIVE = "ACTIVE"
     REMISSION = "REMISSION"
+
 
 class PatientProfiles(TimestampMixin, Base):
     __tablename__ = "patient_profiles"

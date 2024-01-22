@@ -6,6 +6,7 @@ from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.types import Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 class ProviderProfiles(TimestampMixin, Base):
     __tablename__ = "provider_profiles"
     id: Mapped[int] = mapped_column(primary_key=True)

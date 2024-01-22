@@ -1,5 +1,6 @@
 from api.constants import USER_PROFILE_RETURN_SCHEMA
 
+
 # decorator code
 def class_route(self, rule, endpoint, **options):
     """
@@ -15,6 +16,7 @@ def class_route(self, rule, endpoint, **options):
 
     return decorator
 
+
 def generate_paginated_dict(api_results):
     results = []
 
@@ -22,10 +24,5 @@ def generate_paginated_dict(api_results):
         results = api_results
     else:
         results.append(api_results)
-    
-    return {
-        "count":len(results),
-        "next":None,
-        "previous":None,
-        "results": results 
-    }
+
+    return {"count": len(results), "next": None, "previous": None, "results": results}

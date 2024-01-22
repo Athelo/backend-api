@@ -14,6 +14,7 @@ class PatientProfileSchema(SQLAlchemyAutoSchema):
     updated_at = auto_field(dump_only=True)
     cancer_status = auto_field()
 
+
 class PatientProfileCreateSchema(Schema):
     user_id = fields.Int(required=True)
     active = fields.Bool(missing=True)  # Default to True if not provided

@@ -6,6 +6,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.types import Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 class CaregiverProfiles(TimestampMixin, Base):
     __tablename__ = "caregiver_profiles"
     id: Mapped[int] = mapped_column(primary_key=True)

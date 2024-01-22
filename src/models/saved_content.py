@@ -12,7 +12,5 @@ class SavedContent(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow())
     external_content_id: Mapped[UUID] = mapped_column(nullable=False)
-    user_profile_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id"), nullable=False
-    )
+    user_profile_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     users: Mapped["Users"] = relationship("Users", back_populates="saved_content")

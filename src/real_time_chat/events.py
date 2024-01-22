@@ -1,6 +1,6 @@
 from flask import session
 from flask_socketio import emit, join_room, leave_room
-from app import socketio
+from src.app import socketio
 
 
 @socketio.on("joined", namespace="/chat")
