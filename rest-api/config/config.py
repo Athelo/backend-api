@@ -6,6 +6,7 @@ from models.database import getconn
 
 class Config(object):
     TESTING = False
+    PORT = os.environ.get("PORT")
 
 
 class CloudConfig(Config):
