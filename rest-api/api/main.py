@@ -1,7 +1,27 @@
 from datetime import datetime
 
 from auth.middleware import jwt_authenticated
-from flask import Blueprint, render_template, request
+from threading import Lock
+from flask import (
+    Blueprint,
+    render_template,
+    session,
+    request,
+    copy_current_request_context,
+)
+from flask_socketio import (
+    emit,
+    join_room,
+    leave_room,
+    close_room,
+    rooms,
+    disconnect,
+)
+
+from websocket.socketio import socketio
+
+thread = None
+thread_lock = Lock()
 
 main_endpoints = Blueprint("Main", __name__)
 
