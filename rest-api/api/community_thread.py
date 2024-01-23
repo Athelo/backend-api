@@ -6,10 +6,11 @@ from http.client import (
     UNPROCESSABLE_ENTITY,
     CONFLICT,
     NOT_FOUND,
+    OK,
 )
 from api.utils import class_route
 from auth.middleware import jwt_authenticated
-from auth.utils import get_user_from_request
+from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
@@ -50,6 +51,7 @@ class CommunityThreadListView(MethodView):
         joined_community_threads = (
             db.session.query(CommunityThread)
             .where(CommunityThread.id.in_(user_thread_ids))
+            .where(CommunityThread.active.is_(True))
             .all()
         )
 
@@ -73,8 +75,7 @@ class CommunityThreadListView(MethodView):
     @jwt_authenticated
     def put(self):
         user = get_user_from_request(request)
-        if user.admin_profiles is None or not user.admin_profiles.active:
-            abort(UNAUTHORIZED, "Only admins can create new community threads")
+        require_admin_user(user)
 
         json_data = request.get_json()
         if not json_data:
@@ -110,6 +111,7 @@ class CommunityThreadListView(MethodView):
         return result, CREATED
 
 
+@jwt_authenticated
 @community_thread_endpoints.route("/<int:thread_id>", methods=["GET"])
 def get_community_thread(thread_id: int):
     user = get_user_from_request(request)
@@ -127,6 +129,49 @@ def get_community_thread(thread_id: int):
     )
 
     return group_message_schema_from_community_thread(community_thread, belong_to)
+
+
+@jwt_authenticated
+@community_thread_endpoints.route("/<int:thread_id>", methods=["PUT"])
+def update_community_thread(thread_id: int):
+    user = get_user_from_request(request)
+    require_admin_user(user)
+    json_data = request.get_json()
+    if not json_data:
+        abort(BAD_REQUEST, "No input data provided.")
+
+    schema = CommunityThreadCreateSchema(partial=True)
+
+    try:
+        data = schema.load(json_data)
+    except ValidationError as err:
+        abort(UNPROCESSABLE_ENTITY, err.messages)
+
+    thread = db.session.get(CommunityThread, thread_id)
+    if thread is None:
+        abort(NOT_FOUND, f"Thread {thread_id} not found")
+
+    # TODO: flesh out as more edit capability is needed
+    if data.get("display_name"):
+        thread.display_name = data["display_name"]
+    if data.get("active"):
+        thread.active = data["active"]
+
+    try:
+        db.session.add(thread)
+        db.session.commit()
+    except IntegrityError as e:
+        abort(
+            UNPROCESSABLE_ENTITY,
+            f"Cannot update chat because {e.orig.args[0]['M']}",
+        )
+    except DatabaseError as e:
+        abort(
+            UNPROCESSABLE_ENTITY,
+            f"Cannot update chat because {e.orig.args[0]['M']}",
+        )
+    result = CommunityThreadSchema().dump(thread)
+    return result, OK
 
 
 @jwt_authenticated
