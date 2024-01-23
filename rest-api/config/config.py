@@ -8,7 +8,7 @@ class Config(object):
     TESTING = False
 
 
-class CloudConfig(object):
+class CloudConfig(Config):
     SQLALCHEMY_DATABASE_URI = "postgresql+pg8000://"
     SQLALCHEMY_ENGINE_OPTIONS = {"creator": getconn}
     DB_NAME = os.environ.get("DB_NAME", None)
@@ -17,6 +17,8 @@ class CloudConfig(object):
     PROJECT = os.environ.get("PROJECT")
     REGION = os.environ.get("REGION")
     INSTANCE_CONNECTION_NAME = os.environ.get("INSTANCE_CONNECTION_NAME")
+    DEBUG = False
+    SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 class ProductionConfig(CloudConfig):
@@ -35,6 +37,8 @@ class LocalConfig(Config):
     PORT = 8000
     SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@db/{DB_NAME}"
     LOG_LEVEL = logging.DEBUG
+    DEBUG = True
+    SECRET_KEY = "SECRET_KEY"
 
 
 class TestingConfig(Config):
