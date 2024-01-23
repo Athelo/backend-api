@@ -146,10 +146,10 @@ def my_ping():
 
 @socketio.event
 def connect():
-    global thread
-    with thread_lock:
-        if thread is None:
-            thread = socketio.start_background_task(background_thread)
+    # global thread
+    # with thread_lock:
+    #     if thread is None:
+    #         thread = socketio.start_background_task(background_thread)
     emit("my_response", {"data": "Connected", "count": 0})
 
 
