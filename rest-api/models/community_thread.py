@@ -27,7 +27,7 @@ class CommunityThread(TimestampMixin, Base):
         lazy="joined",
     )
     participants: Mapped[List["Users"]] = relationship(secondary="thread_participants")
-    owner_id: Mapped[int] = mapped_column(ForeignKey("admin_profiles.id"), unique=True)
+    owner_id: Mapped[int] = mapped_column(ForeignKey("admin_profiles.id"), unique=False)
     owner: Mapped["AdminProfile"] = relationship(
         back_populates="owned_threads", lazy="joined"
     )
