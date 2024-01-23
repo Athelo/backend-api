@@ -20,7 +20,7 @@ from schemas.community_thread import (
     group_message_schema_from_community_thread,
 )
 from models.community_thread import CommunityThread, ThreadParticipants
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DatabaseError
 from api.constants import V1_API_PREFIX
 from api.utils import generate_paginated_dict
 
@@ -97,6 +97,11 @@ class CommunityThreadListView(MethodView):
             db.session.add(thread)
             db.session.commit()
         except IntegrityError as e:
+            abort(
+                UNPROCESSABLE_ENTITY,
+                f"Cannot create chat because {e.orig.args[0]['M']}",
+            )
+        except DatabaseError as e:
             abort(
                 UNPROCESSABLE_ENTITY,
                 f"Cannot create chat because {e.orig.args[0]['M']}",
