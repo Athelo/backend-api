@@ -31,7 +31,6 @@ def create_app() -> Flask:
     setup_logging(app)
 
     with app.app_context():
-        print("initializing app")
         db.init_app(app)
         migrate.init_app(app, db)
         socketio.init_app(app)
