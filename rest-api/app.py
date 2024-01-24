@@ -8,7 +8,7 @@ from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
-from websocket.socketio import socketio
+# from websocket.socketio import socketio
 
 
 def set_config(app: Flask):
@@ -33,7 +33,7 @@ def create_app() -> Flask:
     with app.app_context():
         db.init_app(app)
         migrate.init_app(app, db)
-        socketio.init_app(app)
+        # socketio.init_app(app)
 
         for blueprint in blueprints:
             print(f"registering blueprint {blueprint}")
@@ -47,5 +47,5 @@ def create_app() -> Flask:
 app = create_app()
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=app.config.get("PORT"), debug=True)
-    # app.run(host="127.0.0.1", port=8080)
+    # socketio.run(app, host="0.0.0.0", port=app.config.get("PORT"), debug=True)
+    app.run(host="127.0.0.1", port=8080)
