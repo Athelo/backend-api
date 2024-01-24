@@ -3,8 +3,6 @@
 A REST API to interact with symptom tracking and messaging.
 
 ## Run App Locally
-
-### With Docker Compose
 After installing Docker and docker-compose, run
 ```
 make build-run
@@ -18,6 +16,11 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+### Tips and tricks 
+In a bash shell in the api docker container (access by running `make bash-shell`), you can run `flask routes` to see 
+all routes served by the API
+
 ## Developing
 VSCode is the expected environment for development. If using another editor, please find out how to configure it equivalently and update this readme
 
@@ -34,17 +37,17 @@ VSCode is the expected environment for development. If using another editor, ple
       },
       "editor.defaultFormatter": "charliermarsh.ruff"
     }
-  }
+}
 ```
 
+### Unit tests
+Run all unit tests with `make test`. To run a subset of tests, provide `TESTPATH` with the relative path
+starting after `rest-api`. Example: `make test TESTPATH=api` would run all test files beneath `/rest-api/api`.
 
-#### Migrations
+### Migrations
 1. Make your changes to files in `rest-api/models`. Any new models must extend Base from models.base
 2. Import any new models in `rest-api/models/__init__.py`
 3. Run `make bash-shell`
 4. In the shell, run `flask db migrate -m "<migration description>"`
 5. Still in the shell, test upgrade (`flask db upgrade`) and downgrade (`flask db downgrade`)
 
-#### Tips and tricks 
-In a bash shell in the api docker container (access by running `make bash-shell`), you can run `flask routes` to see 
-all routes served by the API
