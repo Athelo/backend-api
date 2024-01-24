@@ -30,3 +30,4 @@ eventlet==0.33.3
 
 #Video Appointment
 opentok>=3.0
+pytest
