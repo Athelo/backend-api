@@ -11,4 +11,4 @@ flask db upgrade
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 # gunicorn --bind :$PORT --worker-class eventlet --workers 8  app:app
-gunicorn --bind :$PORT --workers 1 --threads 8 wsgi:app
+gunicorn --bind :$PORT --workers 1 --threads 8 app:app
