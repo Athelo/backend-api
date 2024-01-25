@@ -17,3 +17,11 @@ class Feedback(TimestampMixin, Base):
     topic: Mapped["FeedbackTopic"] = relationship(
         lazy="joined",
     )
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "status": 2,
+            "topic": self.topic.to_json(),
+        }

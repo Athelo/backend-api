@@ -25,16 +25,12 @@ feedback_endpoints = Blueprint(
 )
 
 
-def feedback_topic_to_json(topic: FeedbackTopic):
-    return {"id": topic.id, "category": topic.id, "name": topic.name, "application": 1}
-
-
 @class_route(feedback_endpoints, "/feedback-topic", "feedback_topics")
 class FeedbackTopicsView(MethodView):
     @jwt_authenticated
     def get(self):
         topics = db.session.query(FeedbackTopic).all()
-        results = [feedback_topic_to_json(topic) for topic in topics]
+        results = [topic.to_json() for topic in topics]
         return generate_paginated_dict(results)
 
     @jwt_authenticated
@@ -66,22 +62,8 @@ class FeedbackTopicsView(MethodView):
                 UNPROCESSABLE_ENTITY,
                 f"Cannot create feedback topic because {e.orig.args[0]['M']}",
             )
-        result = feedback_topic_to_json(topic)
+        result = topic.to_json()
         return result, CREATED
-
-
-def feedback_to_json(feedback: Feedback):
-    return {
-        "id": feedback.id,
-        "content": feedback.content,
-        "status": 2,
-        "topic": {
-            "id": feedback.topic.id,
-            "category": feedback.topic.id,
-            "name": feedback.topic.name,
-            "application": 1,
-        },
-    }
 
 
 @class_route(feedback_endpoints, "/feedback", "feedback")
@@ -92,9 +74,7 @@ class FeedbackListView(MethodView):
         require_admin_user(user)
 
         feedbacks = db.session.query(Feedback).all()
-        return generate_paginated_dict(
-            [feedback_to_json(feedback) for feedback in feedbacks]
-        )
+        return generate_paginated_dict([feedback.to_json() for feedback in feedbacks])
 
     @jwt_authenticated
     def post(self):
@@ -128,5 +108,5 @@ class FeedbackListView(MethodView):
                 UNPROCESSABLE_ENTITY,
                 f"Cannot create chat because {e.orig.args[0]['M']}",
             )
-        result = feedback_to_json(feedback)
+        result = feedback.to_json()
         return result, CREATED
