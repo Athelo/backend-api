@@ -12,6 +12,6 @@ class CaregiverProfile(TimestampMixin, Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True)
     user: Mapped["Users"] = relationship(
-        back_populates="caregiver_profiles", lazy="joined", single_parent=True
+        back_populates="caregiver_profile", lazy="joined", single_parent=True
     )
     active: Mapped[bool] = mapped_column(default=True)

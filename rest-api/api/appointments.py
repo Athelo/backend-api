@@ -16,10 +16,8 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from schemas.appointment import (
-    AppointmentSchema,
-)
-from models.appointment import Appointment
+from schemas.appointment import AppointmentSchema, AppointmentCreateSchema
+from models.appointment import Appointment, AppointmentStatus
 from sqlalchemy.exc import IntegrityError, DatabaseError
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
@@ -37,8 +35,11 @@ appointments_endpoints = Blueprint(
 
 def appointment_to_json(appointment: Appointment):
     return {
-        "provider": {"display_name": appointment.provider.display_name, "photo": ""},
-        "patient": {"display_name": appointment.patient.display_name, "photo": ""},
+        "provider": {
+            "display_name": appointment.provider.user.display_name,
+            "photo": "",
+        },
+        "patient": {"display_name": appointment.patient.user.display_name, "photo": ""},
         "start_time": appointment.start_time,
         "end_time": appointment.end_time,
         "zoom_url": appointment.zoom_url,
@@ -63,6 +64,7 @@ class AppointmentListView(MethodView):
             query.filter(Appointment.patient_id == user.patient_profile.id)
         else:
             return None
+        return query
 
     @jwt_authenticated
     def get(self):
@@ -87,7 +89,7 @@ class AppointmentListView(MethodView):
         json_data = request.get_json()
         if not json_data:
             abort(BAD_REQUEST, "No input data provided.")
-        schema = AppointmentSchema()
+        schema = AppointmentCreateSchema()
 
         try:
             data = schema.load(json_data)
@@ -95,12 +97,13 @@ class AppointmentListView(MethodView):
             abort(UNPROCESSABLE_ENTITY, err.messages)
 
         appointment = Appointment(
-            patient_id=user.id,
+            patient_id=user.patient_profile.id,
             provider_id=data["provider_id"],
             start_time=data["start_time"],
             end_time=data["end_time"],
             zoom_url=data["zoom_url"],
             zoom_token=data["zoom_token"],
+            status=AppointmentStatus.BOOKED,
         )
         try:
             db.session.add(appointment)
@@ -110,5 +113,10 @@ class AppointmentListView(MethodView):
                 UNPROCESSABLE_ENTITY,
                 f"Cannot create appointment because {e.orig.args[0]['M']}",
             )
-        result = schema.dump(appointment)
+        except DatabaseError as e:
+            abort(
+                UNPROCESSABLE_ENTITY,
+                f"Cannot create appointment because {e.orig.args[0]['M']}",
+            )
+        result = AppointmentSchema().dump(appointment)
         return result, CREATED
