@@ -33,20 +33,6 @@ appointments_endpoints = Blueprint(
 )
 
 
-def appointment_to_json(appointment: Appointment):
-    return {
-        "provider": {
-            "display_name": appointment.provider.user.display_name,
-            "photo": "",
-        },
-        "patient": {"display_name": appointment.patient.user.display_name, "photo": ""},
-        "start_time": appointment.start_time,
-        "end_time": appointment.end_time,
-        "zoom_url": appointment.zoom_url,
-        "zoom_token": appointment.zoom_token,
-    }
-
-
 @class_route(appointments_endpoints, "/", "appointment_list")
 class AppointmentListView(MethodView):
     def get_current_user_appointments_query(self, user: Users) -> Query[Appointment]:
@@ -77,7 +63,7 @@ class AppointmentListView(MethodView):
             query = self.get_current_user_appointments_query(user)
 
         appts = query.all()
-        results = [appointment_to_json(appointment) for appointment in appts]
+        results = [appointment.to_legacy_json() for appointment in appts]
         return generate_paginated_dict(results)
 
     @jwt_authenticated

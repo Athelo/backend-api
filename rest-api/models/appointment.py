@@ -35,10 +35,21 @@ class Appointment(TimestampMixin, Base):
     patient_start_time: Mapped[datetime] = mapped_column(nullable=True)
     provider_start_time: Mapped[datetime] = mapped_column(nullable=True)
 
-    @classmethod
     def get_patient_user(self):
         return self.patient.user
 
-    @classmethod
     def get_provider_user(self):
         return self.provider.user
+
+    def to_legacy_json(self):
+        return {
+            "provider": {
+                "display_name": self.provider.user.display_name,
+                "photo": "",
+            },
+            "patient": {"display_name": self.patient.user.display_name, "photo": ""},
+            "start_time": self.start_time,
+            "end_time": self.end_time,
+            "zoom_url": self.zoom_url,
+            "zoom_token": self.zoom_token,
+        }
