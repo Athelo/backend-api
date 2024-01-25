@@ -35,14 +35,18 @@ class Users(TimestampMixin, Base):
         back_populates="user", uselist=False, lazy="joined"
     )
 
+    @property
     def is_patient(self) -> bool:
         return self.patient_profile is not None and self.patient_profile.active
 
+    @property
     def is_provider(self) -> bool:
         return self.provider_profile is not None and self.provider_profile.active
 
+    @property
     def is_admin(self) -> bool:
         return self.admin_profile is not None and self.admin_profile.active
 
+    @property
     def is_caregiver(self) -> bool:
         return self.caregiver_profile is not None and self.caregiver_profile.active

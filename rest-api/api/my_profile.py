@@ -41,10 +41,10 @@ class UserProfileDetailView(MethodView):
             res["last_name"] = user.last_name
             res["display_name"] = user.display_name
             res["email"] = user.email
-            res["is_caregiver"] = user.is_caregiver()
-            res["is_patient"] = user.is_patient()
-            res["is_provider"] = user.is_provider()
-            res["is_admin"] = user.is_admin()
+            res["is_caregiver"] = user.is_caregiver
+            res["is_patient"] = user.is_patient
+            res["is_provider"] = user.is_provider
+            res["is_admin"] = user.is_admin
 
         return generate_paginated_dict(res)
 
@@ -160,12 +160,12 @@ class PatientProfileView(MethodView):
 
         cancer_status = data["cancer_status"]
 
-        if user.is_patient():
+        if user.is_patient:
             user.patient_profile.cancer_status = cancer_status
             patient_profile = user.patient_profile
         else:
             patient_profile = PatientProfile(
-                user_id=user.id, cancer_status=data["cancer_status"]
+                user_id=user.id, cancer_status=cancer_status
             )
 
         db.session.add(patient_profile)
@@ -205,9 +205,9 @@ class ProviderProfileView(MethodView):
 
         appointment_buffer = data["appointment_buffer_sec"]
 
-        if user.is_provider():
+        if user.is_provider:
             user.provider.appointment_buffer_sec = appointment_buffer
-            provider_profile = user.patient_profile
+            provider_profile = user.provider_profile
         else:
             provider_profile = ProviderProfile(
                 user_id=user.id, appointment_buffer_sec=appointment_buffer

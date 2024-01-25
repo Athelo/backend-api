@@ -35,13 +35,15 @@ class Appointment(TimestampMixin, Base):
     patient_start_time: Mapped[datetime] = mapped_column(nullable=True)
     provider_start_time: Mapped[datetime] = mapped_column(nullable=True)
 
+    # leaving off return type to avoid circular imports
     def get_patient_user(self):
         return self.patient.user
 
+    # leaving off return type to avoid circular imports
     def get_provider_user(self):
         return self.provider.user
 
-    def to_legacy_json(self):
+    def to_legacy_json(self) -> dict:
         return {
             "provider": {
                 "display_name": self.provider.user.display_name,

@@ -37,16 +37,16 @@ appointments_endpoints = Blueprint(
 class AppointmentListView(MethodView):
     def get_current_user_appointments_query(self, user: Users) -> Query[Appointment]:
         query = db.session.query(Appointment)
-        if user.is_provider() and user.is_patient():
+        if user.is_provider and user.is_patient:
             query.filter(
                 or_(
                     Appointment.patient_id == user.patient_profile.id,
                     Appointment.provider_id == user.provider_profile.id,
                 )
             )
-        elif user.is_provider():
+        elif user.is_provider:
             query.filter(Appointment.provider_id == user.provider_profile.id)
-        elif user.is_patient():
+        elif user.is_patient:
             query.filter(Appointment.patient_id == user.patient_profile.id)
         else:
             return None
@@ -69,7 +69,7 @@ class AppointmentListView(MethodView):
     @jwt_authenticated
     def post(self):
         user = get_user_from_request(request)
-        if not user.is_patient():
+        if not user.is_patient:
             abort(UNAUTHORIZED, "Only patients can book appointments")
 
         json_data = request.get_json()
