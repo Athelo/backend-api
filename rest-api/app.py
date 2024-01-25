@@ -1,4 +1,3 @@
-# from flask_migrate import Migrate
 from __future__ import annotations
 
 import os
@@ -8,7 +7,7 @@ from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
-# from websocket.socketio import socketio
+from websocket.socketio import setup_socketio
 
 
 def set_config(app: Flask):
@@ -45,7 +44,8 @@ def create_app() -> Flask:
 
 
 app = create_app()
+socket_io = setup_socketio(app)
+
 
 if __name__ == "__main__":
-    # socketio.run(app, host="0.0.0.0", port=app.config.get("PORT"), debug=True)
-    app.run(host="127.0.0.1", port=8080)
+    socket_io.run(app, host="0.0.0.0", port=app.config.get("PORT"), debug=True)
