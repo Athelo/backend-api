@@ -18,16 +18,16 @@ class UserProfileSchema(SQLAlchemyAutoSchema):
     birthday = fields.Str(allow_none=True)
     phone = fields.Str(allow_none=True)
 
-    # patient_profiles = Nested(
+    # patient_profile = Nested(
     #     PatientProfileSchema, many=False, exclude=("user",), dump_only=True
     # )
-    # admin_profiles = Nested(
-    #     "AdmingProfileSchema", many=False, exclude=("user",), dump_only=True
+    # admin_profiles= Nested(
+    #     "AdminProfileSchema", many=False, exclude=("user",), dump_only=True
     # )
-    # caregiver_profiles = Nested(
+    # caregiver_profile = Nested(
     #     "CaregiverProfilesSchema", many=False, exclude=("user",), dump_only=True
     # )
-    # provider_profiles = Nested(
+    # provider_profile = Nested(
     #     "ProviderProfilesSchema", many=False, exclude=("user",), dump_only=True
     # )
     created_at = auto_field(dump_only=True)

@@ -25,5 +25,5 @@ def is_current_user_or_403(request, user_id):
 
 
 def require_admin_user(user: Users):
-    if user.admin_profiles is None or not user.admin_profiles.active:
+    if not user.is_admin():
         abort(UNAUTHORIZED, "Only admins can perform this action")

@@ -41,15 +41,9 @@ class UserProfileDetailView(MethodView):
             res["is_caregiver"] = (
                 user.caregiver_profiles is not None and user.caregiver_profiles.active
             )
-            res["is_patient"] = (
-                user.patient_profiles is not None and user.patient_profiles.active
-            )
-            res["is_provider"] = (
-                user.provider_profiles is not None and user.provider_profiles.active
-            )
-            res["is_admin"] = (
-                user.admin_profiles is not None and user.admin_profiles.active
-            )
+            res["is_patient"] = user.is_patient()
+            res["is_provider"] = user.is_provider()
+            res["is_admin"] = user.is_admin()
 
         return generate_paginated_dict(res)
 

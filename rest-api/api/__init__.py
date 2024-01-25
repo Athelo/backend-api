@@ -12,6 +12,7 @@ from api.message import message_endpoints
 from api.message_channel import message_channel_endpoints
 from api.community_thread import community_thread_endpoints
 from api.feedback import feedback_endpoints
+from api.appointments import appointments_endpoints
 
 blueprints = [
     main_endpoints,
@@ -26,4 +27,5 @@ blueprints = [
     message_channel_endpoints,
     community_thread_endpoints,
     feedback_endpoints,
+    appointments_endpoints,
 ]

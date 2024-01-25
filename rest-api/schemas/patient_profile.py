@@ -1,11 +1,11 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from models.patient_profiles import CancerStatus, PatientProfiles
+from models.patient_profile import CancerStatus, PatientProfile
 from marshmallow import Schema, ValidationError, fields, post_load
 
 
 class PatientProfileSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = PatientProfiles
+        model = PatientProfile
 
     id = auto_field(dump_only=True)
     user_id = auto_field(dump_only=True)
@@ -13,6 +13,7 @@ class PatientProfileSchema(SQLAlchemyAutoSchema):
     created_at = auto_field(dump_only=True)
     updated_at = auto_field(dump_only=True)
     cancer_status = auto_field()
+
 
 class PatientProfileCreateSchema(Schema):
     user_id = fields.Int(required=True)

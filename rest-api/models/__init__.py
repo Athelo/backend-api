@@ -5,11 +5,11 @@ from models.patient_symptoms import PatientSymptoms
 from models.patient_feelings import PatientFeelings
 from models.message_channel import MessageChannel
 from models.message import Message
-from models.caregiver_profiles import CaregiverProfiles
-from models.patient_profiles import PatientProfiles
-from models.provider_profiles import ProviderProfiles
+from models.caregiver_profile import CaregiverProfile
+from models.patient_profile import PatientProfile
+from models.provider_profile import ProviderProfile
 from models.admin_profile import AdminProfile
-from models.appointments import Appointments
+from models.appointment import Appointment
 from models.provider_availability import ProviderAvailability
 from models.community_thread import CommunityThread
 from models.thread_post import ThreadPost
