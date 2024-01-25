@@ -36,7 +36,6 @@ def create_app() -> Flask:
         # socketio.init_app(app)
 
         for blueprint in blueprints:
-            print(f"registering blueprint {blueprint}")
             app.register_blueprint(blueprint=blueprint)
 
     ma = Marshmallow(app)

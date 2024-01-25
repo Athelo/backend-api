@@ -36,7 +36,7 @@ community_thread_endpoints = Blueprint(
 )
 
 
-@class_route(community_thread_endpoints, "/", "")
+@class_route(community_thread_endpoints, "/", "community_thread_list")
 class CommunityThreadListView(MethodView):
     @jwt_authenticated
     def get(self):
