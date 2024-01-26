@@ -13,3 +13,5 @@ from models.appointments import Appointments
 from models.provider_availability import ProviderAvailability
 from models.community_thread import CommunityThread
 from models.thread_post import ThreadPost
+from models.feedback import Feedback
+from models.feedback_topic import FeedbackTopic
