@@ -4,6 +4,7 @@ from api.main import main_endpoints
 from api.common import common_endpoints
 from api.my_profile import my_profile_endpoints
 from api.saved_content import saved_content_endpoints
+from api.socket_connection import socket_endpoints
 from api.symptom import symptom_endpoints
 from api.user_profile import user_profile_endpoints
 from api.user_feeling import user_feeling_endpoints
@@ -24,4 +25,5 @@ blueprints = [
     message_endpoints,
     message_channel_endpoints,
     community_thread_endpoints,
+    socket_endpoints,
 ]
