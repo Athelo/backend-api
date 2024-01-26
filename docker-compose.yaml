@@ -11,7 +11,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - 5001:8000
+      - 5001:8080
     environment:
     - ENVIRONMENT=local
     - GOOGLE_APPLICATION_CREDENTIALS=/application_default_credentials.json
