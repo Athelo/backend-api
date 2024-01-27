@@ -78,6 +78,7 @@ class UserProfileDetailView(MethodView):
                 "message": f"User Profile for {request.email} does not exist."
             }, NOT_FOUND
 
+        # Add TODO to remove later
         if data.get("first_name"):
             user.first_name = data["first_name"]
         if data.get("last_name"):
