@@ -24,7 +24,6 @@ from models.provider_profile import ProviderProfile
 from schemas.provider_profile import ProviderProfileSchema, ProviderProfileCreateSchema
 from api.constants import (
     USER_PROFILE_RETURN_SCHEMA,
-    ALLOWED_ADMIN_DOMAINS,
     DATETIME_FORMAT,
 )
 from zoneinfo import ZoneInfo
