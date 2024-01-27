@@ -112,7 +112,7 @@ class FeedbackListView(MethodView):
         result = feedback.to_json()
         return result, CREATED
 
-@class_route(feedback_endpoints, "/applications/", "feedback")
+@class_route(feedback_endpoints, "/applications/", "about_us")
 class ApplicationData(MethodView):
     def get(self):
         # Return app auxillary data (e.g. about us, privacy policy and terms of use)

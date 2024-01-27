@@ -1148,6 +1148,24 @@
 							"body": "<!doctype html><html lang=en><title>401 Unauthorized</title><h1>Unauthorized</h1><p>Only admins can create new community threads</p>"
 						}
 					]
+				},
+				{
+					"name": "App Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/applications/applications/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"applications",
+								"applications",
+								""
+							]
+						}
+					}
 				}
 			]
 		},
