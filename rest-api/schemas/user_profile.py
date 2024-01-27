@@ -21,7 +21,7 @@ class UserProfileSchema(SQLAlchemyAutoSchema):
     # patient_profile = Nested(
     #     PatientProfileSchema, many=False, exclude=("user",), dump_only=True
     # )
-    # admin_profiles= Nested(
+    # admin_profile= Nested(
     #     "AdminProfileSchema", many=False, exclude=("user",), dump_only=True
     # )
     # caregiver_profile = Nested(

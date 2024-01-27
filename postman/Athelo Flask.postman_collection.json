@@ -766,6 +766,47 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"count\": 1,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"belong_to\": true,\n            \"chat_room_identifier\": 1,\n            \"chat_room_type\": 2,\n            \"id\": 1,\n            \"is_public\": true,\n            \"name\": \"Remission\",\n            \"owner\": {\n                \"active\": true,\n                \"birthday\": \"\",\n                \"created_at\": \"2024-01-21T04:52:35.260303\",\n                \"display_name\": \"Stephanie Syed\",\n                \"email\": \"stephanie@athelohealth.com\",\n                \"first_name\": \"Stephanie\",\n                \"id\": 1,\n                \"last_name\": \"Syed\",\n                \"phone\": \"\",\n                \"updated_at\": \"2024-01-21T04:52:35.260750\"\n            },\n            \"user_profiles\": [\n                {\n                    \"active\": true,\n                    \"birthday\": \"\",\n                    \"created_at\": \"2024-01-21T04:52:35.260303\",\n                    \"display_name\": \"Stephanie Syed\",\n                    \"email\": \"stephanie@athelohealth.com\",\n                    \"first_name\": \"Stephanie\",\n                    \"id\": 1,\n                    \"last_name\": \"Syed\",\n                    \"phone\": \"\",\n                    \"updated_at\": \"2024-01-21T04:52:35.260750\"\n                }\n            ],\n            \"user_profiles_count\": 1\n        }\n    ]\n}"
+						},
+						{
+							"name": "Community Threads",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/chats/group-conversations/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chats",
+										"group-conversations",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1086"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 27 Jan 2024 20:36:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 1,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"belong_to\": true,\n            \"chat_room_identifier\": 1,\n            \"chat_room_type\": 2,\n            \"id\": 1,\n            \"is_public\": true,\n            \"name\": \"Family Planning\",\n            \"owner\": {\n                \"active\": true,\n                \"birthday\": \"\",\n                \"created_at\": \"2024-01-25T03:11:43.004405\",\n                \"display_name\": \"Stephanie  ADMIN Syed\",\n                \"email\": \"stephanie@athelohealth.com\",\n                \"first_name\": \"Stephanie  ADMIN\",\n                \"id\": 1,\n                \"last_name\": \"Syed\",\n                \"phone\": \"\",\n                \"updated_at\": \"2024-01-25T03:11:43.004579\"\n            },\n            \"user_profiles\": [\n                {\n                    \"active\": true,\n                    \"birthday\": \"\",\n                    \"created_at\": \"2024-01-25T03:11:43.004405\",\n                    \"display_name\": \"Stephanie  ADMIN Syed\",\n                    \"email\": \"stephanie@athelohealth.com\",\n                    \"first_name\": \"Stephanie  ADMIN\",\n                    \"id\": 1,\n                    \"last_name\": \"Syed\",\n                    \"phone\": \"\",\n                    \"updated_at\": \"2024-01-25T03:11:43.004579\"\n                }\n            ],\n            \"user_profiles_count\": 1\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -851,6 +892,98 @@
 							"body": "<!doctype html><html lang=en><title>401 Unauthorized</title><h1>Unauthorized</h1><p>Only admins can create new community threads</p>"
 						}
 					]
+				},
+				{
+					"name": "Posts by thread",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/group-conversations/1/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								"group-conversations",
+								"1",
+								"posts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/chats/group-conversations/1/posts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chats",
+										"group-conversations",
+										"1",
+										"posts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "864"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 27 Jan 2024 20:33:50 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 4,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"author_id\": 1,\n            \"content\": \"Hello\",\n            \"created_at\": \"2024-01-27T20:30:01.879540\",\n            \"id\": 12,\n            \"thread_id\": 1,\n            \"updated_at\": \"2024-01-27T20:30:01.879712\"\n        },\n        {\n            \"author_id\": 1,\n            \"content\": \"Hello\",\n            \"created_at\": \"2024-01-27T20:32:47.270325\",\n            \"id\": 13,\n            \"thread_id\": 1,\n            \"updated_at\": \"2024-01-27T20:32:47.270440\"\n        },\n        {\n            \"author_id\": 1,\n            \"content\": \"Hello\",\n            \"created_at\": \"2024-01-27T20:32:47.270325\",\n            \"id\": 14,\n            \"thread_id\": 1,\n            \"updated_at\": \"2024-01-27T20:32:47.270440\"\n        },\n        {\n            \"author_id\": 1,\n            \"content\": \"Hello\",\n            \"created_at\": \"2024-01-27T20:33:18.325174\",\n            \"id\": 15,\n            \"thread_id\": 1,\n            \"updated_at\": \"2024-01-27T20:33:18.325332\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "posts by thread",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Hello\",\n    \"author_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/chats/group-conversations/1/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								"group-conversations",
+								"1",
+								"posts"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1592,6 +1725,26 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/chats/group-conversations/5/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats",
+						"group-conversations",
+						"5",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -1599,7 +1752,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjViNjAyZTBjYTFmNDdhOGViZmQxMTYwNGQ5Y2JmMDZmNGQ0NWY4MmIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTcwNjIwMDkwMCwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNzA2MzI3MDEwLCJleHAiOjE3MDYzMzA2MTAsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.SMxeI5RL_RwQ5-IyDM8V41yMSHgYd8g2oGys1SQOjGXKfveMoUqkf_q0hV4KXKCezPsWoCiK7n653fCQ4zZDizXz0jVlh_rp2SqiFMLjwX7wy96Gy3oOzhFdpdSMjmQ85zkCBxaoWRkSlmbuPjkkuJAJUaXoGDwyN8NRoGgXHF_Q1-gkPFW_sUZq12-eqXdWh2S6SB4pybzNmDMHJ8xnoPif35OPT6YlT9bZMy52A1NkGd4pQBijHZa47UXMjfNOgFI1BYltUXewqkBsAOf_GxXWrYKmAMspvYFKlyb0Fc5rc4Kv3JIgskUxGJshvjle7xWBpfdQL3y6ZTcZGmz9Ow",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjViNjAyZTBjYTFmNDdhOGViZmQxMTYwNGQ5Y2JmMDZmNGQ0NWY4MmIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTcwNjM3ODg1MiwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNzA2Mzg1MDkzLCJleHAiOjE3MDYzODg2OTMsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.Ke1AjJgtFCSrsUdJZuQJ4QGyymvMlKcm1jxmzrJg9fGbx7dVJteKB7xWPD309d_Nrz4IfobUDO8z3dGdzRul6lv42JtUc-IvjZ2cFNHzvn62nsiMXsHCXVVDtOi-yezU0xU6UWvcT-RugyoG4q5DMb6n0Nsbivhd8jBZJf8qgSqNHqmJI0XgeW534vWS2ZeHExsQKDNWA9kM4HrSvaWACXgTNYPsN0A4xGPLxuZj4hkbiflDDkKJKsuKf7uLrpX0sFxR40-ZgXFNWOSP_N1WYTl6KascKDKHIrZPt8_xEpvDgqCG0G-Si6P7MqG0ONLytS4XmUMGkaMWH0AJOefCEQ",
 				"type": "string"
 			}
 		]
