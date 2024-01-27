@@ -32,7 +32,6 @@ def create_app() -> Flask:
     with app.app_context():
         db.init_app(app)
         migrate.init_app(app, db)
-        # socketio.init_app(app)
 
         for blueprint in blueprints:
             app.register_blueprint(blueprint=blueprint)

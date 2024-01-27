@@ -7,6 +7,8 @@ from models.database import getconn
 class Config(object):
     TESTING = False
     PORT = os.environ.get("PORT")
+    WEBSOCKET_JWT_ALGORITHM = os.environ.get("WEBSOCKET_JWT_ALGORITHM", "HS256")
+    WEBSOCKET_JWT_SECRET_KEY = os.environ.get("WEBSOCKET_JWT_SECRET_KEY", "secret")
 
 
 class CloudConfig(Config):
@@ -40,6 +42,7 @@ class LocalConfig(Config):
     LOG_LEVEL = logging.DEBUG
     DEBUG = True
     SECRET_KEY = "SECRET_KEY"
+    CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:8000", "http://localhost:3000", "http://192.168.0.223:3000"]
 
 
 class TestingConfig(Config):
