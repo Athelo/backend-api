@@ -103,9 +103,9 @@ class UserProfileDeleteView(MethodView):
     @jwt_authenticated
     def delete(self):
         user = get_user_from_request(request)
-        db.session.delete(user)
-        db.session.commit()
-        return {}, ACCEPTED
+        # db.session.delete(user)
+        # db.session.commit()
+        return {"message": "Attempted to delete the user"}, ACCEPTED
 
 
 @class_route(my_profile_endpoints, "/admin/", "admin-profile")
