@@ -84,8 +84,6 @@ class UserProfileDetailView(MethodView):
             user.last_name = data["last_name"]
         if data.get("display_name"):
             user.display_name = data["display_name"]
-        if data.get("email"):
-            user.email = (data["email"],)
         if data.get("birthday"):
             user.birthday = (data["birthday"],)
         if data.get("phone"):
