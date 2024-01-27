@@ -112,7 +112,7 @@ class CommunityThreadListView(MethodView):
 
 
 @jwt_authenticated
-@community_thread_endpoints.route("/<int:thread_id>", methods=["GET"])
+@community_thread_endpoints.route("/<int:thread_id>/", methods=["GET"])
 def get_community_thread(thread_id: int):
     user = get_user_from_request(request)
     community_thread = (
@@ -132,7 +132,7 @@ def get_community_thread(thread_id: int):
 
 
 @jwt_authenticated
-@community_thread_endpoints.route("/<int:thread_id>", methods=["PUT"])
+@community_thread_endpoints.route("/<int:thread_id>/", methods=["PUT"])
 def update_community_thread(thread_id: int):
     user = get_user_from_request(request)
     require_admin_user(user)
@@ -175,7 +175,7 @@ def update_community_thread(thread_id: int):
 
 
 @jwt_authenticated
-@community_thread_endpoints.route("/<int:thread_id>/join", methods=["GET"])
+@community_thread_endpoints.route("/<int:thread_id>/join/", methods=["GET"])
 def join_community_thread(thread_id: int):
     user = get_user_from_request(request)
     community_thread = (
@@ -208,7 +208,7 @@ def join_community_thread(thread_id: int):
 
 
 @jwt_authenticated
-@community_thread_endpoints.route("/<int:thread_id>/leave", methods=["GET"])
+@community_thread_endpoints.route("/<int:thread_id>/leave/", methods=["GET"])
 def leave_community_thread(thread_id: int):
     user = get_user_from_request(request)
     community_thread = (

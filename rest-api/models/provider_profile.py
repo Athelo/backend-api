@@ -20,3 +20,10 @@ class ProviderProfile(TimestampMixin, Base):
         back_populates="provider",
         lazy="joined",
     )
+    availability: Mapped[List["ProviderAvailability"]] = relationship(
+        back_populates="provider",
+        lazy="joined",
+    )
+
+    def to_json(self):
+        return {"display_name": self.user.display_name, "photo": None}

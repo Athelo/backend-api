@@ -1,4 +1,3 @@
-
 import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 
@@ -18,15 +17,14 @@ user_feeling_endpoints = Blueprint(
     "My Feelings", __name__, url_prefix="/api/v1/health/"
 )
 
+
 @class_route(user_feeling_endpoints, "/user_feeling/", "my_feelings")
 class UserFeelingsView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
         feelings = (
-            db.session.query(PatientFeelings)
-            .filter_by(user_profile_id=user.id)
-            .all()
+            db.session.query(PatientFeelings).filter_by(user_profile_id=user.id).all()
         )
 
         schema = PatientFeelingSchema(many=True)
@@ -39,7 +37,7 @@ class UserFeelingsView(MethodView):
         json_data = request.get_json()
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
-    
+
         schema = PatientFeelingUpdateSchema()
 
         try:
