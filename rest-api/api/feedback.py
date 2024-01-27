@@ -4,6 +4,7 @@ from http.client import (
     CREATED,
     UNPROCESSABLE_ENTITY,
 )
+from api.constants import ABOUT_US, PRIVACY, TERMS_OF_USE
 from api.utils import class_route
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
@@ -110,3 +111,17 @@ class FeedbackListView(MethodView):
             )
         result = feedback.to_json()
         return result, CREATED
+
+@class_route(feedback_endpoints, "/applications/", "feedback")
+class ApplicationData(MethodView):
+    def get(self):
+        # Return app auxillary data (e.g. about us, privacy policy and terms of use)
+        res = [
+            {
+                "about_us": ABOUT_US,
+                "privacy": PRIVACY,
+                "terms_of_use": TERMS_OF_USE
+            }
+        ] 
+
+        return generate_paginated_dict(res)
