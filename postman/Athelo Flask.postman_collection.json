@@ -34,7 +34,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"Stephanie  ADMIN\",\n    \"last_name\": \"Syed\"\n}",
+							"raw": "{\n    \"first_name\": \"Stephanie NOT ADMIN\",\n    \"last_name\": \"Syed\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -220,6 +220,55 @@
 					"response": []
 				},
 				{
+					"name": "Patient Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me/patient/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"patient",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patient Profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cancer_status\": \"REMISSION\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/me/patient/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"patient",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Admin Profile",
 					"request": {
 						"method": "GET",
@@ -253,6 +302,55 @@
 								"users",
 								"me",
 								"admin",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Provider Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me/admin/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"admin",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Provider Profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"appointment_buffer_sec\": 900\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/me/provider/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"provider",
 								""
 							]
 						}
@@ -1053,6 +1151,114 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Appointments",
+			"item": [
+				{
+					"name": "Appointments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/appointments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"appointments"
+							],
+							"query": [
+								{
+									"key": "all",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Appointments",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/appointments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"appointments"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Appointment created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/appointments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"appointments"
+									]
+								}
+							},
+							"status": "CREATED",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.7 Python/3.11.7"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Jan 2024 17:21:24 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "399"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"created_at\": \"2024-01-25T17:21:20.641005\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"id\": 8,\n    \"patient_id\": 1,\n    \"patient_start_time\": null,\n    \"provider_id\": 1,\n    \"provider_start_time\": null,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"status\": \"BOOKED\",\n    \"updated_at\": \"2024-01-25T17:21:20.641177\",\n    \"zoom_token\": \" appointment.zoom_token\",\n    \"zoom_url\": \"appointment.zoom_url\"\n}"
+						}
+					]
+				}
+			]
 		}
 	],
 	"auth": {
@@ -1060,7 +1266,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjViNjAyZTBjYTFmNDdhOGViZmQxMTYwNGQ5Y2JmMDZmNGQ0NWY4MmIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTcwNTg1NzcyMCwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNzA2MTUxODkyLCJleHAiOjE3MDYxNTU0OTIsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.qSiANW7pq6q6frHKi8AhdD5nGLEi3B7d_Kk19mcBdSbTd2gfUCAtvcgFv9O4-rCJcbx9P40b_cBIdsQ-yGp7yPq8Lgt57aMThKQc4zfjaerCGgzaLh_gWH0i3pM66c7f9gKYk4qC0nwz8IZC0HiZHTOIPa4AHX06SuN9J26Jf-l32kd_F4Wl0DyoMp4RtyazP9pDM2D6Rx_XkqlpKk_UwBud_tMfRJHtdp6MziuK850GYOLun9z43lgbSwIWcpRtawbMCmy6toYK87ACmWbyo-Jv2g0h4jF5DOfupByw-JGpw5jcEn_RomAHwRtGA7NO2cW3zkXAYb7wTCV4gmKF1w",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjViNjAyZTBjYTFmNDdhOGViZmQxMTYwNGQ5Y2JmMDZmNGQ0NWY4MmIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTcwMjE2MDMyOCwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzA2MjAwOTEzLCJleHAiOjE3MDYyMDQ1MTMsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.IHyuV7KKEh8y2TJusBa0xYeqaZRpaX8tyr0mZspUjV6l1y4DgvLMjq0vjPYUVPaPup_jLo12qfZRsU8o3aY80pNBsVa509GVnYnqHMjdxP22G9NNkrMg_QkFVQ_TkIRoToio3B8LlV--t20cx3tv4qo4nvGYpG4FTU089zoA5R5ZxWtLLdxYEkpqgCBOBVTV3zbgHsGRTg44Kqv7AKSurw6BW4wy1geQXUwJEDGrqwQPRUkYs9l1MHNDdABaANkwk49oWLtw8Uggpq0a4phsoaCylOqmN9FiyfTONvkuHfPe8b2gF0yzGNh-74UK4BmPufed6Sed2f-UkEczD2TlLw",
 				"type": "string"
 			}
 		]

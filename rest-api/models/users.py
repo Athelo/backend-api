@@ -22,15 +22,31 @@ class Users(TimestampMixin, Base):
     saved_content: Mapped[List["SavedContent"]] = relationship(
         back_populates="users", lazy="joined"
     )
-    patient_profiles: Mapped["PatientProfiles"] = relationship(
-        "PatientProfiles", back_populates="user", uselist=False, lazy="joined"
+    patient_profile: Mapped["PatientProfile"] = relationship(
+        "PatientProfile", back_populates="user", uselist=False, lazy="joined"
     )
-    admin_profiles: Mapped["AdminProfile"] = relationship(
+    admin_profile: Mapped["AdminProfile"] = relationship(
         "AdminProfile", back_populates="user", uselist=False, lazy="joined"
     )
-    caregiver_profiles: Mapped["CaregiverProfiles"] = relationship(
-        "CaregiverProfiles", back_populates="user", uselist=False, lazy="joined"
+    caregiver_profile: Mapped["CaregiverProfile"] = relationship(
+        "CaregiverProfile", back_populates="user", uselist=False, lazy="joined"
     )
-    provider_profiles: Mapped["ProviderProfiles"] = relationship(
-        "ProviderProfiles", back_populates="user", uselist=False, lazy="joined"
+    provider_profile: Mapped["ProviderProfile"] = relationship(
+        back_populates="user", uselist=False, lazy="joined"
     )
+
+    @property
+    def is_patient(self) -> bool:
+        return self.patient_profile is not None and self.patient_profile.active
+
+    @property
+    def is_provider(self) -> bool:
+        return self.provider_profile is not None and self.provider_profile.active
+
+    @property
+    def is_admin(self) -> bool:
+        return self.admin_profile is not None and self.admin_profile.active
+
+    @property
+    def is_caregiver(self) -> bool:
+        return self.caregiver_profile is not None and self.caregiver_profile.active

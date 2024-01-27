@@ -1,5 +1,3 @@
-from typing import List
-
 from sqlalchemy import ForeignKey
 
 from models.base import Base, TimestampMixin
