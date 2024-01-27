@@ -22,6 +22,9 @@ from schemas.patient_profile import PatientProfileCreateSchema, PatientProfileSc
 from models.provider_profile import ProviderProfile
 from schemas.provider_profile import ProviderProfileSchema, ProviderProfileCreateSchema
 from api.constants import USER_PROFILE_RETURN_SCHEMA, ALLOWED_ADMIN_DOMAINS
+from zoneinfo import ZoneInfo
+from datetime import datetime
+from models.provider_availability import ProviderAvailability
 
 logger = logging.getLogger()
 
@@ -219,3 +222,28 @@ class ProviderProfileView(MethodView):
         schema = ProviderProfileSchema()
         result = schema.dump(provider_profile)
         return result, ACCEPTED
+
+
+@class_route(my_profile_endpoints, "/availability/", "my-availability")
+class ProviderAvailabilityView(MethodView):
+    @jwt_authenticated
+    def get(self):
+        user = get_user_from_request(request)
+        if not user.is_provider:
+            abort(UNAUTHORIZED, "Only providers have availability")
+
+        timezone = ZoneInfo(request.args.get("tz", default="US/Mountain"))
+
+        availabilities = (
+            db.session.query(ProviderAvailability)
+            .filter(ProviderAvailability.provider_id == user.provider.id)
+            .filter(
+                ProviderAvailability.end_time > datetime.utcnow(),
+            )
+            .all()
+        )
+        # TODO: remove booked appts from availability
+
+        return generate_paginated_dict(
+            [availability.to_json(timezone) for availability in availabilities]
+        )

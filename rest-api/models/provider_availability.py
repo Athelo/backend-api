@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey
@@ -17,6 +16,14 @@ class ProviderAvailability(TimestampMixin, Base):
     )
     start_time: Mapped[datetime]
     end_time: Mapped[datetime]
+
+    def to_json(self, timezone: ZoneInfo = ZoneInfo("UTC")):
+        return {
+            "id": self.id,
+            "provider_id": self.provider_id,
+            "start_time": self.start_time.astimezone(timezone),
+            "end_time": self.end_time.astimezone(timezone),
+        }
 
     def to_open_appointments_json(self, timezone: ZoneInfo) -> list[dict]:
         # Temporary - splits into 30 min chunks
