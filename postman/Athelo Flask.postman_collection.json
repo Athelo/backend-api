@@ -254,15 +254,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/users/me/patient/",
+							"raw": "{{baseUrl}}/users/me/patient",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"users",
 								"me",
-								"patient",
-								""
+								"patient"
 							]
 						}
 					},
@@ -314,14 +313,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/users/me/admin/",
+							"raw": "{{baseUrl}}/users/me/provider/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"users",
 								"me",
-								"admin",
+								"provider",
 								""
 							]
 						}
@@ -1075,7 +1074,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"topic_id\": \"1\",\n    \"content\": \"this is my problem\"\n}",
+							"raw": "{\n    \"topic_id\": \"2\",\n    \"content\": \"this is my problem again\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1186,7 +1185,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
+							"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"timezone\": \"US/Denver\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1255,8 +1254,342 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"created_at\": \"2024-01-25T17:21:20.641005\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"id\": 8,\n    \"patient_id\": 1,\n    \"patient_start_time\": null,\n    \"provider_id\": 1,\n    \"provider_start_time\": null,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"status\": \"BOOKED\",\n    \"updated_at\": \"2024-01-25T17:21:20.641177\",\n    \"zoom_token\": \" appointment.zoom_token\",\n    \"zoom_url\": \"appointment.zoom_url\"\n}"
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/appointments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"appointments"
+									]
+								}
+							},
+							"status": "UNAUTHORIZED",
+							"code": 401,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.7 Python/3.11.7"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Jan 2024 17:27:08 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "128"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "<!doctype html><html lang=en><title>401 Unauthorized</title><h1>Unauthorized</h1><p>Only patients can book appointments</p>"
+						},
+						{
+							"name": "With timezone",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"timezone\": \"US/Denver\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/appointments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"appointments"
+									]
+								}
+							},
+							"status": "CREATED",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.7 Python/3.11.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 27 Jan 2024 02:40:11 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "400"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"created_at\": \"2024-01-27T02:40:08.692937\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"id\": 11,\n    \"patient_id\": 1,\n    \"patient_start_time\": null,\n    \"provider_id\": 1,\n    \"provider_start_time\": null,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"status\": \"BOOKED\",\n    \"updated_at\": \"2024-01-27T02:40:08.693088\",\n    \"zoom_token\": \" appointment.zoom_token\",\n    \"zoom_url\": \"appointment.zoom_url\"\n}"
 						}
 					]
+				},
+				{
+					"name": "Providers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/providers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"providers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Provider availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/providers/1/availability?date=01/26/2024",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"providers",
+								"1",
+								"availability"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "01/26/2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Appointment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/appointment/10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"appointment",
+								"10"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Appointment Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/appointment/10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"appointment",
+										"10"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.7 Python/3.11.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 27 Jan 2024 02:36:40 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "346"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"end_time\": \"Tue, 25 Jun 2024 17:51:31 GMT\",\n    \"patient\": {\n        \"display_name\": \"Stephanie NOT ADMIN Syed\",\n        \"photo\": \"\"\n    },\n    \"provider\": {\n        \"display_name\": \"Stephanie  ADMIN Syed\",\n        \"photo\": \"\"\n    },\n    \"start_time\": \"Tue, 25 Jun 2024 16:51:31 GMT\",\n    \"zoom_token\": \" appointment.zoom_token\",\n    \"zoom_url\": \"appointment.zoom_url\"\n}"
+						}
+					]
+				},
+				{
+					"name": "My Availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me/availability?tz=US/Central",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"availability"
+							],
+							"query": [
+								{
+									"key": "tz",
+									"value": "US/Central"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Example with duplicates (bad)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/me/availability?tz=US/Central",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"me",
+										"availability"
+									],
+									"query": [
+										{
+											"key": "tz",
+											"value": "US/Central"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.7 Python/3.11.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 27 Jan 2024 04:09:55 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "382"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"count\": 2,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"end_time\": \"Wed, 31 Jan 2024 19:00:00 GMT\",\n            \"id\": 3,\n            \"provider_id\": 1,\n            \"start_time\": \"Wed, 31 Jan 2024 17:00:00 GMT\"\n        },\n        {\n            \"end_time\": \"Wed, 31 Jan 2024 19:00:00 GMT\",\n            \"id\": 1,\n            \"provider_id\": 1,\n            \"start_time\": \"Wed, 31 Jan 2024 17:00:00 GMT\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "My Availability",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"start_time\": \"2024-01-31 10:00\",\n    \"end_time\": \"2024-01-31 12:00\",\n    \"timezone\": \"US/Central\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/me/availability",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Availability",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/me/availability/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"availability",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -1266,7 +1599,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjViNjAyZTBjYTFmNDdhOGViZmQxMTYwNGQ5Y2JmMDZmNGQ0NWY4MmIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTcwMjE2MDMyOCwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzA2MjAwOTEzLCJleHAiOjE3MDYyMDQ1MTMsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.IHyuV7KKEh8y2TJusBa0xYeqaZRpaX8tyr0mZspUjV6l1y4DgvLMjq0vjPYUVPaPup_jLo12qfZRsU8o3aY80pNBsVa509GVnYnqHMjdxP22G9NNkrMg_QkFVQ_TkIRoToio3B8LlV--t20cx3tv4qo4nvGYpG4FTU089zoA5R5ZxWtLLdxYEkpqgCBOBVTV3zbgHsGRTg44Kqv7AKSurw6BW4wy1geQXUwJEDGrqwQPRUkYs9l1MHNDdABaANkwk49oWLtw8Uggpq0a4phsoaCylOqmN9FiyfTONvkuHfPe8b2gF0yzGNh-74UK4BmPufed6Sed2f-UkEczD2TlLw",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjViNjAyZTBjYTFmNDdhOGViZmQxMTYwNGQ5Y2JmMDZmNGQ0NWY4MmIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTcwNjIwMDkwMCwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNzA2MzI3MDEwLCJleHAiOjE3MDYzMzA2MTAsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.SMxeI5RL_RwQ5-IyDM8V41yMSHgYd8g2oGys1SQOjGXKfveMoUqkf_q0hV4KXKCezPsWoCiK7n653fCQ4zZDizXz0jVlh_rp2SqiFMLjwX7wy96Gy3oOzhFdpdSMjmQ85zkCBxaoWRkSlmbuPjkkuJAJUaXoGDwyN8NRoGgXHF_Q1-gkPFW_sUZq12-eqXdWh2S6SB4pybzNmDMHJ8xnoPif35OPT6YlT9bZMy52A1NkGd4pQBijHZa47UXMjfNOgFI1BYltUXewqkBsAOf_GxXWrYKmAMspvYFKlyb0Fc5rc4Kv3JIgskUxGJshvjle7xWBpfdQL3y6ZTcZGmz9Ow",
 				"type": "string"
 			}
 		]

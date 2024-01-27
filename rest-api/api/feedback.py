@@ -25,7 +25,7 @@ feedback_endpoints = Blueprint(
 )
 
 
-@class_route(feedback_endpoints, "/feedback-topic", "feedback_topics")
+@class_route(feedback_endpoints, "/feedback-topic/", "feedback_topics")
 class FeedbackTopicsView(MethodView):
     @jwt_authenticated
     def get(self):
@@ -66,7 +66,7 @@ class FeedbackTopicsView(MethodView):
         return result, CREATED
 
 
-@class_route(feedback_endpoints, "/feedback", "feedback")
+@class_route(feedback_endpoints, "/feedback/", "feedback")
 class FeedbackListView(MethodView):
     @jwt_authenticated
     def get(self):
