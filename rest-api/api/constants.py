@@ -7,7 +7,7 @@ USER_PROFILE_RETURN_SCHEMA = {
     "email": "",
     "display_name": "",
     "social_media": [],
-    "is_friend": None,
+    "is_friend": False,
     "photo": None,
     "profile_friend_visibility_only": False,
     "person_tags": [],
@@ -15,11 +15,11 @@ USER_PROFILE_RETURN_SCHEMA = {
     "user": {"id": 0, "i2a_identifier": "", "i2a_username": "", "username": ""},
     "has_fitbit_user_profile": False,
     "athelo_user_type": "2",
-    "is_caregiver": False,
-    "is_patient": False,
 }
 
 V1_API_PREFIX = "/api/v1"
 
 
 ALLOWED_ADMIN_DOMAINS = ["athelohealth.com"]
+
+DATETIME_FORMAT = "%Y-%m-%d %H:%M"

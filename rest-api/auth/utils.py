@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger()
 
 
-def get_user_from_request(request: Request):
+def get_user_from_request(request: Request) -> Users:
     try:
         user = db.session.query(Users).filter_by(email=request.email).one()
         return user
@@ -18,12 +18,12 @@ def get_user_from_request(request: Request):
         raise NotFound("User profile does not exist for that email")
 
 
-def is_current_user_or_403(request, user_id):
+def is_current_user_or_403(request, user_id) -> None:
     user = get_user_from_request(request)
     if user_id != user.id:
         raise Unauthorized()
 
 
-def require_admin_user(user: Users):
-    if user.admin_profiles is None or not user.admin_profiles.active:
+def require_admin_user(user: Users) -> None:
+    if not user.is_admin:
         abort(UNAUTHORIZED, "Only admins can perform this action")
