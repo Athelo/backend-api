@@ -50,6 +50,8 @@ class UserProfileDetailView(MethodView):
             res["last_name"] = user.last_name
             res["display_name"] = user.display_name
             res["email"] = user.email
+            res["birthday"] = user.birthday
+            res["phone"] = user.phone
             res["is_caregiver"] = user.is_caregiver
             res["is_patient"] = user.is_patient
             res["is_provider"] = user.is_provider
@@ -84,6 +86,10 @@ class UserProfileDetailView(MethodView):
             user.display_name = data["display_name"]
         if data.get("email"):
             user.email = (data["email"],)
+        if data.get("birthday"):
+            user.birthday = (data["birthday"],)
+        if data.get("phone"):
+            user.phone = (data["phone"],)
         if data.get("active"):
             user.active = (data.get("active", True),)
 
