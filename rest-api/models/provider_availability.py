@@ -31,8 +31,8 @@ class ProviderAvailability(TimestampMixin, Base):
         next_appt_end = self.start_time.astimezone(timezone) + timedelta(minutes=30)
 
         appointments = []
-        while next_appt_end < self.end_time:
-            appointments.add(next_appt_start.strftime("%m/%d/%Y %I:%M %p"))
+        while next_appt_end < self.end_time.replace(tzinfo=ZoneInfo("UTC")):
+            appointments.append(next_appt_start.strftime("%m/%d/%Y %I:%M %p"))
             next_appt_start = next_appt_end
             next_appt_end = next_appt_end + timedelta(minutes=30)
         return appointments

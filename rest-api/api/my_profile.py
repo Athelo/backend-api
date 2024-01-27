@@ -296,3 +296,17 @@ class ProviderAvailabilityView(MethodView):
             )
         result = availability.to_json(timezone)
         return result, CREATED
+
+
+@my_profile_endpoints.route("/availability/<int:availability_id>/", methods=["DELETE"])
+@jwt_authenticated
+def delete_availability(availability_id: int):
+    user = get_user_from_request(request)
+
+    availability = db.session.get(ProviderAvailability, availability_id)
+    if availability.provider_id != user.provider_profile.id and not user.is_admin:
+        abort(UNAUTHORIZED, "Cannot delete availability for another provider")
+
+    db.session.delete(availability)
+    db.session.commit()
+    return {}, ACCEPTED
