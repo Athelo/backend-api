@@ -65,3 +65,44 @@ class AppointmentListView(MethodView):
         appts = query.all()
         results = [appointment.to_legacy_json() for appointment in appts]
         return generate_paginated_dict(results)
+
+    @jwt_authenticated
+    def post(self):
+        user = get_user_from_request(request)
+        if not user.is_patient:
+            abort(UNAUTHORIZED, "Only patients can book appointments")
+
+        json_data = request.get_json()
+        if not json_data:
+            abort(BAD_REQUEST, "No input data provided.")
+        schema = AppointmentCreateSchema()
+
+        try:
+            data = schema.load(json_data)
+        except ValidationError as err:
+            abort(UNPROCESSABLE_ENTITY, err.messages)
+
+        appointment = Appointment(
+            patient_id=user.patient_profile.id,
+            provider_id=data["provider_id"],
+            start_time=data["start_time"],
+            end_time=data["end_time"],
+            zoom_url=data["zoom_url"],
+            zoom_token=data["zoom_token"],
+            status=AppointmentStatus.BOOKED,
+        )
+        try:
+            db.session.add(appointment)
+            db.session.commit()
+        except IntegrityError as e:
+            abort(
+                UNPROCESSABLE_ENTITY,
+                f"Cannot create appointment because {e.orig.args[0]['M']}",
+            )
+        except DatabaseError as e:
+            abort(
+                UNPROCESSABLE_ENTITY,
+                f"Cannot create appointment because {e.orig.args[0]['M']}",
+            )
+        result = AppointmentSchema().dump(appointment)
+        return result, CREATED
