@@ -22,6 +22,7 @@ class CloudConfig(Config):
     INSTANCE_CONNECTION_NAME = os.environ.get("INSTANCE_CONNECTION_NAME")
     DEBUG = False
     SECRET_KEY = os.environ.get("SECRET_KEY")
+    ALLOWED_ADMIN_DOMAINS = ["athelohealth.com"]
 
 
 class ProductionConfig(CloudConfig):
@@ -42,9 +43,15 @@ class LocalConfig(Config):
     LOG_LEVEL = logging.DEBUG
     DEBUG = True
     SECRET_KEY = "SECRET_KEY"
-    CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:8000", "http://localhost:3000", "http://192.168.0.223:3000"]
+    CORS_ALLOWED_ORIGINS = [
+        "http://127.0.0.1:8000",
+        "http://localhost:3000",
+        "http://192.168.0.223:3000",
+    ]
+    ALLOWED_ADMIN_DOMAINS = ["athelohealth.com", "gmail.com"]
 
 
 class TestingConfig(Config):
     DATABASE_URI = "sqlite:///:memory:"
     TESTING = True
+    ALLOWED_ADMIN_DOMAINS = ["athelohealth.com", "gmail.com"]

@@ -31,6 +31,7 @@ from zoneinfo import ZoneInfo
 from datetime import datetime
 from models.provider_availability import ProviderAvailability
 from sqlalchemy.exc import DatabaseError, IntegrityError
+from flask import current_app as app
 
 logger = logging.getLogger()
 
@@ -125,7 +126,7 @@ class AdminProfileView(MethodView):
 
         if not any(
             allowed_domain
-            for allowed_domain in ALLOWED_ADMIN_DOMAINS
+            for allowed_domain in app.config.get("ALLOWED_ADMIN_DOMAINS")
             if allowed_domain == domain
         ):
             abort(UNAUTHORIZED, "user's email is not on a valid admin domain")
