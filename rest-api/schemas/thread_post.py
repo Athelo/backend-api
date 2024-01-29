@@ -15,3 +15,4 @@ class ThreadPostSchema(SQLAlchemyAutoSchema):
 
 class ThreadPostCreateSchema(Schema):
     content = fields.Str()
+    author_id = fields.Int(allow_none=True, required=False)
