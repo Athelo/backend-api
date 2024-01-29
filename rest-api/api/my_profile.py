@@ -315,3 +315,9 @@ def delete_availability(availability_id: int):
     db.session.delete(availability)
     db.session.commit()
     return {}, ACCEPTED
+
+
+@my_profile_endpoints.route("/zoom-token", methods=["POST"])
+def store_zoom_token():
+    print(request.args)
+    abort(NOT_FOUND, "not implemented")

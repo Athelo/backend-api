@@ -15,6 +15,7 @@ from api.feedback import feedback_endpoints
 from api.appointments import appointments_endpoints
 from api.providers import provider_endpoints
 from api.appointment import appointment_endpoints
+from api.zoom import zoom_endpoints
 
 blueprints = [
     main_endpoints,
@@ -32,4 +33,5 @@ blueprints = [
     appointments_endpoints,
     provider_endpoints,
     appointment_endpoints,
+    zoom_endpoints,
 ]

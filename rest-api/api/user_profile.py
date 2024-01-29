@@ -9,6 +9,7 @@ from marshmallow import ValidationError
 from models.database import db
 from models.users import Users
 from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
+from repositories.user import get_user_by_email
 
 logger = logging.getLogger()
 
@@ -39,8 +40,7 @@ class UserProfilesView(MethodView):
             return err.messages, UNPROCESSABLE_ENTITY
 
         # check for existing user
-
-        user = db.session.query(Users).filter_by(email=request.email).one_or_none()
+        user = get_user_by_email(request.email)
 
         if user is not None:
             return "User with that email already exists", UNPROCESSABLE_ENTITY
