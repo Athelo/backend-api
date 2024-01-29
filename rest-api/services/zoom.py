@@ -12,27 +12,19 @@ from flask import current_app as app
 logger = logging.getLogger()
 
 
-def get_zoom_client_id():
-    return app.config.get("ZOOM_CLIENT_ID")
-
-
-def get_zoom_client_secret():
-    return app.config.get("ZOOM_CLIENT_SECRET")
-
-
 def get_redirect_url():
     return get_api_url() + "/zoom/callback"
 
 
 def get_zoom_oath_url():
     encoded_redirect_url = url_parse.quote(get_redirect_url(), safe=" ")
-    zoom_url = f"https://zoom.us/oauth/authorize?response_type=code&client_id={get_zoom_client_id()}&redirect_uri={encoded_redirect_url}"
+    zoom_url = f"https://zoom.us/oauth/authorize?response_type=code&client_id={app.config.get('ZOOM_CLIENT_ID')}&redirect_uri={encoded_redirect_url}"
     return zoom_url
 
 
 def make_zoom_authorization_url():
     params = {
-        "client_id": get_zoom_client_id(),
+        "client_id": app.config.get("ZOOM_CLIENT_ID"),
         "response_type": "code",
         "redirect_uri": get_redirect_url(),
     }
@@ -53,7 +45,7 @@ def get_zoom_user_email(access_token):
 
 def get_zoom_token(code):
     client_auth = requests.auth.HTTPBasicAuth(
-        get_zoom_client_id(), get_zoom_client_secret()
+        app.config.get("ZOOM_CLIENT_ID"), app.config.get("ZOOM_CLIENT_SECRET")
     )
     post_data = {
         "grant_type": "authorization_code",
@@ -70,7 +62,7 @@ def get_zoom_token(code):
 
 def refresh_zoom_token(refresh_token: str):
     client_auth = requests.auth.HTTPBasicAuth(
-        get_zoom_client_id(), get_zoom_client_secret()
+        app.config.get("ZOOM_CLIENT_ID"), app.config.get("ZOOM_CLIENT_SECRET")
     )
     post_data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
     response = requests.post(
@@ -105,22 +97,17 @@ def create_zoom_meeting_with_provider(
 
     set_provider_zoom_refresh_token(user.provider_profile, refresh_token)
 
-    # The request headers
     headers = {"Authorization": f"Bearer {access_token}"}
 
-    # The request body
     payload = {
         "topic": topic,
         "duration": duration,
         "start_time": start_time.isoformat(),
     }
 
-    # Make the request to create the meeting
     response = requests.post(create_meeting_url, headers=headers, json=payload)
 
-    # Check the response status code
     if response.status_code == 201:
-        # The request was successful, get the meeting ID
         meeting_id = response.json()["id"]
         logger.info(f"Meeting created successfully, meeting ID: {meeting_id}")
     else:
