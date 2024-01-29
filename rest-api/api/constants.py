@@ -26,8 +26,6 @@ ALLOWED_ADMIN_DOMAINS = ["athelohealth.com"]
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M"
 
-# Temporary work around to allow Kirby to use the support@athelohealth.com zoom account
-ZOOM_EMAIL_OVERRIDE = {"support@athelohealth.com": "kirby@athelohealth.com"}
 
 # ------------------ Application Data ----------------------
 ABOUT_US = "<p>Athelo Health is the first biometric-based virtual coaching platform for women in active treatment or in remission with breast and gynecologic cancer. We know that the majority of one&rsquo;s time in treatment and remission is outside of the clinical setting which is why we work to provide evidence-based lifestyle recommendations to support overall well-being. We believe that all women should have access to integrative cancer care, regardless of socioeconomic status, racial and ethnic disparities or geographic limitations.</p>\r\n\r\n<p>The name, Athelo, is the amalgamation of the three goddesses who collectively stand for profound wisdom and guidance. Athena, the Olympian goddess of wisdom, embodies power and authority. She is majestic, beautiful, and stern- traits we know all women embody throughout their journey. Selene, the goddess of the moon, has the ability to provide bright light in a dark sky. She represents change, as the moon passes through new phases each month.&nbsp; Eos, the goddess of dawn, rids the world of darkness. She signifies the arrival of the sun and the subsequent start of a new day.</p>"

@@ -1,7 +1,7 @@
 import logging
 from http.client import BAD_REQUEST, CREATED, NOT_FOUND, OK, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, request
@@ -45,9 +45,7 @@ class SavedContentView(MethodView):
         saved_content = SavedContent(
             external_content_id=data["external_content_id"], user_profile_id=user.id
         )
-
-        db.session.add(saved_content)
-        db.session.commit()
+        commit_entity_or_abort(saved_content)
         result = schema.dump(saved_content)
         return result, CREATED
 

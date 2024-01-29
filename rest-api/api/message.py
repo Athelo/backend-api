@@ -6,7 +6,7 @@ from http.client import (
     UNPROCESSABLE_ENTITY,
 )
 from typing import List
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
@@ -67,9 +67,7 @@ class MessagesView(MethodView):
             )
 
         message = Message(author_id=user.id, content=data["content"], channel=channel)
-
-        db.session.add(message)
-        db.session.commit()
+        commit_entity_or_abort(message)
 
         result = MessageSchema().dump(message)
         return result, CREATED

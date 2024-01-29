@@ -52,6 +52,6 @@ class Appointment(TimestampMixin, Base):
             "patient": {"display_name": self.patient.user.display_name, "photo": ""},
             "start_time": self.start_time,
             "end_time": self.end_time,
-            "zoom_url": self.zoom_url,
-            "zoom_token": self.zoom_token,
+            "zoom_join_url": self.zoom_host_url,
+            "zoom_host_url": self.zoom_join_url,
         }

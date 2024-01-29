@@ -8,7 +8,7 @@ from http.client import (
     CREATED,
 )
 
-from api.utils import class_route, generate_paginated_dict
+from api.utils import class_route, generate_paginated_dict, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
@@ -93,9 +93,7 @@ class UserProfileDetailView(MethodView):
             user.phone = data["phone"]
         if data.get("active"):
             user.active = (data.get("active", True),)
-
-        db.session.add(user)
-        db.session.commit()
+        commit_entity_or_abort(user)
         result = schema.dump(user)
         return result, ACCEPTED
 
@@ -138,9 +136,7 @@ class AdminProfileView(MethodView):
             abort(UNAUTHORIZED, "user's email is not on a valid admin domain")
 
         admin_profile = AdminProfile(user_id=user.id)
-
-        db.session.add(admin_profile)
-        db.session.commit()
+        commit_entity_or_abort(admin_profile)
 
         schema = AdminProfileSchema()
         result = schema.dump(admin_profile)
@@ -183,9 +179,7 @@ class PatientProfileView(MethodView):
             patient_profile = PatientProfile(
                 user_id=user.id, cancer_status=cancer_status
             )
-
-        db.session.add(patient_profile)
-        db.session.commit()
+        commit_entity_or_abort(patient_profile)
 
         schema = PatientProfileSchema()
         result = schema.dump(patient_profile)
@@ -229,8 +223,7 @@ class ProviderProfileView(MethodView):
                 user_id=user.id, appointment_buffer_sec=appointment_buffer
             )
 
-        db.session.add(provider_profile)
-        db.session.commit()
+        commit_entity_or_abort(provider_profile)
 
         schema = ProviderProfileSchema()
         result = schema.dump(provider_profile)
@@ -287,26 +280,13 @@ class ProviderAvailabilityView(MethodView):
             start_time=start_time,
             end_time=end_time,
         )
-
-        try:
-            db.session.add(availability)
-            db.session.commit()
-        except IntegrityError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create feedback topic because {e.orig.args[0]['M']}",
-            )
-        except DatabaseError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create feedback topic because {e.orig.args[0]['M']}",
-            )
+        commit_entity_or_abort(availability)
         result = availability.to_json(timezone)
         return result, CREATED
 
 
-@my_profile_endpoints.route("/availability/<int:availability_id>/", methods=["DELETE"])
 @jwt_authenticated
+@my_profile_endpoints.route("/availability/<int:availability_id>/", methods=["DELETE"])
 def delete_availability(availability_id: int):
     user = get_user_from_request(request)
 

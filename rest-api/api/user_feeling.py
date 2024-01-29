@@ -1,10 +1,10 @@
 import logging
-from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
+from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route, generate_paginated_dict
+from api.utils import class_route, generate_paginated_dict, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
-from flask import Blueprint, abort, request
+from flask import Blueprint, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
@@ -51,8 +51,6 @@ class UserFeelingsView(MethodView):
             note=data.get("note", None),
             general_feeling=data["general_feeling"],
         )
-
-        db.session.add(feeling)
-        db.session.commit()
+        commit_entity_or_abort(feeling)
         result = schema.dump(feeling)
         return result, CREATED

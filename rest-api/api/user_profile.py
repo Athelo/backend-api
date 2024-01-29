@@ -1,7 +1,7 @@
 import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route, generate_paginated_dict
+from api.utils import class_route, generate_paginated_dict, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, request
 from flask.views import MethodView
@@ -52,8 +52,7 @@ class UserProfilesView(MethodView):
             email=request.email,
             active=data.get("active", True),
         )
-        db.session.add(user_profile)
-        db.session.commit()
+        commit_entity_or_abort(user_profile)
         result = UserProfileSchema().dump(user_profile)
         return result, CREATED
 

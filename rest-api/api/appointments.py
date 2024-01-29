@@ -6,7 +6,7 @@ from http.client import (
     UNPROCESSABLE_ENTITY,
     INTERNAL_SERVER_ERROR,
 )
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from models.users import Users
@@ -16,7 +16,6 @@ from marshmallow import ValidationError
 from models.database import db
 from schemas.appointment import AppointmentSchema, AppointmentCreateSchema
 from models.appointment import Appointment, AppointmentStatus
-from sqlalchemy.exc import IntegrityError, DatabaseError
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
 from api.constants import V1_API_PREFIX
@@ -104,18 +103,7 @@ class AppointmentListView(MethodView):
             zoom_join_url=zoom_appt_data["join_url"],
             status=AppointmentStatus.BOOKED,
         )
-        try:
-            db.session.add(appointment)
-            db.session.commit()
-        except IntegrityError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create appointment because {e.orig.args[0]['M']}",
-            )
-        except DatabaseError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create appointment because {e.orig.args[0]['M']}",
-            )
+        commit_entity_or_abort(appointment)
+
         result = AppointmentSchema().dump(appointment)
         return result, CREATED

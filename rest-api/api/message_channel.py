@@ -6,7 +6,7 @@ from http.client import (
     UNPROCESSABLE_ENTITY,
 )
 from typing import List
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
@@ -98,20 +98,13 @@ class MessageChannelsView(MethodView):
             users=participants,
             users_hash=hash(get_participants_hash(participants)),
         )
-        try:
-            db.session.add(channel)
-            db.session.commit()
-        except IntegrityError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
+        commit_entity_or_abort(channel)
         result = MessageChannelSchema().dump(channel)
         return result, CREATED
 
 
-@message_channel_endpoints.route("/search/", methods=["POST"])
 @jwt_authenticated
+@message_channel_endpoints.route("/search/", methods=["POST"])
 def find_channel_by_members():
     data = validate_message_channel_request_data()
     participants = validate_message_channel_request_participants(data)

@@ -1,5 +1,18 @@
 from api.constants import USER_PROFILE_RETURN_SCHEMA, V1_API_PREFIX
 from flask import current_app as app
+from flask import abort
+from models.database import db
+from models.base import Base
+from http.client import (
+    BAD_REQUEST,
+    CREATED,
+    UNAUTHORIZED,
+    UNPROCESSABLE_ENTITY,
+    CONFLICT,
+    NOT_FOUND,
+    OK,
+)
+from sqlalchemy.exc import IntegrityError, DatabaseError
 
 
 # decorator code
@@ -31,3 +44,19 @@ def generate_paginated_dict(api_results):
 
 def get_api_url():
     return app.config.get("BASE_URL") + V1_API_PREFIX
+
+
+def commit_entity_or_abort(entity: Base):
+    try:
+        db.session.add(entity)
+        db.session.commit()
+    except IntegrityError as e:
+        abort(
+            UNPROCESSABLE_ENTITY,
+            f"Cannot create db entity because {e.orig.args[0]['M']}",
+        )
+    except DatabaseError as e:
+        abort(
+            UNPROCESSABLE_ENTITY,
+            f"Cannot create db entiy because {e.orig.args[0]['M']}",
+        )
