@@ -1,18 +1,16 @@
-from datetime import datetime
-
 from flask import request
 from flask_socketio import SocketIO, emit
 
 from auth.middleware import websocket_jwt_authenticated
-from websocket.dump import TEST_ROOMS, TEST_USERS_DUMP
+from cache import cache
+from models import MessageChannel, Message
+from models.database import db
 
 # Set this variable to "threading", "eventlet" or "gevent" to test the
 # different async modes, or leave it set to None for the application to choose
 # the best option based on installed packages.
 async_mode = "eventlet"
-rooms = TEST_ROOMS
 users = []
-users_dump = TEST_USERS_DUMP
 session_ids_to_user = {}
 
 
@@ -29,35 +27,48 @@ def setup_socketio(app):
     def join(data):
         print("Client signed in")
         print(request.sid)
-        user_name = data.get("userName")
         emit("signInResponse", data)
 
-    @socketio.on("join_room")
+    @socketio.on("join_message_channel")
     def join(data):
-        print("Client joined a room")
-        user_name = data.get("userName")
-        room_code = data.get("roomCode")
+        print("Client joined a message channel")
+        user_id = data.get("userId")
+        message_channel_id = data.get("messageChannelId")
+        cache_channel_key = f"message_channel_{message_channel_id}"
 
-        session_ids_to_user[request.sid] = f"{user_name}:{room_code}"
+        cache.set(f"user_session_{request.sid}", f"{user_id}:{message_channel_id}")
+        channel_online_users = cache.get(cache_channel_key)
+        if not channel_online_users:
+            channel_online_users = []
 
-        online_users = rooms[room_code].get("onlineUsers", [])
-        online_users.append(user_name)
-        rooms[room_code]["onlineUsers"] = list(set(online_users))
-        emit("joinRoomResponse", rooms[room_code]["onlineUsers"], broadcast=True)
+        channel_online_users.add(user_id)
+        cache.set(cache_channel_key, channel_online_users)
+        emit("joinMessageChannelResponse", list(channel_online_users), broadcast=True)
 
     @socketio.on("message")
     @websocket_jwt_authenticated
     def message(data):
         print("Client message")
-        room_code = data.get("roomCode")
-        message_id = len(rooms[room_code]['messages']) + 1
+        message_channel_id = data.get("messageChannelId")
+        sender_name = data.get("senderName")
+        content = data.get("text")
+
+        message_channel = db.session.get(MessageChannel, message_channel_id)
+        msg = Message(
+            author_id=request.uid,
+            content=content,
+            channel_id=message_channel_id,
+            channel=message_channel,
+        )
+        db.session.add(msg)
+        db.session.commit()
+
         new_msg = {
-            "id": message_id,
-            "sender": data.get("sender"),
-            "text": data.get("text"),
-            "time": datetime.now().strftime("%H:%M:%S")
+            "id": msg.id,
+            "sender": sender_name,
+            "text": content,
+            "time": msg.created_at.strftime("%H:%M:%S")
         }
-        rooms[room_code]['messages'].append(new_msg)
         emit("messageResponse", new_msg, broadcast=True)
 
     @socketio.on("typing")
@@ -75,9 +86,23 @@ def setup_socketio(app):
     @socketio.on("disconnect")
     def disconnect():
         print("Client disconnected")
-        data = session_ids_to_user[request.sid]
-        user_name, room_code = tuple(data.split(":"))
-        rooms[room_code]["onlineUsers"].remove(user_name)
-        emit("userDisconnectedResponse", rooms[room_code]["onlineUsers"], broadcast=True)
+        user_session = cache.get(f"user_session_{request.sid}")
+        if not user_session:
+            return
+
+        user_id, message_channel_id = tuple(user_session.split(":"))
+        cache_channel_key = f"message_channel_{message_channel_id}"
+
+        channel_online_users = cache.get(cache_channel_key)
+        if not channel_online_users:
+            return
+
+        try:
+            channel_online_users.remove(user_id)
+        except KeyError:
+            return
+
+        cache.set(cache_channel_key, channel_online_users)
+        emit("userDisconnectedResponse", list(channel_online_users), broadcast=True)
 
     return socketio

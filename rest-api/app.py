@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 
 from api import blueprints
+from cache import cache
 from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
@@ -42,6 +43,7 @@ def create_app() -> Flask:
 
 
 app = create_app()
+cache.init_app(app)
 socket_io = setup_socketio(app)
 
 

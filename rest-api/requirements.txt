@@ -12,6 +12,7 @@ structlog==23.1.0
 urllib3<2.0.0 #https://stackoverflow.com/questions/76175361/firebase-authentication-httpresponse-object-has-no-attribute-strict-status
 Flask-Migrate==4.0.5
 PyJWT==2.8.0
+Flask-Caching==2.1.0
 
 # websocket support 
 bidict==0.22.0

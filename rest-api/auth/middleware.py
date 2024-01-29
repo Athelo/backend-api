@@ -58,7 +58,7 @@ def websocket_jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
             try:
                 decoded_token = decode_token(websocket_token)
                 request.uid = decoded_token["uid"]
-                request.room_id = decoded_token["room_id"]
+                request.channel_id = decoded_token["channel_id"]
                 request.device_identifier = decoded_token["device_identifier"]
             except Exception as e:
                 logger.exception(e)
