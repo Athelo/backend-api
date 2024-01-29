@@ -20,7 +20,7 @@ class MessageChannelRequestSchema(Schema):
 class MemberDetailSchema(Schema):
     id = fields.Int()
     name = fields.Str()
-    isOnline = fields.Bool()
+    is_online = fields.Bool()
 
 
 class MessageDetailSchema(Schema):

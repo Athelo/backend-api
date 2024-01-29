@@ -114,7 +114,7 @@ def get_message_channel_details(current_user: Users, message_channel_id: int) ->
         channel_online_users = set()
 
     for user in message_channel.users:
-        is_online = current_user.id == user.id or user.display_name in channel_online_users
+        is_online = current_user.id == user.id or user.id in channel_online_users
         members.append(member_schema.load({
             "id": user.id,
             "name": user.display_name,
