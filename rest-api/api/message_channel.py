@@ -1,7 +1,4 @@
 import logging
-from http.client import (
-    CREATED,
-)
 from api.utils import class_route
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
@@ -38,7 +35,7 @@ class MessageChannelsView(MethodView):
         participants = validate_message_channel_request_participants(request, data)
         channel = create_message_channel(participants)
         result = MessageChannelSchema().dump(channel)
-        return result, CREATED
+        return result
 
 
 @message_channel_endpoints.get("/<message_channel_id>/")
