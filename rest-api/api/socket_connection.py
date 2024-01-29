@@ -23,7 +23,6 @@ def sign_in():
 
     try:
         decoded_token = firebase_admin.auth.verify_id_token(token)
-        firebase_admin.auth.revoke_refresh_tokens(decoded_token["sub"])
     except Exception as e:
         logger.exception(e)
         abort(BAD_REQUEST, f"Error with authentication: {e}")
