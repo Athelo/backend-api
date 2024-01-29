@@ -13,15 +13,17 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from schemas.message_channel import MessageChannelSchema
 from schemas.message import MessageSchema, MessageCreateSchema
 from models.message_channel import MessageChannel
 from models.message import Message
 from sqlalchemy.exc import NoResultFound
+from api.constants import V1_API_PREFIX
 
 logger = logging.getLogger()
 
-message_endpoints = Blueprint("Messages", __name__, url_prefix="/api/message-channels")
+message_endpoints = Blueprint(
+    "Messages", __name__, url_prefix=f"{V1_API_PREFIX}/message-channels"
+)
 
 
 @class_route(message_endpoints, "/<int:message_channel_id>/messages/", "messages")
