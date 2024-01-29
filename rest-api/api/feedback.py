@@ -47,7 +47,6 @@ class FeedbackTopicsView(MethodView):
         try:
             topic = FeedbackTopic(name=json_data["name"])
         except Exception as exc:
-            print(exc)
             abort(UNPROCESSABLE_ENTITY)
 
         try:
@@ -93,7 +92,6 @@ class FeedbackListView(MethodView):
                 topic_id=json_data["topic_id"],
             )
         except Exception as exc:
-            print(exc)
             abort(UNPROCESSABLE_ENTITY)
 
         try:
@@ -112,16 +110,11 @@ class FeedbackListView(MethodView):
         result = feedback.to_json()
         return result, CREATED
 
+
 @class_route(feedback_endpoints, "/applications/", "about_us")
 class ApplicationData(MethodView):
     def get(self):
         # Return app auxillary data (e.g. about us, privacy policy and terms of use)
-        res = [
-            {
-                "about_us": ABOUT_US,
-                "privacy": PRIVACY,
-                "terms_of_use": TERMS_OF_USE
-            }
-        ] 
+        res = [{"about_us": ABOUT_US, "privacy": PRIVACY, "terms_of_use": TERMS_OF_USE}]
 
         return generate_paginated_dict(res)

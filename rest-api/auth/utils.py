@@ -16,6 +16,8 @@ def get_user_from_request(request: Request) -> Users:
     if user is None:
         raise NotFound("User profile does not exist for that email")
 
+    return user
+
 
 def is_current_user_or_403(request, user_id) -> None:
     user = get_user_from_request(request)

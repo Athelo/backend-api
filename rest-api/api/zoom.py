@@ -1,11 +1,14 @@
 import logging
-from flask import Flask, abort, request, Blueprint
-from api.constants import V1_API_PREFIX
-from services.zoom import get_zoom_token, get_zoom_user_email
+from flask import abort, request, Blueprint
+from api.constants import V1_API_PREFIX, ZOOM_EMAIL_OVERRIDE
+from services.zoom import get_zoom_token, get_zoom_user_profile
 from repositories.user import get_user_by_email
+from http.client import (
+    UNPROCESSABLE_ENTITY,
+    OK,
+)
+from models.database import db
 
-CLIENT_ID = "uGg_8H7qSYmioNsz2I83aA"  # Fill this in with your client ID
-CLIENT_SECRET = "dTJBejFCWnBRRkdqbW9yaTM1MkR0UTpWNDhIMGNwTzVyWjcxVk5LczlQeHMzQ0dYYzV4MTJUUw"  # Fill this in with your client secret
 logger = logging.getLogger()
 
 zoom_endpoints = Blueprint(
@@ -22,9 +25,17 @@ def zoom_callback():
         return "Error: " + error
 
     code = request.args.get("code")
-    access_token = get_zoom_token(code)
-    # Note: In most cases, you'll want to store the access token, in, say,
-    # a session for use in other parts of your web app.
-    authorized_email = get_zoom_user_email(access_token)
+    access_token, refresh_token = get_zoom_token(code)
+    profile_data = get_zoom_user_profile(access_token)
+    authorized_email = profile_data["email"]
+    authorized_email = ZOOM_EMAIL_OVERRIDE.get(authorized_email, authorized_email)
     user = get_user_by_email(authorized_email)
-    return "Your user info is: %s" % get_zoom_username(access_token)
+    if not user.is_provider:
+        abort(UNPROCESSABLE_ENTITY, "only providers allow zoom integration")
+
+    zoom_user_id = profile_data["id"]
+    user.provider_profile.zoom_user_id = zoom_user_id
+    user.provider_profile.zoom_refresh_token = refresh_token
+    db.session.add(user.provider_profile)
+    db.session.commit()
+    return profile_data, OK

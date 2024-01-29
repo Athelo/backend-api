@@ -21,6 +21,8 @@ class CloudConfig(Config):
     DEBUG = False
     SECRET_KEY = os.environ.get("SECRET_KEY")
     BASE_URL = "https://athelo-api-bki2ktapnq-uc.a.run.app/"
+    ZOOM_CLIENT_ID = os.environ.get("ZOOM_CLIENT_ID")
+    ZOOM_CLIENT_SECRET = os.environ.get("ZOOM_CLIENT_SECRET")
 
 
 class ProductionConfig(CloudConfig):
@@ -42,6 +44,8 @@ class LocalConfig(Config):
     DEBUG = True
     SECRET_KEY = "SECRET_KEY"
     BASE_URL = "http://localhost:5001"
+    ZOOM_CLIENT_ID = "uGg_8H7qSYmioNsz2I83aA"
+    ZOOM_CLIENT_SECRET = "97TKYdJIh4QO8eBz1lj2okiDnSxcuw4q"
 
 
 class TestingConfig(Config):

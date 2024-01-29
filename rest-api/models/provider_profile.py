@@ -24,6 +24,8 @@ class ProviderProfile(TimestampMixin, Base):
         back_populates="provider",
         lazy="joined",
     )
+    zoom_user_id: Mapped[str] = mapped_column(nullable=True)
+    zoom_refresh_token: Mapped[str] = mapped_column(nullable=True)
 
     def to_json(self):
         return {"display_name": self.user.display_name, "photo": None}

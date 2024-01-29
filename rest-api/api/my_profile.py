@@ -43,19 +43,21 @@ class UserProfileDetailView(MethodView):
     def get(self):
         user = get_user_from_request(request)
 
-        if user:
-            res = USER_PROFILE_RETURN_SCHEMA.copy()
-            res["id"] = user.id
-            res["first_name"] = user.first_name
-            res["last_name"] = user.last_name
-            res["display_name"] = user.display_name
-            res["email"] = user.email
-            res["birthday"] = user.birthday
-            res["phone"] = user.phone
-            res["is_caregiver"] = user.is_caregiver
-            res["is_patient"] = user.is_patient
-            res["is_provider"] = user.is_provider
-            res["is_admin"] = user.is_admin
+        if not user:
+            abort(NOT_FOUND, "user not found for email")
+
+        res = USER_PROFILE_RETURN_SCHEMA.copy()
+        res["id"] = user.id
+        res["first_name"] = user.first_name
+        res["last_name"] = user.last_name
+        res["display_name"] = user.display_name
+        res["email"] = user.email
+        res["birthday"] = user.birthday
+        res["phone"] = user.phone
+        res["is_caregiver"] = user.is_caregiver
+        res["is_patient"] = user.is_patient
+        res["is_provider"] = user.is_provider
+        res["is_admin"] = user.is_admin
 
         return generate_paginated_dict(res)
 
@@ -315,9 +317,3 @@ def delete_availability(availability_id: int):
     db.session.delete(availability)
     db.session.commit()
     return {}, ACCEPTED
-
-
-@my_profile_endpoints.route("/zoom-token", methods=["POST"])
-def store_zoom_token():
-    print(request.args)
-    abort(NOT_FOUND, "not implemented")
