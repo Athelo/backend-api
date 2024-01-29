@@ -5,7 +5,7 @@ from http.client import (
     UNPROCESSABLE_ENTITY,
 )
 from api.constants import ABOUT_US, PRIVACY, TERMS_OF_USE
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
@@ -47,22 +47,9 @@ class FeedbackTopicsView(MethodView):
         try:
             topic = FeedbackTopic(name=json_data["name"])
         except Exception as exc:
-            print(exc)
-            abort(UNPROCESSABLE_ENTITY)
+            abort(UNPROCESSABLE_ENTITY, exc)
 
-        try:
-            db.session.add(topic)
-            db.session.commit()
-        except IntegrityError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create feedback topic because {e.orig.args[0]['M']}",
-            )
-        except DatabaseError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create feedback topic because {e.orig.args[0]['M']}",
-            )
+        commit_entity_or_abort(topic)
         result = topic.to_json()
         return result, CREATED
 
@@ -93,35 +80,17 @@ class FeedbackListView(MethodView):
                 topic_id=json_data["topic_id"],
             )
         except Exception as exc:
-            print(exc)
             abort(UNPROCESSABLE_ENTITY)
 
-        try:
-            db.session.add(feedback)
-            db.session.commit()
-        except IntegrityError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
-        except DatabaseError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
+        commit_entity_or_abort(feedback)
         result = feedback.to_json()
         return result, CREATED
+
 
 @class_route(feedback_endpoints, "/applications/", "about_us")
 class ApplicationData(MethodView):
     def get(self):
         # Return app auxillary data (e.g. about us, privacy policy and terms of use)
-        res = [
-            {
-                "about_us": ABOUT_US,
-                "privacy": PRIVACY,
-                "terms_of_use": TERMS_OF_USE
-            }
-        ] 
+        res = [{"about_us": ABOUT_US, "privacy": PRIVACY, "terms_of_use": TERMS_OF_USE}]
 
         return generate_paginated_dict(res)

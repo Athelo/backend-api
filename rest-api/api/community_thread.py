@@ -8,7 +8,7 @@ from http.client import (
     NOT_FOUND,
     OK,
 )
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
@@ -94,19 +94,7 @@ class CommunityThreadListView(MethodView):
             owner_id=user.admin_profiles.id,
             participants=[user],
         )
-        try:
-            db.session.add(thread)
-            db.session.commit()
-        except IntegrityError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
-        except DatabaseError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
+        commit_entity_or_abort(thread)
         result = CommunityThreadSchema().dump(thread)
         return result, CREATED
 
@@ -157,19 +145,8 @@ def update_community_thread(thread_id: int):
     if data.get("active"):
         thread.active = data["active"]
 
-    try:
-        db.session.add(thread)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot update chat because {e.orig.args[0]['M']}",
-        )
-    except DatabaseError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot update chat because {e.orig.args[0]['M']}",
-        )
+    commit_entity_or_abort(thread)
+
     result = CommunityThreadSchema().dump(thread)
     return result, OK
 
@@ -196,15 +173,7 @@ def join_community_thread(thread_id: int):
         abort(CONFLICT, "user is already in the thread")
 
     community_thread.participants.append(user)
-
-    try:
-        db.session.add(community_thread)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot join community thread because {e.orig.args[0]['M']}",
-        )
+    commit_entity_or_abort(community_thread)
 
 
 @jwt_authenticated
@@ -229,12 +198,4 @@ def leave_community_thread(thread_id: int):
         abort(CONFLICT, "user is not in thread")
 
     community_thread.participants.remove(user)
-
-    try:
-        db.session.add(community_thread)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot join community thread because {e.orig.args[0]['M']}",
-        )
+    commit_entity_or_abort(community_thread)

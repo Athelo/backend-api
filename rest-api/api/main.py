@@ -8,6 +8,7 @@ from flask import (
     session,
     request,
     copy_current_request_context,
+    redirect,
 )
 from flask_socketio import (
     emit,
@@ -17,8 +18,13 @@ from flask_socketio import (
     rooms,
     disconnect,
 )
-
+from auth.utils import get_user_from_request, require_provider_user
+from api.utils import get_api_url
+import urllib.parse as url_parse
+from base64 import standard_b64encode
+from models.users import Users
 from websocket.socketio import socketio
+from services.zoom import make_zoom_authorization_url
 
 thread = None
 thread_lock = Lock()
@@ -46,6 +52,14 @@ def protected():
 def render_index() -> str:
     """Serves the dev tools page of the app."""
     return render_template("dev.html")
+
+
+@main_endpoints.route(
+    "/zoom/",
+)
+def zoom_homepage():
+    text = '<a href="%s">Authenticate with Zoom</a>'
+    return text % make_zoom_authorization_url()
 
 
 def background_thread():

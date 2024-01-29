@@ -1,3 +1,5 @@
+from flask import current_app as app
+
 USER_PROFILE_RETURN_SCHEMA = {
     "id": 0,
     "first_name": None,
@@ -23,8 +25,6 @@ V1_API_PREFIX = "/api/v1"
 ALLOWED_ADMIN_DOMAINS = ["athelohealth.com"]
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M"
-
-
 
 
 # ------------------ Application Data ----------------------
