@@ -433,6 +433,25 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Zoom",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5001/zoom/",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"zoom",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1318,7 +1337,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"timezone\": \"US/Denver\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
+							"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"timezone\": \"US/Denver\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1336,58 +1355,6 @@
 						}
 					},
 					"response": [
-						{
-							"name": "Appointment created",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/appointments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"appointments"
-									]
-								}
-							},
-							"status": "CREATED",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Server",
-									"value": "Werkzeug/2.3.7 Python/3.11.7"
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 25 Jan 2024 17:21:24 GMT"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Content-Length",
-									"value": "399"
-								},
-								{
-									"key": "Connection",
-									"value": "close"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"created_at\": \"2024-01-25T17:21:20.641005\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"id\": 8,\n    \"patient_id\": 1,\n    \"patient_start_time\": null,\n    \"provider_id\": 1,\n    \"provider_start_time\": null,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"status\": \"BOOKED\",\n    \"updated_at\": \"2024-01-25T17:21:20.641177\",\n    \"zoom_token\": \" appointment.zoom_token\",\n    \"zoom_url\": \"appointment.zoom_url\"\n}"
-						},
 						{
 							"name": "Unauthorized",
 							"originalRequest": {
@@ -1491,6 +1458,58 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"created_at\": \"2024-01-27T02:40:08.692937\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"id\": 11,\n    \"patient_id\": 1,\n    \"patient_start_time\": null,\n    \"provider_id\": 1,\n    \"provider_start_time\": null,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"status\": \"BOOKED\",\n    \"updated_at\": \"2024-01-27T02:40:08.693088\",\n    \"zoom_token\": \" appointment.zoom_token\",\n    \"zoom_url\": \"appointment.zoom_url\"\n}"
+						},
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"timezone\": \"US/Denver\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/appointments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"appointments"
+									]
+								}
+							},
+							"status": "CREATED",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.7 Python/3.11.7"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 29 Jan 2024 05:07:30 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "864"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"created_at\": \"2024-01-29T05:07:25.957188\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"id\": 12,\n    \"patient_id\": 1,\n    \"patient_start_time\": null,\n    \"provider_id\": 1,\n    \"provider_start_time\": null,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"status\": \"BOOKED\",\n    \"updated_at\": \"2024-01-29T05:07:25.957309\",\n    \"zoom_host_url\": \"https://us06web.zoom.us/s/83441019541?zak=eyJ0eXAiOiJKV1QiLCJzdiI6IjAwMDAwMSIsInptX3NrbSI6InptX28ybSIsImFsZyI6IkhTMjU2In0.eyJhdWQiOiJjbGllbnRzbSIsInVpZCI6IkpMaUF2YkM1UjFPQUlQdDdtVGc4c3ciLCJpc3MiOiJ3ZWIiLCJzayI6IjAiLCJzdHkiOjEsIndjZCI6InVzMDYiLCJjbHQiOjAsIm1udW0iOiI4MzQ0MTAxOTU0MSIsImV4cCI6MTcwNjUxMjA1MCwiaWF0IjoxNzA2NTA0ODUwLCJhaWQiOiI3QTVRdGQzUVRxbXVVRmpaRlMtYVdnIiwiY2lkIjoiIn0.DaeanUU-NrSXk3JRO6ERjmD7G-ya7RLj1xQQV0mHkSc\",\n    \"zoom_join_url\": \"https://us06web.zoom.us/j/83441019541?pwd=FgNHlRW37HXtmxZkz8ljw33BU8LbK6.1\"\n}"
 						}
 					]
 				},
@@ -1752,7 +1771,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjViNjAyZTBjYTFmNDdhOGViZmQxMTYwNGQ5Y2JmMDZmNGQ0NWY4MmIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RlcGhhbmllIHN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2kxRHp1VENQTVBxWHJ0VmM5QnhxdFJwQnJZUFFNV1BwZnY5Z3dfUzh4PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTcwNjM3ODg1MiwidXNlcl9pZCI6InR0cmFmOFQ1ZmdZTVZWWHV1M29Sb3hvRHVMTTIiLCJzdWIiOiJ0dHJhZjhUNWZnWU1WVlh1dTNvUm94b0R1TE0yIiwiaWF0IjoxNzA2Mzg1MDkzLCJleHAiOjE3MDYzODg2OTMsImVtYWlsIjoic3RlcGhhbmllQGF0aGVsb2hlYWx0aC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTEwMDU4OTgwMzg4OTYwOTg1MCJdLCJlbWFpbCI6WyJzdGVwaGFuaWVAYXRoZWxvaGVhbHRoLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.Ke1AjJgtFCSrsUdJZuQJ4QGyymvMlKcm1jxmzrJg9fGbx7dVJteKB7xWPD309d_Nrz4IfobUDO8z3dGdzRul6lv42JtUc-IvjZ2cFNHzvn62nsiMXsHCXVVDtOi-yezU0xU6UWvcT-RugyoG4q5DMb6n0Nsbivhd8jBZJf8qgSqNHqmJI0XgeW534vWS2ZeHExsQKDNWA9kM4HrSvaWACXgTNYPsN0A4xGPLxuZj4hkbiflDDkKJKsuKf7uLrpX0sFxR40-ZgXFNWOSP_N1WYTl6KascKDKHIrZPt8_xEpvDgqCG0G-Si6P7MqG0ONLytS4XmUMGkaMWH0AJOefCEQ",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjViNjAyZTBjYTFmNDdhOGViZmQxMTYwNGQ5Y2JmMDZmNGQ0NWY4MmIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU3RlcGhhbmllIFN5ZWQiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS2JwUXlZRHp0bU9vZkd0RjU2RFdUYVJ6ZE43dnFhbDBZS1UwS3lQVUZSPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Rlc3QtZGVwbG95LTQwMjgxNiIsImF1ZCI6InRlc3QtZGVwbG95LTQwMjgxNiIsImF1dGhfdGltZSI6MTcwNjUzNzg4NiwidXNlcl9pZCI6IldEN2N4c0VnekFobWVwakZpTUFWTEJtNERERjMiLCJzdWIiOiJXRDdjeHNFZ3pBaG1lcGpGaU1BVkxCbTREREYzIiwiaWF0IjoxNzA2NTM3ODg2LCJleHAiOjE3MDY1NDE0ODYsImVtYWlsIjoic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDU0OTA0Mzk4ODkyMTczNDU0NjQiXSwiZW1haWwiOlsic3RlcGhhbmllbXN5ZWRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.r0qIB1ShuQke5jedB_vDkmgMWgndEdDWnfZ2xUpIy-eoORW-FN8LeIxFwV22gpPHSQSErkmWod_grAxv8J_75fMZrMfgCphZqFMoeYgILtcFWTDLFJAd2D_2KD7Zxj_EBL9OAf6JK_D3R_xSZVV0vQpVXSypV6uDwxSbbwPIDKvf3qvBCyE7htKYNxzqyi_vLQ4USWncXwce2b-OriSr2Yt9woV6sNVIXmDP7_ZOWY446VOXeR3fvsYDvh5TIiQ5T8G74kbDl5OTdodmfSmftibKHQ45cxtvWaa9Xsycpv3AZrMfQUNoU-pn3L08sXG7QdEFLZpYuSUUsUO4P7G7Zg",
 				"type": "string"
 			}
 		]

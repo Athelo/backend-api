@@ -2,13 +2,12 @@ import logging
 from http.client import (
     BAD_REQUEST,
     CREATED,
-    UNAUTHORIZED,
     UNPROCESSABLE_ENTITY,
     CONFLICT,
     NOT_FOUND,
     OK,
 )
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
@@ -21,11 +20,8 @@ from schemas.community_thread import (
     group_message_schema_from_community_thread,
 )
 from models.community_thread import CommunityThread, ThreadParticipants
-from sqlalchemy.exc import IntegrityError, DatabaseError
 from api.constants import V1_API_PREFIX
 from api.utils import generate_paginated_dict
-from models.thread_post import ThreadPost
-from schemas.thread_post import ThreadPostCreateSchema, ThreadPostSchema
 
 
 logger = logging.getLogger()
@@ -93,22 +89,10 @@ class CommunityThreadListView(MethodView):
         thread = CommunityThread(
             display_name=data["display_name"],
             description=data["description"],
-            owner_id=user.admin_profile.id,
+            owner_id=user.admin_profiles.id,
             participants=[user],
         )
-        try:
-            db.session.add(thread)
-            db.session.commit()
-        except IntegrityError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
-        except DatabaseError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
+        commit_entity_or_abort(thread)
         result = CommunityThreadSchema().dump(thread)
         return result, CREATED
 
@@ -159,19 +143,8 @@ def update_community_thread(thread_id: int):
     if data.get("active"):
         thread.active = data["active"]
 
-    try:
-        db.session.add(thread)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot update chat because {e.orig.args[0]['M']}",
-        )
-    except DatabaseError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot update chat because {e.orig.args[0]['M']}",
-        )
+    commit_entity_or_abort(thread)
+
     result = CommunityThreadSchema().dump(thread)
     return result, OK
 
@@ -198,15 +171,7 @@ def join_community_thread(thread_id: int):
         abort(CONFLICT, "user is already in the thread")
 
     community_thread.participants.append(user)
-
-    try:
-        db.session.add(community_thread)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot join community thread because {e.orig.args[0]['M']}",
-        )
+    commit_entity_or_abort(community_thread)
 
 
 @jwt_authenticated
@@ -231,58 +196,4 @@ def leave_community_thread(thread_id: int):
         abort(CONFLICT, "user is not in thread")
 
     community_thread.participants.remove(user)
-
-    try:
-        db.session.add(community_thread)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot join community thread because {e.orig.args[0]['M']}",
-        )
-
-
-@class_route(community_thread_endpoints, "/<int:thread_id>/posts/", "thread_post_list")
-class ThreadPostsListView(MethodView):
-    @jwt_authenticated
-    def get(
-        self,
-        thread_id: int,
-    ):
-        posts = (
-            db.session.query(ThreadPost).filter(ThreadPost.thread_id == thread_id).all()
-        )
-        print(posts)
-        return generate_paginated_dict(
-            [ThreadPostSchema().dump(post) for post in posts]
-        )
-
-    @jwt_authenticated
-    def post(self, thread_id: int):
-        json_data = request.get_json()
-
-        schema = ThreadPostCreateSchema()
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
-
-        thread_post = ThreadPost(
-            content=data["content"],
-            author_id=data.get("author_id", None),
-            thread_id=thread_id,
-        )
-        try:
-            db.session.add(thread_post)
-            db.session.commit()
-        except IntegrityError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
-        except DatabaseError as e:
-            abort(
-                UNPROCESSABLE_ENTITY,
-                f"Cannot create chat because {e.orig.args[0]['M']}",
-            )
-        return "", CREATED
+    commit_entity_or_abort(community_thread)

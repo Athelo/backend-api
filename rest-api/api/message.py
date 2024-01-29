@@ -6,22 +6,24 @@ from http.client import (
     UNPROCESSABLE_ENTITY,
 )
 from typing import List
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from schemas.message_channel import MessageChannelSchema
 from schemas.message import MessageSchema, MessageCreateSchema
 from models.message_channel import MessageChannel
 from models.message import Message
 from sqlalchemy.exc import NoResultFound
+from api.constants import V1_API_PREFIX
 
 logger = logging.getLogger()
 
-message_endpoints = Blueprint("Messages", __name__, url_prefix="/api/message-channels")
+message_endpoints = Blueprint(
+    "Messages", __name__, url_prefix=f"{V1_API_PREFIX}/message-channels"
+)
 
 
 @class_route(message_endpoints, "/<int:message_channel_id>/messages/", "messages")
@@ -67,9 +69,7 @@ class MessagesView(MethodView):
             )
 
         message = Message(author_id=user.id, content=data["content"], channel=channel)
-
-        db.session.add(message)
-        db.session.commit()
+        commit_entity_or_abort(message)
 
         result = MessageSchema().dump(message)
         return result, CREATED

@@ -21,6 +21,4 @@ class AppointmentCreateSchema(Schema):
     provider_id = fields.Int()
     start_time = fields.DateTime()
     end_time = fields.DateTime()
-    zoom_url = fields.Str()
-    zoom_token = fields.Str()
     timezone = fields.Str(load_default="US/Mountain")

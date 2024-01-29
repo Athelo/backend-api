@@ -8,6 +8,7 @@ from flask import (
     request,
 )
 
+from services.zoom import make_zoom_authorization_url
 
 thread = None
 thread_lock = Lock()
@@ -35,3 +36,11 @@ def protected():
 def render_index() -> str:
     """Serves the dev tools page of the app."""
     return render_template("dev.html")
+
+
+@main_endpoints.route(
+    "/zoom/",
+)
+def zoom_homepage():
+    text = '<a href="%s">Authenticate with Zoom</a>'
+    return text % make_zoom_authorization_url()

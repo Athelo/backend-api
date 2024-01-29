@@ -74,23 +74,6 @@ def get_message_channels_for_user(user: Users) -> List[MessageChannel]:
     return channels
 
 
-def create_message_channel(participants: List[Users]) -> MessageChannel:
-    channel = MessageChannel(
-        users=participants,
-        users_hash=hash(get_participants_hash(participants)),
-    )
-    try:
-        db.session.add(channel)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot create chat because {e.orig.args[0]['M']}",
-        )
-
-    return channel
-
-
 def get_message_channel_details(current_user: Users, message_channel_id: int) -> dict:
     message_channel = db.session.get(MessageChannel, message_channel_id)
 

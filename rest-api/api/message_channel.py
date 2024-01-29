@@ -1,5 +1,5 @@
 import logging
-from api.utils import class_route
+from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, request, jsonify
@@ -11,7 +11,7 @@ from models.message_channel import MessageChannel
 
 from use_cases.message_channel_use_case import get_message_channel_details, \
     validate_message_channel_request_participants, validate_message_channel_request_data, get_participants_hash, \
-    get_message_channels_for_user, create_message_channel
+    get_message_channels_for_user
 
 logger = logging.getLogger()
 
@@ -33,7 +33,11 @@ class MessageChannelsView(MethodView):
     def post(self):
         data = validate_message_channel_request_data(request)
         participants = validate_message_channel_request_participants(request, data)
-        channel = create_message_channel(participants)
+        channel = MessageChannel(
+            users=participants,
+            users_hash=hash(get_participants_hash(participants)),
+        )
+        commit_entity_or_abort(channel)
         result = MessageChannelSchema().dump(channel)
         return result
 
@@ -48,8 +52,8 @@ def get_message_channel_detail(message_channel_id: int):
     return jsonify(result)
 
 
-@message_channel_endpoints.route("/search/", methods=["POST"])
 @jwt_authenticated
+@message_channel_endpoints.route("/search/", methods=["POST"])
 def find_channel_by_members():
     data = validate_message_channel_request_data(request)
     participants = validate_message_channel_request_participants(request, data)

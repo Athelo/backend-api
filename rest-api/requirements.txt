@@ -13,6 +13,7 @@ urllib3<2.0.0 #https://stackoverflow.com/questions/76175361/firebase-authenticat
 Flask-Migrate==4.0.5
 PyJWT==2.8.0
 Flask-Caching==2.1.0
+Flask-Cors==4.0.0
 
 # websocket support 
 bidict==0.22.0
