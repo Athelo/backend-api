@@ -4,9 +4,6 @@ from http.client import (
     CREATED,
     UNAUTHORIZED,
     UNPROCESSABLE_ENTITY,
-    CONFLICT,
-    NOT_FOUND,
-    OK,
     INTERNAL_SERVER_ERROR,
 )
 from api.utils import class_route
@@ -94,9 +91,10 @@ class AppointmentListView(MethodView):
                 f"Appointment with {user.display_name}",
             )
         except HTTPError as exc:
-            abort(INTERNAL_SERVER_ERROR, "Failed to create zoom meeting")
+            abort(
+                INTERNAL_SERVER_ERROR, f"Failed to create zoom meeting - {exc.response}"
+            )
 
-        print(zoom_appt_data)
         appointment = Appointment(
             patient_id=user.patient_profile.id,
             provider_id=request_data["provider_id"],

@@ -65,7 +65,6 @@ def get_zoom_token(code):
         "https://zoom.us/oauth/token", auth=client_auth, data=post_data
     )
     token_json = response.json()
-    print(token_json)
     return token_json["access_token"], token_json["refresh_token"]
 
 
@@ -78,7 +77,6 @@ def refresh_zoom_token(refresh_token: str):
         "https://zoom.us/oauth/token", auth=client_auth, data=post_data
     )
     token_json = response.json()
-    print(token_json)
     return token_json["access_token"], token_json["refresh_token"]
 
 
@@ -90,8 +88,6 @@ def create_zoom_meeting_with_provider(
 ):
     if not user.is_provider:
         raise ValueError("User must be a provider")
-
-    print(user.provider_profile.__dict__)
 
     if (
         user.provider_profile.zoom_user_id is None
@@ -126,10 +122,9 @@ def create_zoom_meeting_with_provider(
     if response.status_code == 201:
         # The request was successful, get the meeting ID
         meeting_id = response.json()["id"]
-        print(f"Meeting created successfully, meeting ID: {meeting_id}")
+        logger.info(f"Meeting created successfully, meeting ID: {meeting_id}")
     else:
         # The request failed, raise an exception
-        print(response)
         raise requests.exceptions.HTTPError(
             "Failed to create meeting", response=response
         )
