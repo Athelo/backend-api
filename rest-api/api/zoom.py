@@ -1,7 +1,7 @@
 import logging
 from flask import abort, request, Blueprint
 from api.utils import commit_entity_or_abort
-from api.constants import V1_API_PREFIX, ZOOM_EMAIL_OVERRIDE
+from api.constants import V1_API_PREFIX
 from services.zoom import (
     get_zoom_token,
     get_zoom_user_profile,
@@ -33,9 +33,7 @@ def zoom_callback():
     code = request.args.get("code")
     access_token, refresh_token = get_zoom_token(code)
     profile_data = get_zoom_user_profile(access_token)
-    print(profile_data)
     authorized_email = profile_data["email"]
-    authorized_email = ZOOM_EMAIL_OVERRIDE.get(authorized_email, authorized_email)
     user = get_user_by_email(authorized_email)
     if not user.is_provider:
         abort(UNPROCESSABLE_ENTITY, "only providers allow zoom integration")
