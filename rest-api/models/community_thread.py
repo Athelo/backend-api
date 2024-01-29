@@ -31,11 +31,3 @@ class CommunityThread(TimestampMixin, Base):
     owner: Mapped["AdminProfile"] = relationship(
         back_populates="owned_threads", lazy="joined"
     )
-    chat_room_id: Mapped[UUID] = mapped_column(
-        postgres_UUID(as_uuid=True),
-        nullable=False,
-        unique=True,
-        index=True,
-        default=uuid4,
-        server_default=text("gen_random_uuid()"),
-    )
