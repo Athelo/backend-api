@@ -20,6 +20,8 @@ services:
     tty: true 
     # command: tail -f /dev/null
     command: python3 app.py
+    depends_on:
+      - redis
   db:
     image: postgres:15
     volumes:
@@ -28,6 +30,17 @@ services:
       - POSTGRES_USER=athelo
       - POSTGRES_PASSWORD=athelo
       - POSTGRES_DB=athelo
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/var/lib/redis/
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=redispassword
 
 volumes:
   postgres_data:
+  redis_data:
