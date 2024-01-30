@@ -12,7 +12,6 @@ function initApp() {
         else {
             document.getElementById("message").innerHTML = "No user signed in.";
             document.getElementById('signInButton').innerText = 'Sign In with Google';
-            document.getElementById('tokenDisplay').innerText = ''
             google_token = ''
             curr_user = null
         }
@@ -71,7 +70,15 @@ async function getToken() {
 
 
 async function createTokenForSession() {
+    if (!google_token) {
+        window.alert('Must sign in to connect')
+        return
+    }
     sessionId = document.getElementById("sessionInput").value
+    if (!sessionId) {
+        window.alert("Must provide session id")
+        return
+    }
     let req_headers = {}
     if (google_token !== null) {
         req_headers = {
@@ -97,6 +104,7 @@ async function createTokenForSession() {
 
     } catch (err) {
         window.alert('Something went wrong... Please try again!');
+        return
     }
 
     // Initialize an OpenTok Session object
