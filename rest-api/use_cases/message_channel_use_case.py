@@ -3,7 +3,6 @@ from typing import List
 
 from flask import abort
 from marshmallow import ValidationError
-from sqlalchemy.exc import IntegrityError
 
 from auth.utils import get_user_from_request
 from cache import cache
