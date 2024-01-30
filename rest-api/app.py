@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import eventlet
-eventlet.monkey_patch()
+eventlet.monkey_patch(socket=True)
 
 
 import os
