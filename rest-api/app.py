@@ -8,7 +8,9 @@ from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
+
 # from websocket.socketio import socketio
+from services.opentok import OpenTokClient
 
 
 def set_config(app: Flask):
@@ -37,6 +39,8 @@ def create_app() -> Flask:
 
         for blueprint in blueprints:
             app.register_blueprint(blueprint=blueprint)
+
+        OpenTokClient.init_app(app)
 
     ma = Marshmallow(app)
     app.logger.info("Running app!")

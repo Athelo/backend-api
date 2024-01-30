@@ -98,13 +98,14 @@ class MessageChannelsView(MethodView):
             users=participants,
             users_hash=hash(get_participants_hash(participants)),
         )
+        print(channel.__dict__)
         commit_entity_or_abort(channel)
         result = MessageChannelSchema().dump(channel)
         return result, CREATED
 
 
-@jwt_authenticated
 @message_channel_endpoints.route("/search/", methods=["POST"])
+@jwt_authenticated
 def find_channel_by_members():
     data = validate_message_channel_request_data()
     participants = validate_message_channel_request_participants(data)

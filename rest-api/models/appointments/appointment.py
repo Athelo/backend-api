@@ -1,7 +1,6 @@
 import enum
 
 from datetime import datetime
-from typing import Optional
 
 from models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey
@@ -14,6 +13,12 @@ class AppointmentStatus(enum.Enum):
     NO_SHOW = "NO_SHOW"
     IN_PROGRESS = "IN_PROGRESS"
     COMPLETE = "COMPLETE"
+
+
+class VideoType(enum.Enum):
+    VONAGE = "VONAGE"
+    ZOOM = "ZOOM"
+    NOT_CONFIGURED = "NOT_CONFIGURED"
 
 
 class Appointment(TimestampMixin, Base):
@@ -34,6 +39,13 @@ class Appointment(TimestampMixin, Base):
     end_time: Mapped[datetime]
     patient_start_time: Mapped[datetime] = mapped_column(nullable=True)
     provider_start_time: Mapped[datetime] = mapped_column(nullable=True)
+    zoom_meeting: Mapped["ZoomMeeting"] = relationship(
+        back_populates="appointment",
+        lazy="joined",
+    )
+    vonage_session: Mapped["VonageSession"] = relationship(
+        back_populates="appointment", lazy="joined"
+    )
 
     # leaving off return type to avoid circular imports
     def get_patient_user(self):
@@ -55,3 +67,19 @@ class Appointment(TimestampMixin, Base):
             "zoom_join_url": self.zoom_host_url,
             "zoom_host_url": self.zoom_join_url,
         }
+
+    @property
+    def is_zoom_appointment(self):
+        return self.zoom_meeting is not None
+
+    @property
+    def is_vonage_appointment(self):
+        return self.vonage_session is not None
+
+    @property
+    def video_call_type(self) -> VideoType:
+        if self.vonage_session is not None:
+            return VideoType.VONAGE
+        if self.zoom_meeting is not None:
+            return VideoType.ZOOM
+        return VideoType.NOT_CONFIGURED

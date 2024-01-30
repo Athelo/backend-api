@@ -1,5 +1,5 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from models.appointment import Appointment
+from models.appointments.appointment import Appointment
 from marshmallow import Schema, fields
 
 

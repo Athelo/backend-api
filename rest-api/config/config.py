@@ -23,6 +23,8 @@ class CloudConfig(Config):
     BASE_URL = "https://athelo-api-bki2ktapnq-uc.a.run.app/"
     ZOOM_CLIENT_ID = os.environ.get("ZOOM_CLIENT_ID")
     ZOOM_CLIENT_SECRET = os.environ.get("ZOOM_CLIENT_SECRET")
+    VONAGE_API_KEY = os.environ.get("VONAGE_API_KEY")
+    VONAGE_API_SECRET = os.environ.get("VONAGE_API_SECRET")
 
 
 class ProductionConfig(CloudConfig):
@@ -46,6 +48,8 @@ class LocalConfig(Config):
     BASE_URL = "http://localhost:5001"
     ZOOM_CLIENT_ID = "uGg_8H7qSYmioNsz2I83aA"
     ZOOM_CLIENT_SECRET = "97TKYdJIh4QO8eBz1lj2okiDnSxcuw4q"
+    VONAGE_API_KEY = "47853731"
+    VONAGE_API_SECRET = "25851f9cb85dba8e206be42841da93c73832228a"
 
 
 class TestingConfig(Config):
