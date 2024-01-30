@@ -26,6 +26,7 @@ class CloudConfig(Config):
     BASE_URL = "https://athelo-api-bki2ktapnq-uc.a.run.app/"
     ZOOM_CLIENT_ID = os.environ.get("ZOOM_CLIENT_ID")
     ZOOM_CLIENT_SECRET = os.environ.get("ZOOM_CLIENT_SECRET")
+    REDIS_URL = os.environ.get("REDIS_URL")
 
 
 class ProductionConfig(CloudConfig):
@@ -42,11 +43,15 @@ class LocalConfig(Config):
     DB_PASS = "athelo"
     DB_PORT = 5432
     PORT = 8000
+    PROJECT = os.environ.get("PROJECT")
+    REGION = os.environ.get("REGION")
+    INSTANCE_CONNECTION_NAME = os.environ.get("INSTANCE_CONNECTION_NAME")
     SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@db/{DB_NAME}"
     LOG_LEVEL = logging.DEBUG
     DEBUG = True
     SECRET_KEY = "SECRET_KEY"
     CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5001",
         "http://127.0.0.1:8000",
         "http://localhost:3000",
         "http://192.168.0.223:3000",
@@ -55,6 +60,7 @@ class LocalConfig(Config):
     BASE_URL = "http://localhost:5001"
     ZOOM_CLIENT_ID = "uGg_8H7qSYmioNsz2I83aA"
     ZOOM_CLIENT_SECRET = "97TKYdJIh4QO8eBz1lj2okiDnSxcuw4q"
+    REDIS_URL = "redis://redis:6379/0"
 
 
 class TestingConfig(Config):

@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import eventlet
+eventlet.monkey_patch()
+
+
 import os
 
 from flask_cors import CORS
@@ -45,9 +49,9 @@ def create_app() -> Flask:
 
 
 app = create_app()
-cache.init_app(app)
+CORS(app, resources={r"/*":{"origins":"*"}})
+cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": app.config.get("REDIS_URL", None)})
 socket_io = setup_socketio(app)
-CORS(app)
 
 
 if __name__ == "__main__":

@@ -15,33 +15,33 @@ session_ids_to_user = {}
 
 
 def setup_socketio(app):
-    socketio = SocketIO(async_mode=async_mode, logger=True, engineio_logger=True, cors_allowed_origins=app.config.get("CORS_ALLOWED_ORIGINS", "*"))
+    socketio = SocketIO(async_mode=async_mode, logger=True, engineio_logger=True, cors_allowed_origins=app.config.get("CORS_ALLOWED_ORIGINS", "*"), message_queue=app.config.get("REDIS_URL", None))
     socketio.init_app(app)
 
     @socketio.on("connect")
     def connect(data):
-        print("Client connected")
+        print(f"Client connected - {request.sid}")
         emit("connectResponse", data)
 
     @socketio.on("sign_in")
     def join(data):
-        print("Client signed in")
-        print(request.sid)
+        print(f"Client signed in - {request.sid}")
         emit("signInResponse", data)
 
     @socketio.on("join_message_channel")
     def join(data):
-        print("Client joined a message channel")
-        user_id = data.get("userId")
-        message_channel_id = data.get("messageChannelId")
+        print(f"Client joined a message channel - {request.sid}")
+        user_id = int(data.get("userId"))
+        message_channel_id = int(data.get("messageChannelId"))
         cache_channel_key = f"message_channel_{message_channel_id}"
 
         cache.set(f"user_session_{request.sid}", f"{user_id}:{message_channel_id}")
         channel_online_users = cache.get(cache_channel_key)
         if not channel_online_users:
-            channel_online_users = []
+            channel_online_users = set()
 
         channel_online_users.add(user_id)
+        channel_online_users = set(channel_online_users)
         cache.set(cache_channel_key, channel_online_users)
         emit("joinMessageChannelResponse", list(channel_online_users), broadcast=True)
 
@@ -49,7 +49,7 @@ def setup_socketio(app):
     @websocket_jwt_authenticated
     def message(data):
         print("Client message")
-        message_channel_id = data.get("messageChannelId")
+        message_channel_id = int(data.get("messageChannelId"))
         sender_name = data.get("senderName")
         content = data.get("text")
 
@@ -85,15 +85,18 @@ def setup_socketio(app):
 
     @socketio.on("disconnect")
     def disconnect():
-        print("Client disconnected")
+        print(f"Client disconnected - {request.sid}")
         user_session = cache.get(f"user_session_{request.sid}")
         if not user_session:
             return
 
         user_id, message_channel_id = tuple(user_session.split(":"))
+        user_id = int(user_id)
+        message_channel_id = int(message_channel_id)
         cache_channel_key = f"message_channel_{message_channel_id}"
 
         channel_online_users = cache.get(cache_channel_key)
+        channel_online_users = set(channel_online_users)
         if not channel_online_users:
             return
 
