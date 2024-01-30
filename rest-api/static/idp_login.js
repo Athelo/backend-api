@@ -13,7 +13,7 @@ function initApp() {
       document.getElementById("message").innerHTML = "No user signed in.";
       document.getElementById('signInButton').innerText = 'Sign In with Google';
       document.getElementById('tokenDisplay').innerText = ''
-      token = ''
+      google_token = ''
       curr_user = null
     }
   });
@@ -62,11 +62,11 @@ async function getToken() {
   if (curr_user == null) {
     window.alert("Please sign in to get a token.")
   }
-  token = await firebase.auth().currentUser.getIdToken().catch((error) => {
+  google_token = await firebase.auth().currentUser.getIdToken().catch((error) => {
     document.getElementById('tokenDisplay').textContent = error.message
   })
-  if (token) {
-    document.getElementById('tokenDisplay').textContent = `${token}`
+  if (google_token) {
+    document.getElementById('tokenDisplay').textContent = `${google_token}`
   } else {
     document.getElementById('tokenDisplay').textContent = 'Unable to get token'
   }
@@ -74,19 +74,19 @@ async function getToken() {
 }
 
 async function getPublicEndpoint() {
-  await performGetAndUpdateElements('publicEndpointMessage', '/public')
+  await performGetAndUpdateElements('publicEndpointMessage', '/public/')
 }
 
 async function getProtectedEndpoint() {
-  await performGetAndUpdateElements('protectedEndpointMessage', '/protected')
+  await performGetAndUpdateElements('protectedEndpointMessage', '/protected/')
 }
 
 async function performGetAndUpdateElements(element, endpoint) {
   document.getElementById(element).innerText = ''
   let req_headers = {}
-  if (token !== null) {
+  if (google_token !== null) {
     req_headers = {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${google_token}`,
     }
   }
   try {

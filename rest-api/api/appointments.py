@@ -14,7 +14,7 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from schemas.appointment import AppointmentSchema, AppointmentCreateSchema
+from schemas.appointment import AppointmentCreateSchema
 from models.appointments.appointment import Appointment, AppointmentStatus, VideoType
 from models.appointments.vonage_session import VonageSession
 from models.appointments.zoom_meeting import ZoomMeeting
@@ -121,8 +121,10 @@ class AppointmentListView(MethodView):
         if video_type == VideoType.VONAGE:
             try:
                 client = OpenTokClient.instance()
-                session_id = client.create_session()
-                appointment.vonage_session = VonageSession(session_id=session_id)
+                session = client.create_session()
+                appointment.vonage_session = VonageSession(
+                    session_id=session.session_id
+                )
             except Exception as exc:
                 abort(
                     INTERNAL_SERVER_ERROR,
@@ -131,5 +133,6 @@ class AppointmentListView(MethodView):
 
         commit_entity_or_abort(appointment)
 
-        result = AppointmentSchema().dump(appointment)
+        # result = AppointmentSchema().dump(appointment)
+        result = appointment.to_legacy_json()
         return result, CREATED

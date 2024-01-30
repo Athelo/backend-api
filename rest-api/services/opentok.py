@@ -31,7 +31,7 @@ class OpenTokClient(object):
             raise Exception("You must define API_KEY and API_SECRET in app config")
         cls.client = Client(api_key, api_secret)
 
-    def create_session(self):
+    def create_session(self) -> Session:
         return self.client.create_session()
 
     def create_host_token(self, session_id: str, user: Users) -> str:

@@ -57,6 +57,7 @@ class Appointment(TimestampMixin, Base):
 
     def to_legacy_json(self) -> dict:
         return {
+            "id": self.id,
             "provider": {
                 "display_name": self.provider.user.display_name,
                 "photo": "",
@@ -64,8 +65,15 @@ class Appointment(TimestampMixin, Base):
             "patient": {"display_name": self.patient.user.display_name, "photo": ""},
             "start_time": self.start_time,
             "end_time": self.end_time,
-            "zoom_join_url": self.zoom_host_url,
-            "zoom_host_url": self.zoom_join_url,
+            "zoom_join_url": self.zoom_meeting.join_url
+            if self.zoom_meeting is not None
+            else None,
+            "zoom_host_url": self.zoom_meeting.host_url
+            if self.zoom_meeting is not None
+            else None,
+            "vonage_session": self.vonage_session.session_id
+            if self.vonage_session is not None
+            else None,
         }
 
     @property

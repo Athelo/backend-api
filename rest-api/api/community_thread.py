@@ -133,35 +133,35 @@ class ThreadPostListView(MethodView):
 
         return generate_paginated_dict(schema.dump(posts, many=True))
 
-    @jwt_authenticated
-    def post(thread_id: int):
-        user = get_user_from_request(request)
-        thread = (
-            db.session.query(CommunityThread)
-            .where(CommunityThread == thread_id)
-            .one_or_none()
-        )
-        if thread is None:
-            abort(NOT_FOUND, f"Thread {thread_id} not found")
+    # @jwt_authenticated
+    # def post(thread_id: int):
+    #     user = get_user_from_request(request)
+    #     thread = (
+    #         db.session.query(CommunityThread)
+    #         .where(CommunityThread == thread_id)
+    #         .one_or_none()
+    #     )
+    #     if thread is None:
+    #         abort(NOT_FOUND, f"Thread {thread_id} not found")
 
-        user_belongs_to_thread = any(
-            participant
-            for participant in thread.participants
-            if participant.id == user.id
-        )
+    #     user_belongs_to_thread = any(
+    #         participant
+    #         for participant in thread.participants
+    #         if participant.id == user.id
+    #     )
 
-        if user_belongs_to_thread:
-            abort(
-                UNAUTHORIZED, "Cannot post to a group messagee that you haven't joined"
-            )
-        try:
-            post = ThreadPostCreateSchema().load(request.get_json())
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
+    #     if user_belongs_to_thread:
+    #         abort(
+    #             UNAUTHORIZED, "Cannot post to a group messagee that you haven't joined"
+    #         )
+    #     try:
+    #         post_data = ThreadPostCreateSchema().load(request.get_json())
+    #     except ValidationError as err:
+    #         abort(UNPROCESSABLE_ENTITY, err.messages)
 
-        schema = ThreadPostSchema()
+    #     post = ThreadPost(author_id=user, thread_id=, content=)
 
-        return generate_paginated_dict(schema.dump(posts, many=True))
+    #     return generate_paginated_dict(schema.dump(posts, many=True))
 
 
 @community_thread_endpoints.route("/<int:thread_id>/", methods=["POST"])

@@ -10,6 +10,7 @@ from flask import (
     copy_current_request_context,
     redirect,
 )
+from flask import current_app as app
 from flask_socketio import (
     emit,
     join_room,
@@ -25,6 +26,7 @@ from base64 import standard_b64encode
 from models.users import Users
 from websocket.socketio import socketio
 from services.zoom import make_zoom_authorization_url
+from services.opentok import OpenTokClient
 
 thread = None
 thread_lock = Lock()
@@ -37,12 +39,12 @@ def hello_world():
     return "Hello World! This is Athelo Health's API"
 
 
-@main_endpoints.route("/api/v1/public/", methods=["GET"])
+@main_endpoints.route("/public/", methods=["GET"])
 def public():
     return f"This is Athelo Health's API, and it is {datetime.utcnow()}"
 
 
-@main_endpoints.route("/api/v1/protected/", methods=["GET"])
+@main_endpoints.route("/protected/", methods=["GET"])
 @jwt_authenticated
 def protected():
     return f"{request.uid} ({request.email}) is authenticated at {datetime.utcnow()}"
@@ -60,6 +62,13 @@ def render_index() -> str:
 def zoom_homepage():
     text = '<a href="%s">Authenticate with Zoom</a>'
     return text % make_zoom_authorization_url()
+
+
+@main_endpoints.route("/opentok/")
+def opentok():
+    key = app.config.get("VONAGE_API_KEY")
+    # token = OpenTokClient.instance().create_host_token(session_id, user)
+    return render_template("opentok.html", api_key=key)
 
 
 def background_thread():
