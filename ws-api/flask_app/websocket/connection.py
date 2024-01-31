@@ -45,7 +45,7 @@ def message(data):
     sender_name = data.get("senderName")
     content = data.get("text")
 
-    response = requests.post(f"http://athelo-backend-api:8080/api/v1/message-channels/{message_channel_id}/messages/", json={
+    response = requests.post(f"http://rest-api:8080/api/v1/message-channels/{message_channel_id}/messages/", json={
         "content": content
     }, headers={
         "Authorization": f"Bearer {request.main_token}"

@@ -1,11 +1,11 @@
 version: '3.4'
 
 services:
-  athelo-backend-api:
+  rest-api:
     build: ./rest-api
     restart: always
-    image: athelo-backend
-    container_name: athelo-backend-api
+    image: rest-api
+    container_name: rest-api
     volumes: 
       - ./rest-api:/app
       - ./application_default_credentials.json:/application_default_credentials.json
@@ -23,15 +23,16 @@ services:
       - redis
     networks:
       - athelo_network
-  ws-server:
-    build: ./ws-server
-    container_name: ws-server
+  ws-api:
+    build: ./ws-api
+    image: ws-api
+    container_name: ws-api
     restart: on-failure
     depends_on:
-      - athelo-backend-api
+      - rest-api
       - redis
     volumes:
-      - ./ws-server:/flask_app
+      - ./ws-api:/flask_app
     networks:
       - athelo_network
   db:
@@ -49,7 +50,7 @@ services:
     image: sameersbn/redis:4.0.9-3
     container_name: redis
     ports:
-      - "6379:6379"
+      - 6379:6379
     environment:
       REDIS_PASSWORD: redispassword
     volumes:
@@ -66,8 +67,8 @@ services:
     ports:
       - 8000:80
     depends_on:
-      - athelo-backend-api
-      - ws-server
+      - rest-api
+      - ws-api
     networks:
       - athelo_network
 

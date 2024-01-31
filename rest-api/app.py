@@ -29,7 +29,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     set_config(app)
     setup_logging(app)
-    cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": app.config["REDIS_URL"]})
+    cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": app.config.get("REDIS_URL")})
 
     with app.app_context():
         db.init_app(app)

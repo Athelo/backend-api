@@ -44,7 +44,6 @@ class LocalConfig(Config):
     DB_PORT = 5432
     PORT = os.environ.get("PORT", 8080)
     DB_HOST = os.environ.get("DB_HOST", "db")
-    REDIS_HOST = os.environ.get("REDIS_HOST", "redis")
     SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
     LOG_LEVEL = logging.DEBUG
     DEBUG = True
@@ -53,13 +52,12 @@ class LocalConfig(Config):
         "http://localhost:5001",
         "http://127.0.0.1:8000",
         "http://localhost:3000",
-        "http://192.168.0.223:3000",
     ]
     ALLOWED_ADMIN_DOMAINS = ["athelohealth.com", "gmail.com"]
     BASE_URL = "http://localhost:5001"
     ZOOM_CLIENT_ID = "uGg_8H7qSYmioNsz2I83aA"
     ZOOM_CLIENT_SECRET = "97TKYdJIh4QO8eBz1lj2okiDnSxcuw4q"
-    REDIS_URL = f"redis://default:redispassword@{REDIS_HOST}:6379/0"
+    REDIS_URL = os.environ.get("REDIS_URL", f"redis://default:redispassword@redis:6379/0")
 
 
 class TestingConfig(Config):
