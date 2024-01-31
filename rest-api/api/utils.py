@@ -1,17 +1,10 @@
-from api.constants import USER_PROFILE_RETURN_SCHEMA, V1_API_PREFIX
+from api.constants import V1_API_PREFIX
 from flask import current_app as app
 from flask import abort
 from models.database import db
 from models.base import Base
-from http.client import (
-    BAD_REQUEST,
-    CREATED,
-    UNAUTHORIZED,
-    UNPROCESSABLE_ENTITY,
-    CONFLICT,
-    NOT_FOUND,
-    OK,
-)
+from http.client import UNPROCESSABLE_ENTITY
+
 from sqlalchemy.exc import IntegrityError, DatabaseError
 
 
@@ -34,7 +27,7 @@ def class_route(self, rule, endpoint, **options):
 def generate_paginated_dict(api_results):
     results = []
 
-    if type(api_results) == list:
+    if isinstance(api_results, list):
         results = api_results
     else:
         results.append(api_results)
