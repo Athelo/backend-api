@@ -1,7 +1,7 @@
 import logging
 from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route, commit_entity_or_abort
+from api.utils import class_route, commit_entity_or_abort, generate_paginated_dict
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, request
 from flask.views import MethodView
@@ -22,7 +22,7 @@ class SyptomsView(MethodView):
     def get(self):
         symptoms = db.session.scalars(db.select(Symptom)).all()
         schema = SymptomSchema(many=True)
-        return schema.dump(symptoms)
+        return generate_paginated_dict(schema.dump(symptoms))
 
     @jwt_authenticated
     def post(self):
