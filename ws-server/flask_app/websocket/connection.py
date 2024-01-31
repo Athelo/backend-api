@@ -63,7 +63,7 @@ def message(data):
 
 
 @socketio.on("typing")
-# @websocket_jwt_authenticated
+@websocket_jwt_authenticated
 def typing(data):
     print("Client typing")
     emit("typingResponse", data, broadcast=True)

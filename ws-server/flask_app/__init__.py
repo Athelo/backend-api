@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -17,8 +20,8 @@ def create_app():
     CORS(app, resources={r"/*": {"origins": "*"}})
 
     register_extensions(app)
-    cache.init_app(app, {"CACHE_TYPE": "SimpleCache"})
-    # cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": config.REDIS_URI})
+    # cache.init_app(app, {"CACHE_TYPE": "SimpleCache"})
+    cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": config.REDIS_URI})
 
     return app
 

@@ -8,7 +8,7 @@ SECRET_KEY = "os.environ.getasdfsdf"
 
 
 # REDIS_URI = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
-REDIS_URI = f"redis://redis:6379/0"
+REDIS_URI = f"redis://default:redispassword@redis:6379/0"
 
 
 class Config:

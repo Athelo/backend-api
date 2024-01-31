@@ -4,6 +4,7 @@ import os
 
 from flask_cors import CORS
 from api import blueprints
+from cache import cache
 from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
@@ -28,6 +29,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     set_config(app)
     setup_logging(app)
+    cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": app.config["REDIS_URL"]})
 
     with app.app_context():
         db.init_app(app)
@@ -42,8 +44,7 @@ def create_app() -> Flask:
 
 
 app = create_app()
-CORS(app, resources={r"/*":{"origins":"*"}})
-# socket_io = setup_socketio(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 if __name__ == "__main__":

@@ -11,8 +11,11 @@ EXPOSE 5000
 
 CMD gunicorn 'flask_app:create_app()' \
     --worker-class eventlet \
-    --workers 1 \
+    -w 1 \
+    --threads 8 \
     --bind 0.0.0.0:5000 \
     --reload \
     --access-logfile - \
     --error-logfile -
+
+

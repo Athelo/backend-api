@@ -5,6 +5,7 @@ services:
     build: ./rest-api
     restart: always
     image: athelo-backend
+    container_name: athelo-backend-api
     volumes: 
       - ./rest-api:/app
       - ./application_default_credentials.json:/application_default_credentials.json
@@ -21,7 +22,7 @@ services:
     depends_on:
       - redis
     networks:
-      - mynetwork
+      - athelo_network
   ws-server:
     build: ./ws-server
     container_name: ws-server
@@ -32,9 +33,10 @@ services:
     volumes:
       - ./ws-server:/flask_app
     networks:
-      - mynetwork
+      - athelo_network
   db:
     image: postgres:15
+    container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
@@ -42,17 +44,19 @@ services:
       - POSTGRES_PASSWORD=athelo
       - POSTGRES_DB=athelo
     networks:
-      - mynetwork
+      - athelo_network
   redis:
-    image: redis:latest
-    restart: always
-    volumes:
-      - redis_data:/var/lib/redis/
-      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    image: sameersbn/redis:4.0.9-3
+    container_name: redis
+    ports:
+      - "6379:6379"
     environment:
-      - REDIS_PASSWORD=redispassword
+      REDIS_PASSWORD: redispassword
+    volumes:
+      - redis_data:/var/lib/redis
+    restart: always
     networks:
-      - mynetwork
+      - athelo_network
   nginx:
     image: nginx:1.25.3-alpine
     container_name: nginx
@@ -65,12 +69,12 @@ services:
       - athelo-backend-api
       - ws-server
     networks:
-      - mynetwork
+      - athelo_network
 
 volumes:
   postgres_data:
   redis_data:
 
 networks:
-  mynetwork:
+  athelo_network:
     driver: bridge

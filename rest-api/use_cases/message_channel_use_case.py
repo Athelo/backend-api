@@ -5,6 +5,7 @@ from flask import abort
 from marshmallow import ValidationError
 
 from auth.utils import get_user_from_request
+from cache import cache
 # from cache import cache
 from models import MessageChannel, Users
 from models.database import db
@@ -91,8 +92,7 @@ def get_message_channel_details(current_user: Users, message_channel_id: int) ->
 
     members = []
     cache_channel_key = f"message_channel_{message_channel_id}"
-    # channel_online_users = cache.get(cache_channel_key)
-    channel_online_users = set()
+    channel_online_users = cache.get(cache_channel_key)
     if channel_online_users is None:
         channel_online_users = set()
 
@@ -105,7 +105,7 @@ def get_message_channel_details(current_user: Users, message_channel_id: int) ->
         }))
 
     channel_online_users.add(current_user.id)
-    # cache.set(cache_channel_key, channel_online_users)
+    cache.set(cache_channel_key, channel_online_users)
 
     token = generate_token(current_user.id, message_channel_id, "device_identifier")
 
