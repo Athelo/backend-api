@@ -9,6 +9,7 @@ class Config(object):
     PORT = os.environ.get("PORT")
     WEBSOCKET_JWT_ALGORITHM = os.environ.get("WEBSOCKET_JWT_ALGORITHM", "HS256")
     WEBSOCKET_JWT_SECRET_KEY = os.environ.get("WEBSOCKET_JWT_SECRET_KEY", "secret")
+    REDIS_URL = os.environ.get("REDIS_URL")
 
 
 class CloudConfig(Config):
@@ -26,7 +27,6 @@ class CloudConfig(Config):
     BASE_URL = "https://athelo-api-bki2ktapnq-uc.a.run.app/"
     ZOOM_CLIENT_ID = os.environ.get("ZOOM_CLIENT_ID")
     ZOOM_CLIENT_SECRET = os.environ.get("ZOOM_CLIENT_SECRET")
-    REDIS_URL = os.environ.get("REDIS_URL")
 
 
 class ProductionConfig(CloudConfig):
@@ -57,7 +57,6 @@ class LocalConfig(Config):
     BASE_URL = "http://localhost:5001"
     ZOOM_CLIENT_ID = "uGg_8H7qSYmioNsz2I83aA"
     ZOOM_CLIENT_SECRET = "97TKYdJIh4QO8eBz1lj2okiDnSxcuw4q"
-    REDIS_URL = os.environ.get("REDIS_URL")
 
 
 class TestingConfig(Config):

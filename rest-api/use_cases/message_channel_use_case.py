@@ -6,7 +6,6 @@ from marshmallow import ValidationError
 
 from auth.utils import get_user_from_request
 from cache import cache
-# from cache import cache
 from models import MessageChannel, Users
 from models.database import db
 from schemas.message_channel import MessageChannelDetailResponseSchema, MessageDetailSchema, MemberDetailSchema, \

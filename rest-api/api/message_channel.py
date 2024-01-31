@@ -9,7 +9,7 @@ from typing import List
 from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
-from flask import Blueprint, abort, request, jsonify
+from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
@@ -123,4 +123,4 @@ def get_message_channel_detail(message_channel_id: int):
     current_user = get_user_from_request(request)
 
     result = get_message_channel_details(current_user, message_channel_id)
-    return jsonify(result)
+    return result
