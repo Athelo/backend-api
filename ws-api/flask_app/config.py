@@ -1,36 +1,26 @@
 import os
 
-# Flask env
-FLASK_ENV = os.environ.get("FLASK_ENV")
-SECRET_KEY = "os.environ.getasdfsdf"
-
-# Redis
-
-
-# REDIS_URI = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
-REDIS_URI = f"redis://default:redispassword@redis:6379/0"
-
 
 class Config:
-    FLASK_ENV = FLASK_ENV
-    SECRET_KEY = SECRET_KEY
-    REDIS_URI = REDIS_URI
+    SECRET_KEY = os.environ.get("SECRET_KEY", "SECRET_KEY")
+    REDIS_URL = os.environ.get("REDIS_URL")
     DEBUG = False
     TESTING = False
-    WEBSOCKET_JWT_SECRET_KEY = "secret"
-    WEBSOCKET_JWT_ALGORITHM = "HS256"
+    WEBSOCKET_JWT_ALGORITHM = os.environ.get("WEBSOCKET_JWT_ALGORITHM", "HS256")
+    WEBSOCKET_JWT_SECRET_KEY = os.environ.get("WEBSOCKET_JWT_SECRET_KEY", "secret")
 
 
-class DevConfig(Config):
+class StagingConfig(Config):
     DEBUG = True
-
-
-class TestConfig(Config):
-    TESTING = True
 
 
 class ProdConfig(Config):
     pass
 
 
-config = DevConfig()
+if os.environ.get("ENVIRONMENT") == "prod":
+    config = ProdConfig()
+elif os.environ.get("ENVIRONMENT") == "staging":
+    config = StagingConfig()
+else:
+    config = Config()

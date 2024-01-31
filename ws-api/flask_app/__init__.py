@@ -3,25 +3,21 @@ eventlet.monkey_patch()
 
 from flask import Flask
 from flask_cors import CORS
-
-# Configuration
 from flask_app.config import config
-
-# Extensions
 from flask_app.websocket import socketio
-
 from flask_app.cache import cache
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(config)
-    app.config['DEBUG'] = True
     CORS(app, resources={r"/*": {"origins": "*"}})
 
     register_extensions(app)
-    # cache.init_app(app, {"CACHE_TYPE": "SimpleCache"})
-    cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": config.REDIS_URI})
+    if config.REDIS_URL:
+        cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": config.REDIS_URL})
+    else:
+        cache.init_app(app, {"CACHE_TYPE": "SimpleCache"})
 
     return app
 

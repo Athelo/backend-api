@@ -57,7 +57,7 @@ class LocalConfig(Config):
     BASE_URL = "http://localhost:5001"
     ZOOM_CLIENT_ID = "uGg_8H7qSYmioNsz2I83aA"
     ZOOM_CLIENT_SECRET = "97TKYdJIh4QO8eBz1lj2okiDnSxcuw4q"
-    REDIS_URL = os.environ.get("REDIS_URL", f"redis://default:redispassword@redis:6379/0")
+    REDIS_URL = os.environ.get("REDIS_URL")
 
 
 class TestingConfig(Config):
