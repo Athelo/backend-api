@@ -1,13 +1,8 @@
 from __future__ import annotations
 
-import eventlet
-eventlet.monkey_patch(socket=True)
-
-
 import os
 
 from flask_cors import CORS
-
 from api import blueprints
 from cache import cache
 from config.logging import setup_logging
