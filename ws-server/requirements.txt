@@ -1,0 +1,8 @@
+Flask
+flask-socketio
+gunicorn[eventlet]
+redis
+Flask-Caching
+Flask-Cors
+PyJWT
+requests

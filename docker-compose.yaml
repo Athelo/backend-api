@@ -2,16 +2,14 @@ version: '3.4'
 
 services:
   athelo-backend-api:
+    build: ./rest-api
     restart: always
     image: athelo-backend
     volumes: 
       - ./rest-api:/app
       - ./application_default_credentials.json:/application_default_credentials.json
-    build:
-      context: .
-      dockerfile: ./Dockerfile
     ports:
-      - 5001:8080
+      - 8080:8080
     environment:
     - ENVIRONMENT=local
     - GOOGLE_APPLICATION_CREDENTIALS=/application_default_credentials.json
@@ -22,6 +20,19 @@ services:
     command: python3 app.py
     depends_on:
       - redis
+    networks:
+      - mynetwork
+  ws-server:
+    build: ./ws-server
+    container_name: ws-server
+    restart: on-failure
+    depends_on:
+      - athelo-backend-api
+      - redis
+    volumes:
+      - ./ws-server:/flask_app
+    networks:
+      - mynetwork
   db:
     image: postgres:15
     volumes:
@@ -30,17 +41,36 @@ services:
       - POSTGRES_USER=athelo
       - POSTGRES_PASSWORD=athelo
       - POSTGRES_DB=athelo
+    networks:
+      - mynetwork
   redis:
     image: redis:latest
     restart: always
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/var/lib/redis/
       - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
     environment:
       - REDIS_PASSWORD=redispassword
+    networks:
+      - mynetwork
+  nginx:
+    image: nginx:1.25.3-alpine
+    container_name: nginx
+    restart: on-failure
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8000:80
+    depends_on:
+      - athelo-backend-api
+      - ws-server
+    networks:
+      - mynetwork
 
 volumes:
   postgres_data:
   redis_data:
+
+networks:
+  mynetwork:
+    driver: bridge

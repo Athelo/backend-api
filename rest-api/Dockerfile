@@ -18,7 +18,7 @@ FROM python:3.11
 
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
-COPY rest-api/requirements.txt ./
+COPY requirements.txt ./
 
 # Install production dependencies.
 RUN set -ex; \
@@ -26,15 +26,11 @@ RUN set -ex; \
     pip install gunicorn
 
 # Copy local code to the container image.
-ENV APP_HOME /app
-WORKDIR $APP_HOME
-COPY ./rest-api ./
-
-# Copy any certificates if present.
-COPY ./certs /app/certs
+ADD . /app
+WORKDIR /app
 
 # make start up script executable
-RUN chmod +x ./start.sh 
+RUN chmod +x /app/start.sh
 
 
-CMD ["./start.sh"]
+CMD ["./app/start.sh"]
