@@ -41,16 +41,16 @@ class AppointmentListView(MethodView):
     def get_current_user_appointments_query(self, user: Users) -> Query[Appointment]:
         query = db.session.query(Appointment)
         if user.is_provider and user.is_patient:
-            query.filter(
+            query = query.filter(
                 or_(
                     Appointment.patient_id == user.patient_profile.id,
                     Appointment.provider_id == user.provider_profile.id,
                 )
             )
         elif user.is_provider:
-            query.filter(Appointment.provider_id == user.provider_profile.id)
+            query = query.filter(Appointment.provider_id == user.provider_profile.id)
         elif user.is_patient:
-            query.filter(Appointment.patient_id == user.patient_profile.id)
+            query = query.filter(Appointment.patient_id == user.patient_profile.id)
         else:
             return None
         return query

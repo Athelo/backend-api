@@ -23,7 +23,7 @@
 
 <body>
     <nav class="teal darken-3">
-        <div class="nav-wrapper container"><a class="brand-logo center" href="#!">ATHLEO VONAGE VIDEO APPOINTMENTS</a>
+        <div class="nav-wrapper container"><a class="brand-logo center" href="#!">ATHELO VONAGE VIDEO APPOINTMENTS</a>
         </div>
     </nav>
     <div class="section">
@@ -47,12 +47,17 @@
         <div class="row center">
             <div class="col s6 m10 offset-m1">
                 <div class="card-panel">
-                    <input id="sessionInput"> </textarea>
+                    <select id='appointmentList' name="appointmentList" hidden="false" style="display: inline-flex;">
+                        <option value=" none">Select an Appointment</option>
+                    </select>
+                    <p id="appointmentDisplay" style="white-space: pre-line;">No appointment selected</p>
                     <button id="connectButton" class="btn green">Connect to Session</button>
                 </div>
             </div>
         </div>
     </div>
+
+
     <div class="section">
         <div class="row center">
             <div class="col s6 m10 offset-m1">
@@ -75,6 +80,7 @@
 
             document.getElementById('connectButton').onclick = createTokenForSession
             document.getElementById('signInButton').addEventListener("click", toggle)
+            document.getElementById('appointmentList').onchange = updateAppointmentDisplay
 
         </script>
 </body>
