@@ -5,6 +5,7 @@ from sqlalchemy.sql import func
 from api.utils import class_route, generate_paginated_dict, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
+from api.constants import V1_API_PREFIX, DATETIME_FORMAT, DATE_FORMAT
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
@@ -12,12 +13,12 @@ from models.database import db
 from models.patient_symptoms import PatientSymptoms
 from models.symptom import Symptom
 from schemas.patient_symptom import PatientSymptomSchema, PatientSymptomUpdateSchema
-from marshmallow import fields
+from datetime import datetime
 
 logger = logging.getLogger()
 
 user_symptom_endpoints = Blueprint(
-    "My Symptoms", __name__, url_prefix="/api/v1/health/"
+    "My Symptoms", __name__, url_prefix=f"{V1_API_PREFIX}/health/"
 )
 
 
@@ -44,6 +45,20 @@ class UserSymptomsView(MethodView):
         if not json_data:
             return {"message": "No input data provided"}, BAD_REQUEST
         schema = PatientSymptomUpdateSchema()
+
+        try:
+            full_datetime = datetime.strptime(
+                json_data["occurrence_date"], DATETIME_FORMAT
+            )
+        except ValueError:
+            try:
+                full_datetime = datetime.strptime(
+                    json_data["occurrence_date"], DATE_FORMAT
+                )
+            except ValueError:
+                return 'Unable to parse "occurrence_date"', UNPROCESSABLE_ENTITY
+
+        json_data["occurrence_date"] = full_datetime.isoformat()
 
         try:
             data = schema.load(json_data)
@@ -199,10 +214,9 @@ class FeelingsSymptomsPerDay(MethodView):
         )
 
         map_by_date = {}
-        date_format = "%Y-%m-%d"
 
         for user_sym in symptoms:
-            symptom_date = user_sym.occurrence_date.strftime(date_format)
+            symptom_date = user_sym.occurrence_date.strftime(DATE_FORMAT)
             if symptom_date not in map_by_date:
                 map_by_date[symptom_date] = set()
 
