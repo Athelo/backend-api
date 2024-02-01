@@ -2,7 +2,12 @@ import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 from sqlalchemy.sql import func
 
-from api.utils import class_route, generate_paginated_dict, commit_entity_or_abort
+from api.utils import (
+    class_route,
+    generate_paginated_dict,
+    commit_entity_or_abort,
+    convertDateToDatetimeIfNecessary,
+)
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
 from api.constants import V1_API_PREFIX, DATETIME_FORMAT, DATE_FORMAT
@@ -46,20 +51,7 @@ class UserSymptomsView(MethodView):
             return {"message": "No input data provided"}, BAD_REQUEST
         schema = PatientSymptomUpdateSchema()
 
-        try:
-            full_datetime = datetime.strptime(
-                json_data["occurrence_date"], DATETIME_FORMAT
-            )
-        except ValueError:
-            try:
-                full_datetime = datetime.strptime(
-                    json_data["occurrence_date"], DATE_FORMAT
-                )
-            except ValueError:
-                return 'Unable to parse "occurrence_date"', UNPROCESSABLE_ENTITY
-
-        json_data["occurrence_date"] = full_datetime.isoformat()
-
+        json_data = convertDateToDatetimeIfNecessary(json_data, "occurrence_date")
         try:
             data = schema.load(json_data)
         except ValidationError as err:

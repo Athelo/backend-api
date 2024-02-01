@@ -107,6 +107,13 @@ async function performGetAndUpdateElements(element, endpoint) {
 
   } catch (err) {
     document.getElementById(element).innerText = `Error when submitting vote: ${err}`
-    window.alert('Something went wrong... Please try again!');
+    window.alert(`Something went wrong... Please try again!\n${err}`);
   }
+}
+
+async function copyToken() {
+  tokenVal = document.getElementById('tokenDisplay').value
+  navigator.clipboard.writeText(tokenVal);
+  window.alert(`Copied ${tokenVal} to clipboard`)
+
 }
