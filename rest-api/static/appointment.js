@@ -121,7 +121,7 @@ function createAppointmentDisplayString(appt) {
     display += ("Start time: " + appt["start_time"] + "\r\n")
     display += ("End time: " + appt["end_time"] + "\r\n")
     display += ("Patient: " + appt["patient"]["display_name"] + "\r\n")
-    display += ("Provider: " + appt["patient"]["display_name"] + "\r\n")
+    display += ("Provider: " + appt["provider"]["display_name"] + "\r\n")
     return display
 }
 
