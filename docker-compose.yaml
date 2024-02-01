@@ -22,6 +22,7 @@ services:
     command: python3 app.py
     depends_on:
       - redis
+      - db
     networks:
       - athelo_network
   ws-api:

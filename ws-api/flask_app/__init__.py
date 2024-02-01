@@ -23,7 +23,7 @@ def create_app():
 
 
 def register_extensions(app):
-    socketio.init_app(app)
+    socketio.init_app(app, logger=True, engineio_logger=True, cors_allowed_origins="*", async_mode="eventlet", message_queue=config.REDIS_URL)
 
 
 app = create_app()
