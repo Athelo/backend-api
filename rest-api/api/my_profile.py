@@ -285,8 +285,8 @@ class ProviderAvailabilityView(MethodView):
         return result, CREATED
 
 
-@jwt_authenticated
 @my_profile_endpoints.route("/availability/<int:availability_id>/", methods=["DELETE"])
+@jwt_authenticated
 def delete_availability(availability_id: int):
     user = get_user_from_request(request)
 

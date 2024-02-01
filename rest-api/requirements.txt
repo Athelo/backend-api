@@ -29,3 +29,6 @@ python-socketio
 six==1.11.0
 zipp==3.8.1
 eventlet==0.33.3
+
+#Video Appointment
+opentok>=3.0
