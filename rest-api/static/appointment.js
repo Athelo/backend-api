@@ -172,6 +172,21 @@ async function createTokenForSession() {
     // Initialize a Publisher, and place it into the element with id="publisher"
     var publisher = OT.initPublisher('publisher');
 
+    session.on('streamCreated', function (event) {
+        session.subscribe(event.stream, 'subscriber', {
+            insertMode: 'append',
+            width: '100%',
+            height: '100%'
+        }, handleError);
+    });
+
+    var publisher = OT.initPublisher('publisher', {
+        insertMode: 'append',
+        width: '100%',
+        height: '100%'
+    }, handleError);
+
+
     session.on({
 
         // This function runs when session.connect() asynchronously completes
