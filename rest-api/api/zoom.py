@@ -1,4 +1,3 @@
-import logging
 from flask import abort, request, Blueprint
 from api.utils import commit_entity_or_abort
 from api.constants import V1_API_PREFIX

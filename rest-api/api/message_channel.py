@@ -1,4 +1,3 @@
-import logging
 from http.client import (
     BAD_REQUEST,
     CREATED,
@@ -16,7 +15,6 @@ from models.database import db
 from schemas.message_channel import MessageChannelSchema, MessageChannelRequestSchema
 from models.message_channel import MessageChannel
 from models.users import Users
-from sqlalchemy.exc import IntegrityError, NoResultFound
 
 
 message_channel_endpoints = Blueprint(

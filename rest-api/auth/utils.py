@@ -1,12 +1,9 @@
 from flask import Request, abort
-from models.database import db
 from models.users import Users
 from werkzeug.exceptions import Unauthorized, NotFound
-from sqlalchemy.exc import NoResultFound
 from http.client import UNAUTHORIZED
 from repositories.user import get_user_by_email
 
-import logging
 
 
 def get_user_from_request(request: Request) -> Users:

@@ -41,7 +41,7 @@ def create_app() -> Flask:
 
         OpenTokClient.init_app(app)
 
-    ma = Marshmallow(app)
+    ma = Marshmallow(app)  # noqa: F841
     app.logger.info("Running app!")
     return app
 

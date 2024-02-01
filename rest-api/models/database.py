@@ -1,5 +1,3 @@
-import os
-
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -29,4 +27,4 @@ def getconn():
 # initialize the app with the extension
 db = SQLAlchemy(model_class=Base)
 migrate = Migrate()
-__all__ = ["base"]
+__all__ = ["base"]  # noqa F822

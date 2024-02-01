@@ -1,8 +1,6 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from marshmallow_sqlalchemy.fields import Nested
 from models.users import Users
 from marshmallow import Schema, fields, post_load
-from schemas.patient_profile import PatientProfileSchema
 
 
 class UserProfileSchema(SQLAlchemyAutoSchema):

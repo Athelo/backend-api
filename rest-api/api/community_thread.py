@@ -1,8 +1,6 @@
-import logging
 from http.client import (
     BAD_REQUEST,
     CREATED,
-    UNAUTHORIZED,
     UNPROCESSABLE_ENTITY,
     CONFLICT,
     NOT_FOUND,
@@ -22,7 +20,7 @@ from schemas.community_thread import (
 )
 from models.community_thread import CommunityThread, ThreadParticipants
 from models.thread_post import ThreadPost
-from schemas.thread_post import ThreadPostSchema, ThreadPostCreateSchema
+from schemas.thread_post import ThreadPostSchema
 from api.constants import V1_API_PREFIX
 from api.utils import generate_paginated_dict
 

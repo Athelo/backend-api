@@ -1,4 +1,3 @@
-import logging
 from api.utils import get_api_url
 import requests
 import requests.auth

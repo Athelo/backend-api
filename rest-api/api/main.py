@@ -1,8 +1,6 @@
 from datetime import datetime
-import logging
 
 from auth.middleware import jwt_authenticated
-from threading import Lock
 from flask import (
     Blueprint,
     render_template,

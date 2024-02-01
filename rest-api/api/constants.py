@@ -1,4 +1,3 @@
-from flask import current_app as app
 
 USER_PROFILE_RETURN_SCHEMA = {
     "id": 0,

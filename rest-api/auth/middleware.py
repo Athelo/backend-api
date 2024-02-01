@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 from collections.abc import Callable
 from functools import wraps
 from typing import TypeVar
@@ -8,6 +7,7 @@ from typing import TypeVar
 import firebase_admin
 from firebase_admin import auth  # noqa: F401
 from flask import Response, request
+from flask import current_app as app
 
 a = TypeVar("a")
 
@@ -28,7 +28,7 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
             split_header = header.split(" ")
             if len(split_header) != 2:
                 return Response(
-                    status=403, response=f"Error with authentication: malformed header."
+                    status=403, response="Error with authentication: malformed header."
                 )
             token = header.split(" ")[1]
             try:

@@ -1,5 +1,3 @@
-import logging
-from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY
 
 from api.utils import class_route
 from flask import Blueprint

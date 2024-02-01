@@ -1,12 +1,8 @@
-from datetime import datetime
-from typing import Optional
 from typing import List
 from models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey, Integer
-from sqlalchemy.types import Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
-from typing import get_args
 
 
 class ProviderType(enum.Enum):
