@@ -12,7 +12,6 @@ from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
 from models.provider_availability import ProviderAvailability
 
-logger = logging.getLogger()
 
 provider_endpoints = Blueprint(
     "ProviderProfiles", __name__, url_prefix="/api/v1/providers"

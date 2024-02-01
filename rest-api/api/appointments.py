@@ -27,7 +27,6 @@ from requests.exceptions import HTTPError
 from repositories.user import get_user_by_provider_id
 from services.opentok import OpenTokClient
 
-logger = logging.getLogger()
 
 appointments_endpoints = Blueprint(
     "Appointments",

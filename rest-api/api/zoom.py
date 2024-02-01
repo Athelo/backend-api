@@ -15,7 +15,6 @@ from http.client import (
 from auth.middleware import jwt_authenticated
 from auth.utils import require_admin_user
 
-logger = logging.getLogger()
 
 zoom_endpoints = Blueprint(
     "Zoom",

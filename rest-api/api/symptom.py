@@ -10,7 +10,6 @@ from models.database import db
 from models.symptom import Symptom
 from schemas.symptom import SymptomSchema
 
-logger = logging.getLogger()
 
 symptom_endpoints = Blueprint("Symptom", __name__, url_prefix="/api/v1/health/symptoms")
 

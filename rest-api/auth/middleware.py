@@ -12,7 +12,6 @@ from flask import Response, request
 a = TypeVar("a")
 
 default_app = firebase_admin.initialize_app()
-logger = logging.getLogger()
 
 
 def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
@@ -35,7 +34,7 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
             try:
                 decoded_token = firebase_admin.auth.verify_id_token(token)
             except Exception as e:
-                logger.exception(e)
+                app.logger.exception(e)
                 return Response(status=403, response=f"Error with authentication: {e}")
         else:
             return Response(status=401)

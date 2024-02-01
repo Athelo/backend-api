@@ -13,8 +13,6 @@ from services.zoom import make_zoom_authorization_url
 from api.constants import V1_API_PREFIX
 from http.client import ACCEPTED
 
-logger = logging.getLogger()
-
 main_endpoints = Blueprint("Main", __name__)
 
 
@@ -57,11 +55,11 @@ def opentok():
 
 @main_endpoints.route(f"{V1_API_PREFIX}/test-logging")
 def test_logging():
-    logger.critical("This is a critical log")
-    logger.fatal("This is a fatal log")
-    logger.error("This is an error log")
-    logger.warn("This is a warn log")
-    logger.warning("This is a warning log")
-    logger.info("This is an info log")
-    logger.debug("This is a debug log")
+    app.logger.critical("This is a critical log")
+    app.logger.fatal("This is a fatal log")
+    app.logger.error("This is an error log")
+    app.logger.warn("This is a warn log")
+    app.logger.warning("This is a warning log")
+    app.logger.info("This is an info log")
+    app.logger.debug("This is a debug log")
     return "", ACCEPTED
