@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import os
-
 from api import blueprints
 from config.logging import setup_logging
 from flask import Flask
@@ -50,5 +49,4 @@ def create_app() -> Flask:
 app = create_app()
 
 if __name__ == "__main__":
-    # socketio.run(app, host="0.0.0.0", port=app.config.get("PORT"), debug=True)
     app.run(host="0.0.0.0", port=8080)
