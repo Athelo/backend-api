@@ -20,7 +20,7 @@ from models.admin_profile import AdminProfile
 from schemas.admin_profile import AdminProfileSchema
 from models.patient_profile import PatientProfile
 from schemas.patient_profile import PatientProfileCreateSchema, PatientProfileSchema
-from models.provider_profile import ProviderProfile
+from models.provider_profile import ProviderProfile, ProviderType
 from schemas.provider_profile import ProviderProfileSchema, ProviderProfileCreateSchema
 from api.constants import (
     USER_PROFILE_RETURN_SCHEMA,
@@ -30,7 +30,6 @@ from api.constants import (
 from zoneinfo import ZoneInfo
 from datetime import datetime
 from models.provider_availability import ProviderAvailability
-from sqlalchemy.exc import DatabaseError, IntegrityError
 
 logger = logging.getLogger()
 
@@ -210,17 +209,22 @@ class ProviderProfileView(MethodView):
 
         try:
             data = schema.load(json_data)
+            provider_type = ProviderType(data["provider_type"])
+
         except ValidationError as err:
             abort(UNPROCESSABLE_ENTITY, err.messages)
 
         appointment_buffer = data["appointment_buffer_sec"]
 
         if user.is_provider:
-            user.provider_profile.appointment_buffer_sec = appointment_buffer
             provider_profile = user.provider_profile
+            provider_profile.appointment_buffer_sec = appointment_buffer
+            provider_profile.provider_type = provider_type
         else:
             provider_profile = ProviderProfile(
-                user_id=user.id, appointment_buffer_sec=appointment_buffer
+                user_id=user.id,
+                appointment_buffer_sec=appointment_buffer,
+                provider_type=provider_type,
             )
 
         commit_entity_or_abort(provider_profile)

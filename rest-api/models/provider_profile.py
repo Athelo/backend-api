@@ -5,6 +5,15 @@ from models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.types import Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+import enum
+from typing import get_args
+
+
+class ProviderType(enum.Enum):
+    CARE_NAVIGATOR = "CARE_NAVIGATOR"
+
+
+provider_type_display = {ProviderType.CARE_NAVIGATOR: "Care Navigator"}
 
 
 class ProviderProfile(TimestampMixin, Base):
@@ -26,6 +35,12 @@ class ProviderProfile(TimestampMixin, Base):
     )
     zoom_user_id: Mapped[str] = mapped_column(nullable=True)
     zoom_refresh_token: Mapped[str] = mapped_column(nullable=True)
+    provider_type: Mapped[ProviderType] = mapped_column(nullable=True)
 
     def to_json(self):
-        return {"display_name": self.user.display_name, "photo": None}
+        return {
+            "display_name": self.user.display_name,
+            "photo": "https://images.squarespace-cdn.com/content/v1/6001010b0b53fb47a674a59b/1625549383635-W9V47OHULCNOK92N1XLL/Athelo-Logo-2A.jpeg?format=1500w",
+            "id": self.id,
+            "provider_type": provider_type_display.get(self.provider_type),
+        }
