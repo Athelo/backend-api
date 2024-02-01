@@ -1,4 +1,3 @@
-import logging
 from http.client import (
     BAD_REQUEST,
     CREATED,
@@ -61,7 +60,7 @@ class MessagesView(MethodView):
 
         try:
             channel = db.session.get(MessageChannel, message_channel_id)
-        except NoResultFound as err:
+        except NoResultFound:
             abort(
                 BAD_REQUEST,
                 f"Cannot add message to channel id {channel.id} because it does not exist.",

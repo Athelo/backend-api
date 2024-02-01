@@ -1,4 +1,3 @@
-from typing import List
 
 from models.base import Base, TimestampMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship

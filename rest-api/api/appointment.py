@@ -1,4 +1,3 @@
-import logging
 from http.client import NOT_FOUND, UNPROCESSABLE_ENTITY, OK
 from api.utils import class_route
 from auth.middleware import jwt_authenticated

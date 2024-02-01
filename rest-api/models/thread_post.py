@@ -1,5 +1,3 @@
-from typing import List
-import enum
 
 from sqlalchemy import ForeignKey
 

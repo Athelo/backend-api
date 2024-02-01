@@ -1,9 +1,9 @@
 from models.users import Users
 from models.database import db
 from models.provider_profile import ProviderProfile
-import logging
 from api.utils import commit_entity_or_abort
 from repositories.utils import try_commit_entity
+from flask import current_app as app
 
 
 def get_user_by_email(email: str) -> Users:

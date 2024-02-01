@@ -1,5 +1,5 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from models.provider_profile import ProviderProfile, ProviderType
+from models.provider_profile import ProviderProfile
 from marshmallow import Schema, fields
 
 

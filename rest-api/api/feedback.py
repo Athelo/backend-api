@@ -1,4 +1,3 @@
-import logging
 from http.client import (
     BAD_REQUEST,
     CREATED,
@@ -16,7 +15,6 @@ from models.feedback import Feedback
 from api.constants import V1_API_PREFIX
 from api.utils import generate_paginated_dict
 from auth.utils import require_admin_user
-from sqlalchemy.exc import IntegrityError, DatabaseError
 
 
 feedback_endpoints = Blueprint(
@@ -77,7 +75,7 @@ class FeedbackListView(MethodView):
                 content=json_data["content"],
                 topic_id=json_data["topic_id"],
             )
-        except Exception as exc:
+        except Exception:
             abort(UNPROCESSABLE_ENTITY)
 
         commit_entity_or_abort(feedback)

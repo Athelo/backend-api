@@ -1,0 +1,4 @@
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"rest-api/models/*" = ["F821"]
+"rest-api/migrations/*" = ["E711", "F401"]

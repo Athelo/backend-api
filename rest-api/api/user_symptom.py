@@ -1,4 +1,3 @@
-import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 from sqlalchemy.sql import func
 
@@ -10,15 +9,14 @@ from api.utils import (
 )
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
-from api.constants import V1_API_PREFIX, DATETIME_FORMAT, DATE_FORMAT
-from flask import Blueprint, abort, request
+from api.constants import V1_API_PREFIX, DATE_FORMAT
+from flask import Blueprint, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.patient_symptoms import PatientSymptoms
 from models.symptom import Symptom
 from schemas.patient_symptom import PatientSymptomSchema, PatientSymptomUpdateSchema
-from datetime import datetime
 
 
 user_symptom_endpoints = Blueprint(

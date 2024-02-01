@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey
