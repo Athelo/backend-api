@@ -86,26 +86,26 @@ async function createTokenForSession() {
         }
     }
     let ot_token = ""
-    try {
-        await fetch("/api/v1/appointment/18/vonage-appointment-details", {
-            credentials: 'include',
-            method: 'GET',
-            headers: req_headers,
-        }).then(async (response) => {
-            if (response.ok) {
-                let json = await response.json();
-                document.getElementById("otTokenDisplay").innerText = json["token"]
-                ot_token = json["token"]
-            } else {
-                let text = await response.text();
-                document.getElementById("oTtokenDisplay").innerText = `${response.status}: ${response.statusText}\n${text}`
-            }
-        });
+    // try {
+    //     await fetch("/api/v1/appointment/18/vonage-appointment-details", {
+    //         credentials: 'include',
+    //         method: 'GET',
+    //         headers: req_headers,
+    //     }).then(async (response) => {
+    //         if (response.ok) {
+    //             let json = await response.json();
+    //             document.getElementById("otTokenDisplay").innerText = json["token"]
+    //             ot_token = json["token"]
+    //         } else {
+    //             let text = await response.text();
+    //             document.getElementById("oTtokenDisplay").innerText = `${response.status}: ${response.statusText}\n${text}`
+    //         }
+    //     });
 
-    } catch (err) {
-        window.alert('Something went wrong... Please try again!');
-        return
-    }
+    // } catch (err) {
+    //     window.alert('Something went wrong... Please try again!');
+    //     return
+    // }
 
     // Initialize an OpenTok Session object
     var session = OT.initSession(apiKey, sessionId);
