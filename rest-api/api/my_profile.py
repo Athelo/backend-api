@@ -31,7 +31,6 @@ from zoneinfo import ZoneInfo
 from datetime import datetime
 from models.provider_availability import ProviderAvailability
 
-logger = logging.getLogger()
 
 my_profile_endpoints = Blueprint("My Profile", __name__, url_prefix="/api/v1/users/me")
 

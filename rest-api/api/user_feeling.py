@@ -16,7 +16,6 @@ from models.database import db
 from models.patient_feelings import PatientFeelings
 from schemas.patient_feeling import PatientFeelingSchema, PatientFeelingUpdateSchema
 
-logger = logging.getLogger()
 
 user_feeling_endpoints = Blueprint(
     "My Feelings", __name__, url_prefix="/api/v1/health/"

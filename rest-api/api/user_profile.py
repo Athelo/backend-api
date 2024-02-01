@@ -11,7 +11,6 @@ from models.users import Users
 from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
 from repositories.user import get_user_by_email
 
-logger = logging.getLogger()
 
 user_profile_endpoints = Blueprint(
     "User Profiles", __name__, url_prefix="/api/v1/users"

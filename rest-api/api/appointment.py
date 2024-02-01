@@ -10,7 +10,6 @@ from models.appointments.appointment import Appointment, AppointmentStatus
 from api.constants import V1_API_PREFIX
 from services.opentok import OpenTokClient
 
-logger = logging.getLogger()
 
 appointment_endpoints = Blueprint(
     "Appointment",

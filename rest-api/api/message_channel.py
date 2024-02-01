@@ -19,8 +19,6 @@ from models.users import Users
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 
-logger = logging.getLogger()
-
 message_channel_endpoints = Blueprint(
     "Message Channels", __name__, url_prefix="/api/v1/message-channels"
 )

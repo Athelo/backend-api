@@ -27,8 +27,6 @@ from api.constants import V1_API_PREFIX
 from api.utils import generate_paginated_dict
 
 
-logger = logging.getLogger()
-
 community_thread_endpoints = Blueprint(
     # "Community Threads", __name__, url_prefix=f"{V1_API_PREFIX}/community-threads"
     "Community Threads",

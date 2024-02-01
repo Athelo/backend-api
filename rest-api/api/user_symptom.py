@@ -20,7 +20,6 @@ from models.symptom import Symptom
 from schemas.patient_symptom import PatientSymptomSchema, PatientSymptomUpdateSchema
 from datetime import datetime
 
-logger = logging.getLogger()
 
 user_symptom_endpoints = Blueprint(
     "My Symptoms", __name__, url_prefix=f"{V1_API_PREFIX}/health/"

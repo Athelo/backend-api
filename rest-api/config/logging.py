@@ -12,5 +12,4 @@ def setup_logging(app: Flask):
         app.logger.handlers = gunicorn_logger.handlers
         app.logger.setLevel(gunicorn_logger.level)
     else:
-        app.logger.addHandler(logging.StreamHandler())
-        app.logger.setLevel(logging.INFO)
+        app.logger.setLevel(logging.DEBUG)

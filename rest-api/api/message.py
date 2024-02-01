@@ -19,7 +19,6 @@ from models.message import Message
 from sqlalchemy.exc import NoResultFound
 from api.constants import V1_API_PREFIX
 
-logger = logging.getLogger()
 
 message_endpoints = Blueprint(
     "Messages", __name__, url_prefix=f"{V1_API_PREFIX}/message-channels"

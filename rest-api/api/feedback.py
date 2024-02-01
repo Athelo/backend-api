@@ -19,8 +19,6 @@ from auth.utils import require_admin_user
 from sqlalchemy.exc import IntegrityError, DatabaseError
 
 
-logger = logging.getLogger()
-
 feedback_endpoints = Blueprint(
     "Feedback", __name__, url_prefix=f"{V1_API_PREFIX}/applications/"
 )
