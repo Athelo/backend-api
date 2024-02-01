@@ -104,7 +104,6 @@ async function getAppointments() {
     }
 }
 
-// Attach event handlers
 
 function updateAppointmentDisplay() {
     appointmentSelect = document.getElementById('appointmentList')
@@ -123,6 +122,13 @@ function createAppointmentDisplayString(appt) {
     display += ("Patient: " + appt["patient"]["display_name"] + "\r\n")
     display += ("Provider: " + appt["provider"]["display_name"] + "\r\n")
     return display
+}
+
+
+function handleError(error) {
+    if (error) {
+        alert(error.message);
+    }
 }
 
 

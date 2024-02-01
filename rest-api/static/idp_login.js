@@ -58,11 +58,6 @@ function toggle() {
   }
 }
 
-function handleError(error) {
-  if (error) {
-    alert(error.message);
-  }
-}
 
 async function getToken() {
   if (curr_user == null) {
