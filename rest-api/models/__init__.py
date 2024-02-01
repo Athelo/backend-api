@@ -9,9 +9,11 @@ from models.caregiver_profile import CaregiverProfile
 from models.patient_profile import PatientProfile
 from models.provider_profile import ProviderProfile
 from models.admin_profile import AdminProfile
-from models.appointment import Appointment
 from models.provider_availability import ProviderAvailability
 from models.community_thread import CommunityThread
 from models.thread_post import ThreadPost
 from models.feedback import Feedback
 from models.feedback_topic import FeedbackTopic
+from models.appointments.appointment import Appointment
+from models.appointments.vonage_session import VonageSession
+from models.appointments.zoom_meeting import ZoomMeeting

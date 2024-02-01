@@ -15,7 +15,6 @@ from http.client import (
 from auth.middleware import jwt_authenticated
 from auth.utils import require_admin_user
 
-logger = logging.getLogger()
 
 zoom_endpoints = Blueprint(
     "Zoom",
@@ -24,7 +23,7 @@ zoom_endpoints = Blueprint(
 )
 
 
-@zoom_endpoints.route("/callback/")
+@zoom_endpoints.route("/callback")
 def zoom_callback():
     error = request.args.get("error", "")
     if error:

@@ -8,8 +8,6 @@ from repositories.user import get_user_by_email
 
 import logging
 
-logger = logging.getLogger()
-
 
 def get_user_from_request(request: Request) -> Users:
     user = get_user_by_email(request.email)

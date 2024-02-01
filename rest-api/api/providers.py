@@ -12,22 +12,21 @@ from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
 from models.provider_availability import ProviderAvailability
 
-logger = logging.getLogger()
 
 provider_endpoints = Blueprint(
     "ProviderProfiles", __name__, url_prefix="/api/v1/providers"
 )
 
 
-@jwt_authenticated
 @provider_endpoints.route("", methods=["GET"])
+@jwt_authenticated
 def get_all_providers():
     providers = db.session.query(ProviderProfile).all()
     return generate_paginated_dict([provider.to_json() for provider in providers])
 
 
-@jwt_authenticated
 @provider_endpoints.route("/<int:provider_profile_id>/availability/")
+@jwt_authenticated
 def get_provider_availability(provider_profile_id: int):
     date = request.args.get("date")
     if date is None:

@@ -1,17 +1,11 @@
-from api.constants import USER_PROFILE_RETURN_SCHEMA, V1_API_PREFIX
+from api.constants import V1_API_PREFIX, DATE_FORMAT, DATETIME_FORMAT
 from flask import current_app as app
 from flask import abort
 from models.database import db
 from models.base import Base
-from http.client import (
-    BAD_REQUEST,
-    CREATED,
-    UNAUTHORIZED,
-    UNPROCESSABLE_ENTITY,
-    CONFLICT,
-    NOT_FOUND,
-    OK,
-)
+from http.client import UNPROCESSABLE_ENTITY
+from datetime import datetime
+
 from sqlalchemy.exc import IntegrityError, DatabaseError
 
 
@@ -34,7 +28,7 @@ def class_route(self, rule, endpoint, **options):
 def generate_paginated_dict(api_results):
     results = []
 
-    if type(api_results) == list:
+    if isinstance(api_results, list):
         results = api_results
     else:
         results.append(api_results)
@@ -60,3 +54,21 @@ def commit_entity_or_abort(entity: Base):
             UNPROCESSABLE_ENTITY,
             f"Cannot create db entiy because {e.orig.args[0]['M']}",
         )
+
+
+def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
+    try:
+        full_datetime = datetime.fromisoformat(
+            json_data[field_name],
+        )
+    except ValueError:
+        try:
+            full_datetime = datetime.strptime(json_data[field_name], DATETIME_FORMAT)
+        except ValueError:
+            try:
+                full_datetime = datetime.strptime(json_data[field_name], DATE_FORMAT)
+            except ValueError:
+                abort(UNPROCESSABLE_ENTITY, f'Unable to parse "{field_name}"')
+
+    json_data[field_name] = full_datetime.isoformat()
+    return json_data

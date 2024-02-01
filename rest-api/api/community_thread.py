@@ -20,11 +20,11 @@ from schemas.community_thread import (
     group_message_schema_from_community_thread,
 )
 from models.community_thread import CommunityThread, ThreadParticipants
+from models.thread_post import ThreadPost
+from schemas.thread_post import ThreadPostSchema, ThreadPostCreateSchema
 from api.constants import V1_API_PREFIX
 from api.utils import generate_paginated_dict
 
-
-logger = logging.getLogger()
 
 community_thread_endpoints = Blueprint(
     # "Community Threads", __name__, url_prefix=f"{V1_API_PREFIX}/community-threads"
@@ -97,14 +97,14 @@ class CommunityThreadListView(MethodView):
         return result, CREATED
 
 
-@jwt_authenticated
 @community_thread_endpoints.route("/<int:thread_id>/", methods=["GET"])
+@jwt_authenticated
 def get_community_thread(thread_id: int):
     user = get_user_from_request(request)
     community_thread = (
         db.session.query(CommunityThread)
         .where(CommunityThread.id == thread_id)
-        .join(CommunityThread.users)
+        .join(CommunityThread.participants)
         .one_or_none()
     )
 
@@ -117,8 +117,52 @@ def get_community_thread(thread_id: int):
     return group_message_schema_from_community_thread(community_thread, belong_to)
 
 
+@class_route(
+    community_thread_endpoints, "/<int:thread_id>/posts/", "community_thread_posts"
+)
+class ThreadPostListView(MethodView):
+    @jwt_authenticated
+    def get(thread_id: int):
+        posts = (
+            db.session.query(ThreadPost).where(CommunityThread.id == thread_id).all()
+        )
+        schema = ThreadPostSchema()
+
+        return generate_paginated_dict(schema.dump(posts, many=True))
+
+    # @jwt_authenticated
+    # def post(thread_id: int):
+    #     user = get_user_from_request(request)
+    #     thread = (
+    #         db.session.query(CommunityThread)
+    #         .where(CommunityThread == thread_id)
+    #         .one_or_none()
+    #     )
+    #     if thread is None:
+    #         abort(NOT_FOUND, f"Thread {thread_id} not found")
+
+    #     user_belongs_to_thread = any(
+    #         participant
+    #         for participant in thread.participants
+    #         if participant.id == user.id
+    #     )
+
+    #     if user_belongs_to_thread:
+    #         abort(
+    #             UNAUTHORIZED, "Cannot post to a group messagee that you haven't joined"
+    #         )
+    #     try:
+    #         post_data = ThreadPostCreateSchema().load(request.get_json())
+    #     except ValidationError as err:
+    #         abort(UNPROCESSABLE_ENTITY, err.messages)
+
+    #     post = ThreadPost(author_id=user, thread_id=, content=)
+
+    #     return generate_paginated_dict(schema.dump(posts, many=True))
+
+
+@community_thread_endpoints.route("/<int:thread_id>/", methods=["POST"])
 @jwt_authenticated
-@community_thread_endpoints.route("/<int:thread_id>/", methods=["PUT"])
 def update_community_thread(thread_id: int):
     user = get_user_from_request(request)
     require_admin_user(user)
@@ -149,8 +193,8 @@ def update_community_thread(thread_id: int):
     return result, OK
 
 
-@jwt_authenticated
 @community_thread_endpoints.route("/<int:thread_id>/join/", methods=["GET"])
+@jwt_authenticated
 def join_community_thread(thread_id: int):
     user = get_user_from_request(request)
     community_thread = (
@@ -174,8 +218,8 @@ def join_community_thread(thread_id: int):
     commit_entity_or_abort(community_thread)
 
 
-@jwt_authenticated
 @community_thread_endpoints.route("/<int:thread_id>/leave/", methods=["GET"])
+@jwt_authenticated
 def leave_community_thread(thread_id: int):
     user = get_user_from_request(request)
     community_thread = (

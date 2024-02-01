@@ -11,7 +11,6 @@ from models.database import db
 from models.saved_content import SavedContent
 from schemas.saved_content import SavedContentCreateUpdateSchema, SavedContentSchema
 
-logger = logging.getLogger()
 
 saved_content_endpoints = Blueprint(
     "My Saved Content", __name__, url_prefix="/api/v1/saved-content"

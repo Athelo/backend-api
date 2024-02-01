@@ -10,8 +10,6 @@ from flask import current_app as app
 from models.provider_profile import ProviderProfile
 
 
-logger = logging.getLogger()
-
 ZOOM_ACCOUNT_EMAIL = "stephanie@athelohealth.com"
 
 
@@ -96,7 +94,7 @@ def create_zoom_meeting_with_provider(
         raise ValueError("Provider is missing a  zoom user id")
 
     if provider_user.provider_profile.zoom_refresh_token is None:
-        logger.info(
+        app.logger.info(
             "Provider does not have zoom authentication information - using Athelo account auth"
         )
         access_token = get_provider_zoom_access_token(
@@ -123,7 +121,7 @@ def create_zoom_meeting_with_provider(
 
     if response.status_code == 201:
         meeting_id = response.json()["id"]
-        logger.info(f"Meeting created successfully, meeting ID: {meeting_id}")
+        app.logger.info(f"Meeting created successfully, meeting ID: {meeting_id}")
     else:
         # The request failed, raise an exception
         raise requests.exceptions.HTTPError(

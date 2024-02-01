@@ -5,7 +5,6 @@ from api.utils import class_route
 from flask import Blueprint
 from flask.views import MethodView
 
-logger = logging.getLogger()
 
 common_endpoints = Blueprint("Common", __name__, url_prefix="/api/v1/common")
 
