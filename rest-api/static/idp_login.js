@@ -113,7 +113,7 @@ async function performGetAndUpdateElements(element, endpoint) {
 
 async function copyToken() {
   tokenVal = document.getElementById('tokenDisplay').value
-  navigator.clipboard.writeText(tokenVal);
-  window.alert(`Copied ${tokenVal} to clipboard`)
-
+  navigator.clipboard.writeText(tokenVal).then(function (x) {
+    window.alert(`Copied ${tokenVal} to clipboard`)
+  });
 }
