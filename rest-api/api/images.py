@@ -46,4 +46,4 @@ def upload_image():
     data = str.split(request_data["data"], ",")[-1]
     file_type = request_data["file_type"]
 
-    return cloudStorageService.upload_image(name, data, file_type)
+    return {"url": cloudStorageService.upload_image(name, data, file_type)}, CREATED
