@@ -1,5 +1,6 @@
 from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY
 
+from api.constants import V1_API_PREFIX, DATE_FORMAT
 from api.utils import (
     class_route,
     generate_paginated_dict,
@@ -18,7 +19,7 @@ from schemas.patient_feeling import PatientFeelingSchema, PatientFeelingUpdateSc
 
 
 user_feeling_endpoints = Blueprint(
-    "My Feelings", __name__, url_prefix="/api/v1/health/"
+    "My Feelings", __name__, url_prefix=f"{V1_API_PREFIX}/health/"
 )
 
 
