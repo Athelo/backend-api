@@ -17,6 +17,7 @@ from api.appointments import appointments_endpoints
 from api.providers import provider_endpoints
 from api.appointment import appointment_endpoints
 from api.zoom import zoom_endpoints
+from api.images import image_endpoints
 
 blueprints = [
     appointment_endpoints,
@@ -36,4 +37,5 @@ blueprints = [
     user_profile_endpoints,
     user_symptom_endpoints,
     zoom_endpoints,
+    image_endpoints,
 ]
