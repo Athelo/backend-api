@@ -1,4 +1,3 @@
-import logging
 from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 from sqlalchemy.sql import func
 
@@ -7,18 +6,18 @@ from api.utils import (
     generate_paginated_dict,
     commit_entity_or_abort,
     convertDateToDatetimeIfNecessary,
+    convertTimeStringToDateString,
 )
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
-from api.constants import V1_API_PREFIX, DATETIME_FORMAT, DATE_FORMAT
-from flask import Blueprint, abort, request
+from api.constants import V1_API_PREFIX, DATE_FORMAT
+from flask import Blueprint, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.patient_symptoms import PatientSymptoms
 from models.symptom import Symptom
 from schemas.patient_symptom import PatientSymptomSchema, PatientSymptomUpdateSchema
-from datetime import datetime
 
 
 user_symptom_endpoints = Blueprint(
@@ -40,6 +39,9 @@ class UserSymptomsView(MethodView):
 
         schema = PatientSymptomSchema(many=True)
         res = schema.dump(symptoms)
+        for result in res:
+            result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
+
         return generate_paginated_dict(res)
 
     @jwt_authenticated
@@ -65,6 +67,7 @@ class UserSymptomsView(MethodView):
 
         commit_entity_or_abort(symptom)
         result = schema.dump(symptom)
+        result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
         return result, CREATED
 
 
@@ -177,42 +180,3 @@ class UserSymptomsSummaryView(MethodView):
             )
 
         return symptom_summary
-
-
-@class_route(
-    user_symptom_endpoints,
-    "/user_feelings_and_symptoms_per_day/",
-    "feelings_and_symptoms_per_day",
-)
-class FeelingsSymptomsPerDay(MethodView):
-    @jwt_authenticated
-    def get(self):
-        by_symptoms = request.args.get("by_symptoms") is not None
-        by_feelings = request.args.get("by_feelings") is not None
-
-        if by_feelings:
-            return {"message": "Feelings by day is not supported"}, BAD_REQUEST
-
-        if not by_symptoms:
-            return generate_paginated_dict({})
-
-        user = get_user_from_request(request)
-        symptoms = (
-            db.session.query(PatientSymptoms)
-            .filter_by(user_profile_id=user.id)
-            .join(Symptom)
-            .all()
-        )
-
-        map_by_date = {}
-
-        for user_sym in symptoms:
-            symptom_date = user_sym.occurrence_date.strftime(DATE_FORMAT)
-            if symptom_date not in map_by_date:
-                map_by_date[symptom_date] = set()
-
-            map_by_date[symptom_date].add(user_sym.symptom.name)
-
-        return generate_paginated_dict(
-            {k: ", ".join(v) for k, v in map_by_date.items()}
-        )

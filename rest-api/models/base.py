@@ -2,7 +2,6 @@ from datetime import datetime
 from typing_extensions import Annotated
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import BigInteger
 
 bigint = Annotated[int, "bigint"]
 

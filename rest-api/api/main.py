@@ -1,8 +1,6 @@
 from datetime import datetime
-import logging
 
 from auth.middleware import jwt_authenticated
-from threading import Lock
 from flask import (
     Blueprint,
     render_template,
@@ -49,8 +47,12 @@ def zoom_homepage():
 @main_endpoints.route("/opentok/")
 def opentok():
     key = app.config.get("VONAGE_API_KEY")
-    # token = OpenTokClient.instance().create_host_token(session_id, user)
     return render_template("opentok.html", api_key=key)
+
+
+@main_endpoints.route("/images/")
+def images():
+    return render_template("image_upload.html")
 
 
 @main_endpoints.route(f"{V1_API_PREFIX}/test-logging")

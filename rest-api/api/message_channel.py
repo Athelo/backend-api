@@ -1,4 +1,3 @@
-import logging
 from http.client import (
     BAD_REQUEST,
     CREATED,

@@ -29,6 +29,7 @@ class CloudConfig(Config):
     ZOOM_CLIENT_SECRET = os.environ.get("ZOOM_CLIENT_SECRET")
     VONAGE_API_KEY = os.environ.get("VONAGE_API_KEY")
     VONAGE_API_SECRET = os.environ.get("VONAGE_API_SECRET")
+    STORAGE_BUCKET = os.environ.get("STORAGE_BUCKET")
 
 
 class ProductionConfig(CloudConfig):
@@ -61,6 +62,7 @@ class LocalConfig(Config):
     ZOOM_CLIENT_SECRET = "97TKYdJIh4QO8eBz1lj2okiDnSxcuw4q"
     VONAGE_API_KEY = "47853731"
     VONAGE_API_SECRET = "25851f9cb85dba8e206be42841da93c73832228a"
+    STORAGE_BUCKET = "athelo-ad72bbe5-6171-49d6-b116-9a8236c4213a"
 
 
 class TestingConfig(Config):

@@ -1,4 +1,3 @@
-import logging
 from http.client import UNPROCESSABLE_ENTITY
 
 from sqlalchemy import or_

@@ -1,5 +1,4 @@
-import logging
-from http.client import BAD_REQUEST, CREATED, NOT_FOUND, OK, UNPROCESSABLE_ENTITY
+from http.client import BAD_REQUEST, CREATED, OK, UNPROCESSABLE_ENTITY
 
 from api.utils import class_route, commit_entity_or_abort
 from auth.middleware import jwt_authenticated

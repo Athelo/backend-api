@@ -1,4 +1,3 @@
-import logging
 from http.client import (
     ACCEPTED,
     BAD_REQUEST,
@@ -102,6 +101,7 @@ class UserProfileDeleteView(MethodView):
     @jwt_authenticated
     def delete(self):
         user = get_user_from_request(request)
+        user.active = False
         # db.session.delete(user)
         # db.session.commit()
         return {"message": "Attempted to delete the user"}, ACCEPTED

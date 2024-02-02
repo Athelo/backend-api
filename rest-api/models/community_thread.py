@@ -2,9 +2,7 @@ from typing import List
 
 from models.base import Base, TimestampMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, UniqueConstraint, text
-from sqlalchemy.dialects.postgresql import UUID as postgres_UUID
-from uuid import uuid4, UUID
+from sqlalchemy import ForeignKey, UniqueConstraint
 
 
 # created as a class so we can query it easier

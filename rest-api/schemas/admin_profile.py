@@ -1,7 +1,5 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from marshmallow_sqlalchemy.fields import Nested
 from models.admin_profile import AdminProfile
-from marshmallow import Schema, fields, post_load
 
 
 class AdminProfileSchema(SQLAlchemyAutoSchema):

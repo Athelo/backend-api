@@ -9,6 +9,7 @@ from api.symptom import symptom_endpoints
 from api.user_profile import user_profile_endpoints
 from api.user_feeling import user_feeling_endpoints
 from api.user_symptom import user_symptom_endpoints
+from api.user_feelings_and_symptoms import user_feeling_and_symptom_endpoints
 from api.message import message_endpoints
 from api.message_channel import message_channel_endpoints
 from api.community_thread import community_thread_endpoints
@@ -17,12 +18,23 @@ from api.appointments import appointments_endpoints
 from api.providers import provider_endpoints
 from api.appointment import appointment_endpoints
 from api.zoom import zoom_endpoints
+from api.images import image_endpoints
 
 blueprints = [
-    main_endpoints,
+    appointment_endpoints,
+    appointments_endpoints,
     common_endpoints,
+    community_thread_endpoints,
+    feedback_endpoints,
+    main_endpoints,
+    message_endpoints,
+    message_channel_endpoints,
+    my_profile_endpoints,
+    provider_endpoints,
+    saved_content_endpoints,
     symptom_endpoints,
     user_feeling_endpoints,
+    user_feeling_and_symptom_endpoints,
     user_profile_endpoints,
     user_symptom_endpoints,
     my_profile_endpoints,
@@ -36,4 +48,5 @@ blueprints = [
     provider_endpoints,
     appointment_endpoints,
     zoom_endpoints,
+    image_endpoints,
 ]
