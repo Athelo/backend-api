@@ -62,4 +62,5 @@ class UserFeelingsView(MethodView):
         )
         commit_entity_or_abort(feeling)
         result = schema.dump(feeling)
+        result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
         return result, CREATED
