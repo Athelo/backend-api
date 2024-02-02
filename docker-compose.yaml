@@ -18,18 +18,16 @@ services:
       - REDIS_URL=redis://default:redispassword@redis:6379/0
     stdin_open: true
     tty: true 
-    # command: tail -f /dev/null
-    command: python3 app.py
     depends_on:
-      - redis
-      - db
+      db:
+        condition: service_healthy
     networks:
       - athelo_network
   ws-api:
     build: ./ws-api
     image: ws-api
     container_name: ws-api
-    restart: on-failure
+    restart: always
     depends_on:
       - rest-api
       - redis
@@ -50,6 +48,11 @@ services:
       - POSTGRES_DB=athelo
     networks:
       - athelo_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U athelo" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   redis:
     image: sameersbn/redis:4.0.9-3
     container_name: redis

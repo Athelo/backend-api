@@ -7,7 +7,7 @@ from typing import TypeVar
 
 import firebase_admin
 from firebase_admin import auth  # noqa: F401
-from flask import Response, request
+from flask import Response, request, current_app as app
 
 a = TypeVar("a")
 

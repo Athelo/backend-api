@@ -30,7 +30,7 @@ ADD . /app
 WORKDIR /app
 
 # make start up script executable
-RUN chmod +x /app/start.sh
+RUN chmod +x start.sh
 
 
-CMD ["./app/start.sh"]
+CMD ["./start.sh"]
