@@ -18,6 +18,8 @@ from api.providers import provider_endpoints
 from api.appointment import appointment_endpoints
 from api.zoom import zoom_endpoints
 from api.images import image_endpoints
+from flask import abort
+from http.client import UNPROCESSABLE_ENTITY, UNAUTHORIZED
 
 blueprints = [
     appointment_endpoints,
@@ -39,3 +41,14 @@ blueprints = [
     zoom_endpoints,
     image_endpoints,
 ]
+
+
+def handle_database_error(e):
+    return (
+        f"Cannot create db entity because {e.orig.args[0]['M']}",
+        UNPROCESSABLE_ENTITY,
+    )
+
+
+def handle_unauthorized(e):
+    return e.message, UNAUTHORIZED

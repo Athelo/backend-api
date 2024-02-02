@@ -4,10 +4,10 @@ from api.constants import V1_API_PREFIX, DATE_FORMAT
 from api.utils import (
     class_route,
     generate_paginated_dict,
-    commit_entity_or_abort,
     convertDateToDatetimeIfNecessary,
     convertTimeStringToDateString,
 )
+from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, request
@@ -35,7 +35,9 @@ class UserFeelingsView(MethodView):
         schema = PatientFeelingSchema(many=True)
         res = schema.dump(feelings)
         for result in res:
-            result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
+            result["occurrence_date"] = convertTimeStringToDateString(
+                result["occurrence_date"]
+            )
 
         return generate_paginated_dict(res)
 
@@ -61,7 +63,9 @@ class UserFeelingsView(MethodView):
             note=data.get("note", None),
             general_feeling=data["general_feeling"],
         )
-        commit_entity_or_abort(feeling)
+        commit_entity(feeling)
         result = schema.dump(feeling)
-        result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
+        result["occurrence_date"] = convertTimeStringToDateString(
+            result["occurrence_date"]
+        )
         return result, CREATED

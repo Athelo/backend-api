@@ -102,7 +102,7 @@ def create_zoom_meeting_with_provider(
     else:
         access_token = get_provider_zoom_access_token(provider_user.provider_profile)
 
-    print(
+    app.logger.debug(
         f"User {provider_user.id} ({provider_user.email}) with zoom id {provider_user.provider_profile.zoom_user_id}"
     )
 
@@ -161,5 +161,4 @@ def get_zoom_users_for_account() -> dict:
         headers=headers,
     )
     zoom_users = response.json()["users"]
-    print(zoom_users)
     return zoom_users

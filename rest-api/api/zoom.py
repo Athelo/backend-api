@@ -1,5 +1,5 @@
 from flask import abort, request, Blueprint
-from api.utils import commit_entity_or_abort
+from repositories.utils import commit_entity
 from api.constants import V1_API_PREFIX
 from services.zoom import (
     get_zoom_token,
@@ -39,7 +39,7 @@ def zoom_callback():
     zoom_user_id = profile_data["id"]
     user.provider_profile.zoom_user_id = zoom_user_id
     user.provider_profile.zoom_refresh_token = refresh_token
-    commit_entity_or_abort(user.provider_profile)
+    commit_entity(user.provider_profile)
 
     return profile_data, OK
 

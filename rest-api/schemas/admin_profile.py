@@ -5,6 +5,7 @@ from models.admin_profile import AdminProfile
 class AdminProfileSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = AdminProfile
+        include_fk = False
 
     id = auto_field(dump_only=True)
 

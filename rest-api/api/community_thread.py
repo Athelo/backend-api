@@ -6,7 +6,7 @@ from http.client import (
     NOT_FOUND,
     OK,
 )
-from api.utils import class_route, commit_entity_or_abort
+from api.utils import class_route
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
@@ -23,6 +23,8 @@ from models.thread_post import ThreadPost
 from schemas.thread_post import ThreadPostSchema
 from api.constants import V1_API_PREFIX
 from api.utils import generate_paginated_dict
+
+from repositories.utils import commit_entity
 
 
 community_thread_endpoints = Blueprint(
@@ -91,7 +93,7 @@ class CommunityThreadListView(MethodView):
             owner_id=user.admin_profiles.id,
             participants=[user],
         )
-        commit_entity_or_abort(thread)
+        commit_entity(thread)
         result = CommunityThreadSchema().dump(thread)
         return result, CREATED
 
@@ -186,7 +188,7 @@ def update_community_thread(thread_id: int):
     if data.get("active"):
         thread.active = data["active"]
 
-    commit_entity_or_abort(thread)
+    commit_entity(thread)
 
     result = CommunityThreadSchema().dump(thread)
     return result, OK
@@ -214,7 +216,7 @@ def join_community_thread(thread_id: int):
         abort(CONFLICT, "user is already in the thread")
 
     community_thread.participants.append(user)
-    commit_entity_or_abort(community_thread)
+    commit_entity(community_thread)
 
 
 @community_thread_endpoints.route("/<int:thread_id>/leave/", methods=["GET"])
@@ -239,4 +241,4 @@ def leave_community_thread(thread_id: int):
         abort(CONFLICT, "user is not in thread")
 
     community_thread.participants.remove(user)
-    commit_entity_or_abort(community_thread)
+    commit_entity(community_thread)

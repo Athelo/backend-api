@@ -13,7 +13,9 @@ class ProviderProfileSchema(SQLAlchemyAutoSchema):
     provider_type = fields.Method("get_provider_type")
 
     def get_provider_type(self, obj):
-        return obj.provider_type.value
+        if obj.provider_type:
+            return obj.provider_type.value
+        return None
 
 
 class ProviderProfileCreateSchema(Schema):

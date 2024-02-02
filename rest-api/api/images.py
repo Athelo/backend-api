@@ -6,7 +6,8 @@ from http.client import (
 
 from marshmallow import ValidationError
 from api.constants import ABOUT_US, PRIVACY, TERMS_OF_USE
-from api.utils import class_route, commit_entity_or_abort
+from api.utils import class_route
+from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request

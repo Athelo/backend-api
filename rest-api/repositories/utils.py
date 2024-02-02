@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError, DatabaseError
 from flask import current_app as app
 
 
-def try_commit_entity(entity: Base):
+def commit_entity(entity: Base):
     try:
         db.session.add(entity)
         db.session.commit()
@@ -14,9 +14,9 @@ def try_commit_entity(entity: Base):
         app.logger.error(
             f"Cannot create db entity because {e.orig.args[0]['M']}",
         )
-        return False
+        raise e
     except DatabaseError as e:
         app.logger.error(
             f"Cannot create db entiy because {e.orig.args[0]['M']}",
         )
-        return False
+        raise e

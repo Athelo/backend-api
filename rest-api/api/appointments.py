@@ -5,7 +5,7 @@ from http.client import (
     UNPROCESSABLE_ENTITY,
     INTERNAL_SERVER_ERROR,
 )
-from api.utils import class_route, commit_entity_or_abort
+from api.utils import class_route
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from models.users import Users
@@ -25,6 +25,7 @@ from services.zoom import create_zoom_meeting_with_provider
 from requests.exceptions import HTTPError
 from repositories.user import get_user_by_provider_id
 from services.opentok import OpenTokClient
+from repositories.utils import commit_entity
 
 
 appointments_endpoints = Blueprint(
@@ -129,7 +130,7 @@ class AppointmentListView(MethodView):
                     f"Failed to create zoom meeting - {exc.response}",
                 )
 
-        commit_entity_or_abort(appointment)
+        commit_entity(appointment)
 
         # result = AppointmentSchema().dump(appointment)
         result = appointment.to_legacy_json()

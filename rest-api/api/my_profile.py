@@ -7,7 +7,8 @@ from http.client import (
     CREATED,
 )
 
-from api.utils import class_route, generate_paginated_dict, commit_entity_or_abort
+from api.utils import class_route, generate_paginated_dict
+from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
@@ -23,12 +24,12 @@ from models.provider_profile import ProviderProfile, ProviderType
 from schemas.provider_profile import ProviderProfileSchema, ProviderProfileCreateSchema
 from api.constants import (
     USER_PROFILE_RETURN_SCHEMA,
-    ALLOWED_ADMIN_DOMAINS,
     DATETIME_FORMAT,
 )
 from zoneinfo import ZoneInfo
 from datetime import datetime
 from models.provider_availability import ProviderAvailability
+from repositories.user import create_admin_profile_for_user
 
 
 my_profile_endpoints = Blueprint("My Profile", __name__, url_prefix="/api/v1/users/me")
@@ -90,7 +91,7 @@ class UserProfileDetailView(MethodView):
             user.phone = data["phone"]
         if data.get("active"):
             user.active = (data.get("active", True),)
-        commit_entity_or_abort(user)
+        commit_entity(user)
         result = schema.dump(user)
         return result, ACCEPTED
 
@@ -123,21 +124,10 @@ class AdminProfileView(MethodView):
     @jwt_authenticated
     def put(self):
         user = get_user_from_request(request)
-
-        domain = user.email.split("@")[1]
-
-        if not any(
-            allowed_domain
-            for allowed_domain in ALLOWED_ADMIN_DOMAINS
-            if allowed_domain == domain
-        ):
-            abort(UNAUTHORIZED, "user's email is not on a valid admin domain")
-
-        admin_profile = AdminProfile(user_id=user.id)
-        commit_entity_or_abort(admin_profile)
+        create_admin_profile_for_user(user)
 
         schema = AdminProfileSchema()
-        result = schema.dump(admin_profile)
+        result = schema.dump(user.admin_profile)
         return result, ACCEPTED
 
 
@@ -177,7 +167,7 @@ class PatientProfileView(MethodView):
             patient_profile = PatientProfile(
                 user_id=user.id, cancer_status=cancer_status
             )
-        commit_entity_or_abort(patient_profile)
+        commit_entity(patient_profile)
 
         schema = PatientProfileSchema()
         result = schema.dump(patient_profile)
@@ -226,7 +216,7 @@ class ProviderProfileView(MethodView):
                 provider_type=provider_type,
             )
 
-        commit_entity_or_abort(provider_profile)
+        commit_entity(provider_profile)
 
         schema = ProviderProfileSchema()
         result = schema.dump(provider_profile)
@@ -283,7 +273,7 @@ class ProviderAvailabilityView(MethodView):
             start_time=start_time,
             end_time=end_time,
         )
-        commit_entity_or_abort(availability)
+        commit_entity(availability)
         result = availability.to_json(timezone)
         return result, CREATED
 

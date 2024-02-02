@@ -4,10 +4,10 @@ from sqlalchemy.sql import func
 from api.utils import (
     class_route,
     generate_paginated_dict,
-    commit_entity_or_abort,
     convertDateToDatetimeIfNecessary,
     convertTimeStringToDateString,
 )
+from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
 from api.constants import V1_API_PREFIX, DATE_FORMAT
@@ -40,7 +40,9 @@ class UserSymptomsView(MethodView):
         schema = PatientSymptomSchema(many=True)
         res = schema.dump(symptoms)
         for result in res:
-            result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
+            result["occurrence_date"] = convertTimeStringToDateString(
+                result["occurrence_date"]
+            )
 
         return generate_paginated_dict(res)
 
@@ -65,9 +67,11 @@ class UserSymptomsView(MethodView):
             symptom_id=data["symptom_id"],
         )
 
-        commit_entity_or_abort(symptom)
+        commit_entity(symptom)
         result = schema.dump(symptom)
-        result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
+        result["occurrence_date"] = convertTimeStringToDateString(
+            result["occurrence_date"]
+        )
         return result, CREATED
 
 
@@ -119,7 +123,7 @@ class UserSymptomDetailView(MethodView):
         if data.get("symptom_id"):
             symptom.symptom_id = data["symptom_id"]
 
-        commit_entity_or_abort(symptom)
+        commit_entity(symptom)
         result = schema.dump(symptom)
         return result, ACCEPTED
 

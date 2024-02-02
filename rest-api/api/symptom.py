@@ -1,6 +1,7 @@
 from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route, commit_entity_or_abort, generate_paginated_dict
+from api.utils import class_route, generate_paginated_dict
+from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, request
 from flask.views import MethodView
@@ -35,6 +36,6 @@ class SyptomsView(MethodView):
             return err.messages, UNPROCESSABLE_ENTITY
 
         symptom = Symptom(name=data["name"], description=data["description"])
-        commit_entity_or_abort(symptom)
+        commit_entity(symptom)
         result = schema.dump(symptom)
         return result, CREATED

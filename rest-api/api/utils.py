@@ -6,8 +6,6 @@ from models.base import Base
 from http.client import UNPROCESSABLE_ENTITY
 from datetime import datetime
 
-from sqlalchemy.exc import IntegrityError, DatabaseError
-
 
 # decorator code
 def class_route(self, rule, endpoint, **options):
@@ -40,22 +38,6 @@ def get_api_url():
     return app.config.get("BASE_URL") + V1_API_PREFIX
 
 
-def commit_entity_or_abort(entity: Base):
-    try:
-        db.session.add(entity)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot create db entity because {e.orig.args[0]['M']}",
-        )
-    except DatabaseError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot create db entiy because {e.orig.args[0]['M']}",
-        )
-
-
 def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
     try:
         full_datetime = datetime.fromisoformat(
@@ -73,6 +55,7 @@ def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
     json_data[field_name] = full_datetime.isoformat()
     return json_data
 
+
 def convertTimeStringToDateString(date_time_str: str):
-    date_split = date_time_str.split('T')
+    date_split = date_time_str.split("T")
     return date_split[0]
