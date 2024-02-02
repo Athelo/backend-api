@@ -72,3 +72,7 @@ def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
 
     json_data[field_name] = full_datetime.isoformat()
     return json_data
+
+def convertTimeStringToDateString(date_time_str: str):
+    date_split = date_time_str.split('T')
+    return date_split[0]
