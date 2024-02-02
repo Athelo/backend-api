@@ -30,7 +30,7 @@ def generate_paginated_dict(api_results):
 
     if isinstance(api_results, list):
         results = api_results
-    else:
+    elif api_results is not None:
         results.append(api_results)
 
     return {"count": len(results), "next": None, "previous": None, "results": results}
