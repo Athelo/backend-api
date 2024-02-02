@@ -8,16 +8,16 @@ services:
     container_name: rest-api
     volumes: 
       - ./rest-api:/app
-      - ./application_default_credentials.json:/application_default_credentials.json
     ports:
       - 8080:8080
     environment:
       - ENVIRONMENT=local
-      - GOOGLE_APPLICATION_CREDENTIALS=/application_default_credentials.json
+      - GOOGLE_APPLICATION_CREDENTIALS=application_default_credentials.json
       - GOOGLE_CLOUD_PROJECT=test-deploy-402816
-      - REDIS_URL=redis://default:redispassword@redis:6379/0
+      - REDIS_URL=redis://default:redispassword@redis:6379
     stdin_open: true
-    tty: true 
+    tty: true
+#    command: python3 app.py
     depends_on:
       db:
         condition: service_healthy
@@ -36,7 +36,7 @@ services:
     networks:
       - athelo_network
     environment:
-      - REDIS_URL=redis://default:redispassword@redis:6379/0
+      - REDIS_URL=redis://default:redispassword@redis:6379
   db:
     image: postgres:15
     container_name: postgres
@@ -57,7 +57,7 @@ services:
     image: sameersbn/redis:4.0.9-3
     container_name: redis
     ports:
-      - 6379:6379
+      - "6379:6379"
     environment:
       REDIS_PASSWORD: redispassword
     volumes:
@@ -72,7 +72,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - 80:80
+      - "8000:80"
     depends_on:
       - rest-api
       - ws-api
