@@ -84,8 +84,8 @@ async function uploadImage() {
         })
       }).then(async (response) => {
         if (response.ok) {
-          let text = await response.text();
-          window.alert("File uploaded to " + text)
+          let data = await response.json();
+          window.alert("File uploaded to " + data["url"])
         } else {
           let text = await response.text();
           window.alert(`${response.status}: ${response.statusText}\n${text}`)

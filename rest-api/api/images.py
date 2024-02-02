@@ -32,10 +32,8 @@ image_endpoints = Blueprint(
 @jwt_authenticated
 @image_endpoints.route("/", methods=["POST"])
 def upload_image():
-    app.logger.info("trying to upload image")
     cloudStorageService = CloudStorageService.instance()
     json_data = request.get_json()
-    app.logger.info(json_data)
     schema = ImageUploadSchema()
     try:
         request_data = schema.load(json_data)
