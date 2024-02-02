@@ -10,6 +10,7 @@ from models.database import db, migrate
 
 # from websocket.socketio import socketio
 from services.opentok import OpenTokClient
+from services.cloud_storage import CloudStorageService
 
 
 def set_config(app: Flask):
@@ -40,6 +41,7 @@ def create_app() -> Flask:
             app.register_blueprint(blueprint=blueprint)
 
         OpenTokClient.init_app(app)
+        CloudStorageService.init_app(app)
 
     ma = Marshmallow(app)  # noqa: F841
     app.logger.info("Running app!")
