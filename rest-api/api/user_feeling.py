@@ -32,6 +32,10 @@ class UserFeelingsView(MethodView):
 
         schema = PatientFeelingSchema(many=True)
         res = schema.dump(feelings)
+        for result in res:
+            date_split = result['occurrence_date'].split('T')
+            result['occurrence_date'] = date_split[0]
+
         return generate_paginated_dict(res)
 
     @jwt_authenticated

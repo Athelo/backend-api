@@ -15,4 +15,4 @@ class PatientFeelingSchema(SQLAlchemyAutoSchema):
 class PatientFeelingUpdateSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = PatientFeelings 
-        exclude = ("id", "created_at", "updated_at", "user_profile_id")
+        exclude = ("created_at", "updated_at", "user_profile_id")
