@@ -17,7 +17,10 @@ services:
     - GOOGLE_APPLICATION_CREDENTIALS=/application_default_credentials.json
     - GOOGLE_CLOUD_PROJECT=test-deploy-402816
     stdin_open: true
-    tty: true 
+    tty: true
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres:15
     volumes:
@@ -26,6 +29,11 @@ services:
       - POSTGRES_USER=athelo
       - POSTGRES_PASSWORD=athelo
       - POSTGRES_DB=athelo
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U athelo" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
