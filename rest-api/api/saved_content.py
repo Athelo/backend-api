@@ -1,6 +1,6 @@
 from http.client import BAD_REQUEST, CREATED, OK, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route, commit_entity_or_abort
+from api.utils import class_route, commit_entity_or_abort, generate_paginated_dict
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, request
@@ -25,7 +25,7 @@ class SavedContentView(MethodView):
             db.session.query(SavedContent).filter_by(user_profile_id=user.id).all()
         )
         schema = SavedContentSchema(many=True)
-        return schema.dump(content)
+        return generate_paginated_dict(schema.dump(content))
 
     @jwt_authenticated
     def post(self):
