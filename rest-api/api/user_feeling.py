@@ -5,6 +5,7 @@ from api.utils import (
     generate_paginated_dict,
     commit_entity_or_abort,
     convertDateToDatetimeIfNecessary,
+    convertTimeStringToDateString,
 )
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
@@ -33,8 +34,7 @@ class UserFeelingsView(MethodView):
         schema = PatientFeelingSchema(many=True)
         res = schema.dump(feelings)
         for result in res:
-            date_split = result['occurrence_date'].split('T')
-            result['occurrence_date'] = date_split[0]
+            result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
 
         return generate_paginated_dict(res)
 

@@ -6,6 +6,7 @@ from api.utils import (
     generate_paginated_dict,
     commit_entity_or_abort,
     convertDateToDatetimeIfNecessary,
+    convertTimeStringToDateString,
 )
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
@@ -38,6 +39,9 @@ class UserSymptomsView(MethodView):
 
         schema = PatientSymptomSchema(many=True)
         res = schema.dump(symptoms)
+        for result in res:
+            result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
+
         return generate_paginated_dict(res)
 
     @jwt_authenticated
@@ -63,6 +67,7 @@ class UserSymptomsView(MethodView):
 
         commit_entity_or_abort(symptom)
         result = schema.dump(symptom)
+        result['occurrence_date'] = convertTimeStringToDateString(result['occurrence_date'])
         return result, CREATED
 
 
