@@ -25,7 +25,7 @@ from flask import current_app as app
 image_endpoints = Blueprint(
     "Images",
     __name__,
-    url_prefix=f"{V1_API_PREFIX}/images",
+    url_prefix=f"{V1_API_PREFIX}/common/image",
 )
 
 
