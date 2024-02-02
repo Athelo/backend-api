@@ -172,7 +172,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"external_content_id\": \"2edKVhjb0irNpe8UVpqBDb\n}",
+							"raw": "{\n  \"external_content_id\": \"2edKVhjb0irNpe8UVpqBDb\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
