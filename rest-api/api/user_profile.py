@@ -1,6 +1,7 @@
 from http.client import CREATED, UNPROCESSABLE_ENTITY
 
 from auth.middleware import jwt_authenticated
+from auth.utils import require_admin_user
 from flask import Blueprint, request
 from flask.views import MethodView
 from models.database import db
@@ -73,6 +74,7 @@ class UserProfileDetailView(MethodView):
 @user_profile_endpoints.route("/<int:user_id>/admin", methods=["PUT"])
 @jwt_authenticated
 def create_admin(user_id: int):
+    require_admin_user(get_user_by_email(request.email))
     user = db.session.get(Users, user_id)
     create_admin_profile_for_user(user)
 
@@ -84,6 +86,7 @@ def create_admin(user_id: int):
 @user_profile_endpoints.route("/<int:user_id>/provider", methods=["PUT"])
 @jwt_authenticated
 def create_provider(user_id: int):
+    require_admin_user(get_user_by_email(request.email))
     user = db.session.get(Users, user_id)
 
     create_provider_profile_for_user(user)
@@ -96,6 +99,7 @@ def create_provider(user_id: int):
 @user_profile_endpoints.route("/<int:user_id>/patient", methods=["PUT"])
 @jwt_authenticated
 def create_patient(user_id: int):
+    require_admin_user(get_user_by_email(request.email))
     user = db.session.get(Users, user_id)
     create_patient_profile_for_user(user)
 
@@ -107,6 +111,7 @@ def create_patient(user_id: int):
 @user_profile_endpoints.route("/<int:user_id>/caregiver", methods=["PUT"])
 @jwt_authenticated
 def create_caregiver(user_id: int):
+    require_admin_user(get_user_by_email(request.email))
     user = db.session.get(Users, user_id)
     create_caregiver_profile_for_user(user)
 
