@@ -1,24 +1,21 @@
 from datetime import datetime
 from http.client import (
     ACCEPTED,
-    BAD_REQUEST,
     CREATED,
     NOT_FOUND,
     UNAUTHORIZED,
-    UNPROCESSABLE_ENTITY,
 )
 
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
 from flask.views import MethodView
-from marshmallow import ValidationError
 from models.admin_profile import AdminProfile
 from models.database import db
 from models.patient_profile import PatientProfile
 from models.provider_availability import ProviderAvailability
-from models.provider_profile import ProviderProfile, ProviderType
-from repositories.user import create_admin_profile_for_user
+from models.provider_profile import ProviderProfile
+from repositories.user import create_admin_profile_for_user, deactivate_user
 from repositories.utils import commit_entity
 from schemas.admin_profile import AdminProfileSchema
 from schemas.patient_profile import PatientProfileCreateSchema, PatientProfileSchema
@@ -26,11 +23,8 @@ from schemas.provider_profile import ProviderProfileCreateSchema, ProviderProfil
 from schemas.user_profile import UserProfileSchema
 from zoneinfo import ZoneInfo
 
-from api.constants import (
-    DATETIME_FORMAT,
-    USER_PROFILE_RETURN_SCHEMA,
-)
-from api.utils import class_route, generate_paginated_dict
+from api.constants import DATETIME_FORMAT, USER_PROFILE_RETURN_SCHEMA
+from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 my_profile_endpoints = Blueprint("My Profile", __name__, url_prefix="/api/v1/users/me")
 
@@ -61,22 +55,15 @@ class UserProfileDetailView(MethodView):
 
     @jwt_authenticated
     def put(self):
-        json_data = request.get_json()
-        if not json_data:
-            return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserProfileSchema(partial=True)
-
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            return err.messages, UNPROCESSABLE_ENTITY
-
         user = get_user_from_request(request)
 
         if user is None:
             return {
                 "message": f"User Profile for {request.email} does not exist."
             }, NOT_FOUND
+
+        schema = UserProfileSchema(partial=True)
+        data = validate_json_body(schema)
 
         # Add TODO to remove later
         if data.get("first_name"):
@@ -101,9 +88,7 @@ class UserProfileDeleteView(MethodView):
     @jwt_authenticated
     def delete(self):
         user = get_user_from_request(request)
-        user.active = False
-        # db.session.delete(user)
-        # db.session.commit()
+        deactivate_user(user)
         return {"message": "Attempted to delete the user"}, ACCEPTED
 
 
@@ -148,15 +133,9 @@ class PatientProfileView(MethodView):
     @jwt_authenticated
     def put(self):
         user = get_user_from_request(request)
-        json_data = request.get_json()
-        if not json_data:
-            abort(BAD_REQUEST, "No input data provided.")
-        schema = PatientProfileCreateSchema()
 
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
+        schema = PatientProfileCreateSchema()
+        data = validate_json_body(schema)
 
         cancer_status = data["cancer_status"]
 
@@ -191,17 +170,8 @@ class ProviderProfileView(MethodView):
     @jwt_authenticated
     def put(self):
         user = get_user_from_request(request)
-        json_data = request.get_json()
-        if not json_data:
-            abort(BAD_REQUEST, "No input data provided.")
         schema = ProviderProfileCreateSchema()
-
-        try:
-            data = schema.load(json_data)
-            provider_type = ProviderType(data["provider_type"])
-
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
+        data = validate_json_body(schema)
 
         appointment_buffer = data["appointment_buffer_sec"]
 

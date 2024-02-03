@@ -73,6 +73,24 @@ def create_patient_profile_for_user(user: Users, cancer_status: CancerStatus):
     commit_entity(profile)
 
 
-def create_caregiver_profile(user: Users):
+def create_caregiver_profile_for_user(user: Users):
     profile = CaregiverProfile(user_id=user.id)
     commit_entity(profile)
+
+
+def deactivate_user(user: Users):
+    if user.is_provider:
+        user.provider_profile.active = False
+        db.session.add(user.provider_profile)
+    if user.is_admin:
+        user.admin_profile.active = False
+        db.session.add(user.admin_profile)
+    if user.is_patient:
+        user.patient_profile.active = False
+        db.session.add(user.patient_profile)
+    if user.is_caregiver:
+        user.caregiver_profile = False
+        db.session.add(user.caregiver_profile)
+
+    user.active = False
+    commit_entity(user)

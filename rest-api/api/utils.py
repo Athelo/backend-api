@@ -1,8 +1,12 @@
 from datetime import datetime
-from http.client import UNPROCESSABLE_ENTITY
+from http.client import (
+    BAD_REQUEST,
+    UNPROCESSABLE_ENTITY,
+)
 
-from flask import abort
+from flask import abort, request
 from flask import current_app as app
+from marshmallow import Schema, ValidationError
 
 from api.constants import DATE_FORMAT, DATETIME_FORMAT, V1_API_PREFIX
 
@@ -59,3 +63,23 @@ def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
 def convertTimeStringToDateString(date_time_str: str):
     date_split = date_time_str.split("T")
     return date_split[0]
+
+
+def require_json_body():
+    if not request.get_json():
+        abort(BAD_REQUEST, "No input data provided.")
+
+
+def validate_json(json_data: dict, schema: Schema) -> dict:
+    try:
+        data = schema.load(json_data)
+
+    except ValidationError as err:
+        abort(UNPROCESSABLE_ENTITY, err.messages)
+
+    return data
+
+
+def validate_json_body(schema: Schema) -> dict:
+    require_json_body()
+    return validate_json(request.get_json(), schema)

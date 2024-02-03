@@ -1,5 +1,4 @@
 from http.client import (
-    BAD_REQUEST,
     CREATED,
     UNAUTHORIZED,
     UNPROCESSABLE_ENTITY,
@@ -10,14 +9,13 @@ from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
 from flask.views import MethodView
-from marshmallow import ValidationError
 from models.database import db
 from models.message_channel import MessageChannel
 from models.users import Users
 from repositories.utils import commit_entity
 from schemas.message_channel import MessageChannelRequestSchema, MessageChannelSchema
 
-from api.utils import class_route
+from api.utils import class_route, validate_json_body
 
 message_channel_endpoints = Blueprint(
     "Message Channels", __name__, url_prefix="/api/v1/message-channels"
@@ -25,15 +23,8 @@ message_channel_endpoints = Blueprint(
 
 
 def validate_message_channel_request_data() -> dict:
-    json_data = request.get_json()
-    if not json_data:
-        abort(BAD_REQUEST, "No input data provided.")
     schema = MessageChannelRequestSchema()
-
-    try:
-        data = schema.load(json_data)
-    except ValidationError as err:
-        abort(UNPROCESSABLE_ENTITY, err.messages)
+    data = validate_json_body(schema)
 
     return data
 

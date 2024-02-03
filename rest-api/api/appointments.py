@@ -1,16 +1,13 @@
 from http.client import (
-    BAD_REQUEST,
     CREATED,
     INTERNAL_SERVER_ERROR,
     UNAUTHORIZED,
-    UNPROCESSABLE_ENTITY,
 )
 
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
-from marshmallow import ValidationError
 from models.appointments.appointment import Appointment, AppointmentStatus, VideoType
 from models.appointments.vonage_session import VonageSession
 from models.appointments.zoom_meeting import ZoomMeeting
@@ -26,7 +23,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Query
 
 from api.constants import V1_API_PREFIX
-from api.utils import class_route, generate_paginated_dict
+from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 appointments_endpoints = Blueprint(
     "Appointments",
@@ -80,31 +77,24 @@ class AppointmentListView(MethodView):
         if not user.is_patient:
             abort(UNAUTHORIZED, "Only patients can book appointments")
 
-        json_data = request.get_json()
-        if not json_data:
-            abort(BAD_REQUEST, "No input data provided.")
         schema = AppointmentCreateSchema()
-
-        try:
-            request_data = schema.load(json_data)
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
+        data = validate_json_body(schema)
 
         appointment = Appointment(
             patient_id=user.patient_profile.id,
-            provider_id=request_data["provider_id"],
-            start_time=request_data["start_time"],
-            end_time=request_data["end_time"],
+            provider_id=data["provider_id"],
+            start_time=data["start_time"],
+            end_time=data["end_time"],
             status=AppointmentStatus.BOOKED,
         )
 
-        provider = get_user_by_provider_id(request_data["provider_id"])
+        provider = get_user_by_provider_id(data["provider_id"])
 
         if video_type == VideoType.ZOOM:
             try:
                 zoom_appt_data = create_zoom_meeting_with_provider(
                     provider,
-                    request_data["start_time"],
+                    data["start_time"],
                     f"Appointment with {user.display_name}",
                 )
                 appointment.zoom_meeting = ZoomMeeting(

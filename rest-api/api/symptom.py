@@ -1,15 +1,14 @@
-from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY
+from http.client import CREATED
 
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, request
 from flask.views import MethodView
-from marshmallow import ValidationError
 from models.database import db
 from models.symptom import Symptom
 from repositories.utils import commit_entity
 from schemas.symptom import SymptomSchema
 
-from api.utils import class_route, generate_paginated_dict
+from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 symptom_endpoints = Blueprint("Symptom", __name__, url_prefix="/api/v1/health/symptoms")
 
@@ -25,15 +24,8 @@ class SyptomsView(MethodView):
 
     @jwt_authenticated
     def post(self):
-        json_data = request.get_json()
-        if not json_data:
-            return {"message": "No input data provided"}, BAD_REQUEST
         schema = SymptomSchema()
-
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            return err.messages, UNPROCESSABLE_ENTITY
+        data = validate_json_body(request.json_body(), schema)
 
         symptom = Symptom(name=data["name"], description=data["description"])
         commit_entity(symptom)

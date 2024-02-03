@@ -1,17 +1,14 @@
 from http.client import (
-    BAD_REQUEST,
     CONFLICT,
     CREATED,
     NOT_FOUND,
     OK,
-    UNPROCESSABLE_ENTITY,
 )
 
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
-from marshmallow import ValidationError
 from models.community_thread import CommunityThread, ThreadParticipants
 from models.database import db
 from models.thread_post import ThreadPost
@@ -24,7 +21,7 @@ from schemas.community_thread import (
 from schemas.thread_post import ThreadPostSchema
 
 from api.constants import V1_API_PREFIX
-from api.utils import class_route, generate_paginated_dict
+from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 community_thread_endpoints = Blueprint(
     # "Community Threads", __name__, url_prefix=f"{V1_API_PREFIX}/community-threads"
@@ -75,16 +72,8 @@ class CommunityThreadListView(MethodView):
         user = get_user_from_request(request)
         require_admin_user(user)
 
-        json_data = request.get_json()
-        if not json_data:
-            abort(BAD_REQUEST, "No input data provided.")
-
         schema = CommunityThreadCreateSchema()
-
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
+        data = validate_json_body(schema)
 
         thread = CommunityThread(
             display_name=data["display_name"],
@@ -166,16 +155,9 @@ class ThreadPostListView(MethodView):
 def update_community_thread(thread_id: int):
     user = get_user_from_request(request)
     require_admin_user(user)
-    json_data = request.get_json()
-    if not json_data:
-        abort(BAD_REQUEST, "No input data provided.")
-
     schema = CommunityThreadCreateSchema(partial=True)
 
-    try:
-        data = schema.load(json_data)
-    except ValidationError as err:
-        abort(UNPROCESSABLE_ENTITY, err.messages)
+    data = validate_json_body(request.get_json, schema)
 
     thread = db.session.get(CommunityThread, thread_id)
     if thread is None:

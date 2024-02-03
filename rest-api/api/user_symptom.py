@@ -1,10 +1,9 @@
-from http.client import ACCEPTED, BAD_REQUEST, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
+from http.client import ACCEPTED, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
 
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
 from flask import Blueprint, request
 from flask.views import MethodView
-from marshmallow import ValidationError
 from models.database import db
 from models.patient_symptoms import PatientSymptoms
 from models.symptom import Symptom
@@ -18,6 +17,9 @@ from api.utils import (
     convertDateToDatetimeIfNecessary,
     convertTimeStringToDateString,
     generate_paginated_dict,
+    require_json_body,
+    validate_json,
+    validate_json_body,
 )
 
 user_symptom_endpoints = Blueprint(
@@ -49,16 +51,12 @@ class UserSymptomsView(MethodView):
     @jwt_authenticated
     def post(self):
         user = get_user_from_request(request)
-        json_data = request.get_json()
-        if not json_data:
-            return {"message": "No input data provided"}, BAD_REQUEST
+        require_json_body()
         schema = PatientSymptomUpdateSchema()
-
-        json_data = convertDateToDatetimeIfNecessary(json_data, "occurrence_date")
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            return err.messages, UNPROCESSABLE_ENTITY
+        json_data = convertDateToDatetimeIfNecessary(
+            request.get_json(), "occurrence_date"
+        )
+        data = validate_json(json_data, schema)
 
         symptom = PatientSymptoms(
             occurrence_date=data["occurrence_date"],
@@ -95,15 +93,8 @@ class UserSymptomDetailView(MethodView):
 
     @jwt_authenticated
     def put(self, symptom_id):
-        json_data = request.get_json()
-        if not json_data:
-            return {"message": "No input data provided"}, BAD_REQUEST
         schema = PatientSymptomUpdateSchema(partial=True)
-
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            return err.messages, UNPROCESSABLE_ENTITY
+        data = validate_json_body(schema)
 
         symptom = db.session.get(PatientSymptoms, symptom_id)
         is_current_user_or_403(request, symptom.user_profile_id)
