@@ -1,10 +1,8 @@
 import os
 
 import pytest
+from app import create_app, db
 from sqlalchemy.orm import scoped_session, sessionmaker
-
-from app import create_app
-from app import db
 
 os.environ[
     "SQLALCHEMY_DATABASE_URI"
@@ -12,7 +10,7 @@ os.environ[
 
 
 @pytest.fixture(scope="session")
-def test_client():
+def authenticated_test_client():
     test_app = create_app()
     test_client = test_app.test_client()
 
