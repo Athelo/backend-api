@@ -70,10 +70,8 @@ async function uploadImage() {
   const reader = new FileReader();
   reader.addEventListener("load", async () => {
     fileString = reader.result
-    console.log("set filestring")
-    console.log(reader.result)
     try {
-      await fetch("/api/v1/images", {
+      await fetch("/api/v1/common/image", {
         credentials: 'include',
         method: 'POST',
         headers: req_headers,

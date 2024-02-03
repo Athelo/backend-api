@@ -25,7 +25,7 @@ def upload_image():
     data = validate_json_body(schema)
 
     name = data["name"]
-    data = str.split(data["data"], ",")[-1]
+    img_data = str.split(data["data"], ",")[-1]
     file_type = data["file_type"]
 
-    return {"url": cloudStorageService.upload_image(name, data, file_type)}, CREATED
+    return {"url": cloudStorageService.upload_image(name, img_data, file_type)}, CREATED
