@@ -172,7 +172,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // \"external_content_id\": \"54f20b40-c3e9-44ec-b65b-23fce2ec79e1\"\n    \"external_content_id\": \"9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\" // 9bf3af6d-3d96-4813-b08b-e8c48bcfc78c\n}",
+							"raw": "{\n  \"external_content_id\": \"2edKVhjb0irNpe8UVpqBDb\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -368,9 +368,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/public",
+							"raw": "{{rootUrl}}/public",
 							"host": [
-								"{{baseUrl}}"
+								"{{rootUrl}}"
 							],
 							"path": [
 								"public"
@@ -395,9 +395,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/protected",
+							"raw": "{{rootUrl}}/protected",
 							"host": [
-								"{{baseUrl}}"
+								"{{rootUrl}}"
 							],
 							"path": [
 								"protected"

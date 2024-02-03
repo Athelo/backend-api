@@ -13,7 +13,7 @@ from api.utils import validate_json_body
 image_endpoints = Blueprint(
     "Images",
     __name__,
-    url_prefix=f"{V1_API_PREFIX}/images",
+    url_prefix=f"{V1_API_PREFIX}/common/image",
 )
 
 
