@@ -1,31 +1,30 @@
 from http.client import (
     BAD_REQUEST,
-    CREATED,
-    UNPROCESSABLE_ENTITY,
     CONFLICT,
+    CREATED,
     NOT_FOUND,
     OK,
+    UNPROCESSABLE_ENTITY,
 )
-from api.utils import class_route
+
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
+from models.community_thread import CommunityThread, ThreadParticipants
 from models.database import db
+from models.thread_post import ThreadPost
+from repositories.utils import commit_entity
 from schemas.community_thread import (
-    CommunityThreadSchema,
     CommunityThreadCreateSchema,
+    CommunityThreadSchema,
     group_message_schema_from_community_thread,
 )
-from models.community_thread import CommunityThread, ThreadParticipants
-from models.thread_post import ThreadPost
 from schemas.thread_post import ThreadPostSchema
+
 from api.constants import V1_API_PREFIX
-from api.utils import generate_paginated_dict
-
-from repositories.utils import commit_entity
-
+from api.utils import class_route, generate_paginated_dict
 
 community_thread_endpoints = Blueprint(
     # "Community Threads", __name__, url_prefix=f"{V1_API_PREFIX}/community-threads"

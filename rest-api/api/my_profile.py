@@ -1,36 +1,36 @@
+from datetime import datetime
 from http.client import (
     ACCEPTED,
     BAD_REQUEST,
-    NOT_FOUND,
-    UNPROCESSABLE_ENTITY,
-    UNAUTHORIZED,
     CREATED,
+    NOT_FOUND,
+    UNAUTHORIZED,
+    UNPROCESSABLE_ENTITY,
 )
 
-from api.utils import class_route, generate_paginated_dict
-from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
-from models.database import db
-from schemas.user_profile import UserProfileSchema
 from models.admin_profile import AdminProfile
-from schemas.admin_profile import AdminProfileSchema
+from models.database import db
 from models.patient_profile import PatientProfile
-from schemas.patient_profile import PatientProfileCreateSchema, PatientProfileSchema
-from models.provider_profile import ProviderProfile, ProviderType
-from schemas.provider_profile import ProviderProfileSchema, ProviderProfileCreateSchema
-from api.constants import (
-    USER_PROFILE_RETURN_SCHEMA,
-    DATETIME_FORMAT,
-)
-from zoneinfo import ZoneInfo
-from datetime import datetime
 from models.provider_availability import ProviderAvailability
+from models.provider_profile import ProviderProfile, ProviderType
 from repositories.user import create_admin_profile_for_user
+from repositories.utils import commit_entity
+from schemas.admin_profile import AdminProfileSchema
+from schemas.patient_profile import PatientProfileCreateSchema, PatientProfileSchema
+from schemas.provider_profile import ProviderProfileCreateSchema, ProviderProfileSchema
+from schemas.user_profile import UserProfileSchema
+from zoneinfo import ZoneInfo
 
+from api.constants import (
+    DATETIME_FORMAT,
+    USER_PROFILE_RETURN_SCHEMA,
+)
+from api.utils import class_route, generate_paginated_dict
 
 my_profile_endpoints = Blueprint("My Profile", __name__, url_prefix="/api/v1/users/me")
 

@@ -1,6 +1,6 @@
+from marshmallow import Schema, fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.thread_post import ThreadPost
-from marshmallow import Schema, fields
 
 
 class ThreadPostSchema(SQLAlchemyAutoSchema):

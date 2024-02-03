@@ -1,5 +1,6 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.community_thread import CommunityThread
+
 from schemas.user_profile import UserProfileSchema
 
 

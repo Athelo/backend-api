@@ -5,20 +5,21 @@ from http.client import (
     UNPROCESSABLE_ENTITY,
 )
 from typing import List
-from api.utils import class_route
-from repositories.utils import commit_entity
+
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
-from schemas.message import MessageSchema, MessageCreateSchema
-from models.message_channel import MessageChannel
 from models.message import Message
+from models.message_channel import MessageChannel
+from repositories.utils import commit_entity
+from schemas.message import MessageCreateSchema, MessageSchema
 from sqlalchemy.exc import NoResultFound
-from api.constants import V1_API_PREFIX
 
+from api.constants import V1_API_PREFIX
+from api.utils import class_route
 
 message_endpoints = Blueprint(
     "Messages", __name__, url_prefix=f"{V1_API_PREFIX}/message-channels"

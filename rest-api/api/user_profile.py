@@ -1,19 +1,18 @@
 from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route, generate_paginated_dict
-from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.users import Users
-from schemas.user_profile import UserProfileSchema, UserProfileCreateSchema
+from repositories.user import create_admin_profile_for_user, get_user_by_email
+from repositories.utils import commit_entity
 from schemas.admin_profile import AdminProfileSchema
-from repositories.user import get_user_by_email
-from api.constants import V1_API_PREFIX
-from repositories.user import create_admin_profile_for_user
+from schemas.user_profile import UserProfileCreateSchema, UserProfileSchema
 
+from api.constants import V1_API_PREFIX
+from api.utils import class_route, generate_paginated_dict
 
 user_profile_endpoints = Blueprint(
     "User Profiles", __name__, url_prefix=f"{V1_API_PREFIX}/users"

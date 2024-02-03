@@ -1,8 +1,10 @@
+import enum
 from typing import List
-from models.base import Base, TimestampMixin
+
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-import enum
+
+from models.base import Base, TimestampMixin
 
 
 class ProviderType(enum.Enum):

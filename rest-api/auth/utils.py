@@ -1,9 +1,9 @@
+from http.client import UNAUTHORIZED
+
 from flask import Request, abort
 from models.users import Users
-from werkzeug.exceptions import Unauthorized, NotFound
-from http.client import UNAUTHORIZED
 from repositories.user import get_user_by_email
-
+from werkzeug.exceptions import NotFound, Unauthorized
 
 
 def get_user_from_request(request: Request) -> Users:

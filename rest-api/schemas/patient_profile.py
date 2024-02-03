@@ -1,6 +1,6 @@
+from marshmallow import Schema, ValidationError, fields, post_load
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.patient_profile import CancerStatus, PatientProfile
-from marshmallow import Schema, ValidationError, fields, post_load
 
 
 class PatientProfileSchema(SQLAlchemyAutoSchema):

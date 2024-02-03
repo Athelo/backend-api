@@ -1,6 +1,7 @@
+from marshmallow import Schema, fields, post_load
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.users import Users
-from marshmallow import Schema, fields, post_load
+
 from schemas.admin_profile import AdminProfileSchema
 from schemas.patient_profile import PatientProfileSchema
 from schemas.provider_profile import ProviderProfileSchema

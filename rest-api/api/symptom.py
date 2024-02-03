@@ -1,15 +1,15 @@
 from http.client import BAD_REQUEST, CREATED, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route, generate_paginated_dict
-from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, request
 from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.symptom import Symptom
+from repositories.utils import commit_entity
 from schemas.symptom import SymptomSchema
 
+from api.utils import class_route, generate_paginated_dict
 
 symptom_endpoints = Blueprint("Symptom", __name__, url_prefix="/api/v1/health/symptoms")
 

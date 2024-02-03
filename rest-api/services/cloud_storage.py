@@ -1,6 +1,7 @@
-from google.cloud import storage
-from flask import Flask
 import base64
+
+from flask import Flask
+from google.cloud import storage
 
 google_cloud_storage_url = "https://storage.googleapis.com"
 

@@ -1,19 +1,20 @@
-from flask import abort, request, Blueprint
+from http.client import (
+    OK,
+    UNPROCESSABLE_ENTITY,
+)
+
+from auth.middleware import jwt_authenticated
+from auth.utils import require_admin_user
+from flask import Blueprint, abort, request
+from repositories.user import get_user_by_email, update_provider_zoom_id_by_email
 from repositories.utils import commit_entity
-from api.constants import V1_API_PREFIX
 from services.zoom import (
     get_zoom_token,
     get_zoom_user_profile,
     get_zoom_users_for_account,
 )
-from repositories.user import get_user_by_email, update_provider_zoom_id_by_email
-from http.client import (
-    UNPROCESSABLE_ENTITY,
-    OK,
-)
-from auth.middleware import jwt_authenticated
-from auth.utils import require_admin_user
 
+from api.constants import V1_API_PREFIX
 
 zoom_endpoints = Blueprint(
     "Zoom",

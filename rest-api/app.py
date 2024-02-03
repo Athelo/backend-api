@@ -2,16 +2,17 @@
 from __future__ import annotations
 
 import os
+
 from api import blueprints, handle_database_error, handle_unauthorized
 from auth.exceptions import UnauthorizedException
 from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
+from services.cloud_storage import CloudStorageService
 
 # from websocket.socketio import socketio
 from services.opentok import OpenTokClient
-from services.cloud_storage import CloudStorageService
 from sqlalchemy.exc import DatabaseError, IntegrityError
 
 

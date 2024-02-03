@@ -1,11 +1,14 @@
-from models.users import Users
-from models.database import db
-from models.provider_profile import ProviderProfile
-from repositories.utils import commit_entity
-from flask import current_app as app
 from api.constants import ALLOWED_ADMIN_DOMAINS
 from auth.exceptions import UnauthorizedException
+from flask import current_app as app
 from models.admin_profile import AdminProfile
+from models.caregiver_profile import CaregiverProfile
+from models.database import db
+from models.patient_profile import CancerStatus, PatientProfile
+from models.provider_profile import ProviderProfile
+from models.users import Users
+
+from repositories.utils import commit_entity
 
 
 def get_user_by_email(email: str) -> Users:
@@ -62,4 +65,14 @@ def create_provider_profile_for_user(user: Users, appointment_buffer_sec: int = 
     profile = ProviderProfile(
         user_id=user.id, appointment_buffer_sec=appointment_buffer_sec
     )
+    commit_entity(profile)
+
+
+def create_patient_profile_for_user(user: Users, cancer_status: CancerStatus):
+    profile = PatientProfile(user_id=user.id, cancer_status=cancer_status)
+    commit_entity(profile)
+
+
+def create_caregiver_profile(user: Users):
+    profile = CaregiverProfile(user_id=user.id)
     commit_entity(profile)

@@ -1,32 +1,32 @@
 from http.client import (
     BAD_REQUEST,
     CREATED,
+    INTERNAL_SERVER_ERROR,
     UNAUTHORIZED,
     UNPROCESSABLE_ENTITY,
-    INTERNAL_SERVER_ERROR,
 )
-from api.utils import class_route
+
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
-from models.users import Users
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
-from models.database import db
-from schemas.appointment import AppointmentCreateSchema
 from models.appointments.appointment import Appointment, AppointmentStatus, VideoType
 from models.appointments.vonage_session import VonageSession
 from models.appointments.zoom_meeting import ZoomMeeting
+from models.database import db
+from models.users import Users
+from repositories.user import get_user_by_provider_id
+from repositories.utils import commit_entity
+from requests.exceptions import HTTPError
+from schemas.appointment import AppointmentCreateSchema
+from services.opentok import OpenTokClient
+from services.zoom import create_zoom_meeting_with_provider
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
-from api.constants import V1_API_PREFIX
-from api.utils import generate_paginated_dict
-from services.zoom import create_zoom_meeting_with_provider
-from requests.exceptions import HTTPError
-from repositories.user import get_user_by_provider_id
-from services.opentok import OpenTokClient
-from repositories.utils import commit_entity
 
+from api.constants import V1_API_PREFIX
+from api.utils import class_route, generate_paginated_dict
 
 appointments_endpoints = Blueprint(
     "Appointments",

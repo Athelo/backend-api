@@ -1,7 +1,5 @@
 from http.client import BAD_REQUEST, CREATED, OK, UNPROCESSABLE_ENTITY
 
-from api.utils import class_route
-from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, request
@@ -9,8 +7,10 @@ from flask.views import MethodView
 from marshmallow import ValidationError
 from models.database import db
 from models.saved_content import SavedContent
+from repositories.utils import commit_entity
 from schemas.saved_content import SavedContentCreateUpdateSchema, SavedContentSchema
 
+from api.utils import class_route
 
 saved_content_endpoints = Blueprint(
     "My Saved Content", __name__, url_prefix="/api/v1/saved-content"

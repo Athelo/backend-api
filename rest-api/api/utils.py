@@ -1,10 +1,10 @@
-from api.constants import V1_API_PREFIX, DATE_FORMAT, DATETIME_FORMAT
-from flask import current_app as app
-from flask import abort
-from models.database import db
-from models.base import Base
-from http.client import UNPROCESSABLE_ENTITY
 from datetime import datetime
+from http.client import UNPROCESSABLE_ENTITY
+
+from flask import abort
+from flask import current_app as app
+
+from api.constants import DATE_FORMAT, DATETIME_FORMAT, V1_API_PREFIX
 
 
 # decorator code

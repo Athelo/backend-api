@@ -1,27 +1,15 @@
 from http.client import (
-    BAD_REQUEST,
     CREATED,
     UNPROCESSABLE_ENTITY,
 )
 
-from marshmallow import ValidationError
-from api.constants import ABOUT_US, PRIVACY, TERMS_OF_USE
-from api.utils import class_route
-from repositories.utils import commit_entity
 from auth.middleware import jwt_authenticated
-from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
-from flask.views import MethodView
-from models.database import db
-from models.feedback_topic import FeedbackTopic
-from models.feedback import Feedback
-from api.constants import V1_API_PREFIX
-from api.utils import generate_paginated_dict
-from auth.utils import require_admin_user
-from services.cloud_storage import CloudStorageService
+from marshmallow import ValidationError
 from schemas.image_upload import ImageUploadSchema
-from flask import current_app as app
+from services.cloud_storage import CloudStorageService
 
+from api.constants import V1_API_PREFIX
 
 image_endpoints = Blueprint(
     "Images",

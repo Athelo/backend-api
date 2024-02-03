@@ -1,10 +1,10 @@
 from typing import List
 
-from models.base import Base, TimestampMixin
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Column, Table, ForeignKey
+from sqlalchemy import Column, ForeignKey, Table
 from sqlalchemy.dialects.postgresql import BIGINT
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from models.base import Base, TimestampMixin
 
 # note for a Core table, we use the sqlalchemy.Column construct,
 # not sqlalchemy.orm.mapped_column
