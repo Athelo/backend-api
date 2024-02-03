@@ -95,7 +95,6 @@ class MessageChannelsView(MethodView):
             users=participants,
             users_hash=hash(get_participants_hash(participants)),
         )
-        print(channel.__dict__)
         commit_entity(channel)
         result = MessageChannelSchema().dump(channel)
         return result, CREATED

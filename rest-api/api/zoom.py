@@ -52,7 +52,6 @@ def get_zoom_account_users():
     zoom_users = get_zoom_users_for_account()
     updated_users = []
     for zoom_user in zoom_users:
-        print(zoom_user)
         email = zoom_user["email"]
         zoom_id = zoom_user["id"]
         if update_provider_zoom_id_by_email(email, zoom_id):

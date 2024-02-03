@@ -28,8 +28,6 @@ def set_provider_zoom_refresh_token(
 
 def update_provider_zoom_id_by_email(email: str, zoom_id: str) -> bool:
     user = get_user_by_email(email)
-    print(email)
-    print(zoom_id)
     if user is None:
         app.logger.error(f"No user for email {email}")
         return False
