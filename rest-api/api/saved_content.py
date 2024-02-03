@@ -1,7 +1,5 @@
 from http.client import CREATED, OK
 
-
-from api.utils import class_route, commit_entity_or_abort, generate_paginated_dict
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, request
@@ -11,7 +9,11 @@ from models.saved_content import SavedContent
 from repositories.utils import commit_entity
 from schemas.saved_content import SavedContentCreateUpdateSchema, SavedContentSchema
 
-from api.utils import class_route, validate_json_body
+from api.utils import (
+    class_route,
+    generate_paginated_dict,
+    validate_json_body,
+)
 
 saved_content_endpoints = Blueprint(
     "My Saved Content", __name__, url_prefix="/api/v1/saved-content"
