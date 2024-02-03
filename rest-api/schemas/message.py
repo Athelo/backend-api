@@ -1,6 +1,6 @@
+from marshmallow import Schema, fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.message import Message
-from marshmallow import Schema, fields
 
 
 class MessageSchema(SQLAlchemyAutoSchema):

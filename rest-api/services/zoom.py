@@ -1,13 +1,13 @@
-from api.utils import get_api_url
+import urllib.parse as url_parse
+from datetime import datetime
+
 import requests
 import requests.auth
-import urllib.parse as url_parse
-from models.users import Users
-from datetime import datetime
-from repositories.user import set_provider_zoom_refresh_token, get_user_by_email
+from api.utils import get_api_url
 from flask import current_app as app
 from models.provider_profile import ProviderProfile
-
+from models.users import Users
+from repositories.user import get_user_by_email, set_provider_zoom_refresh_token
 
 ZOOM_ACCOUNT_EMAIL = "stephanie@athelohealth.com"
 
@@ -102,7 +102,7 @@ def create_zoom_meeting_with_provider(
     else:
         access_token = get_provider_zoom_access_token(provider_user.provider_profile)
 
-    print(
+    app.logger.debug(
         f"User {provider_user.id} ({provider_user.email}) with zoom id {provider_user.provider_profile.zoom_user_id}"
     )
 
@@ -161,5 +161,4 @@ def get_zoom_users_for_account() -> dict:
         headers=headers,
     )
     zoom_users = response.json()["users"]
-    print(zoom_users)
     return zoom_users

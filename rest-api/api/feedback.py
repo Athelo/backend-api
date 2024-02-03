@@ -3,19 +3,18 @@ from http.client import (
     CREATED,
     UNPROCESSABLE_ENTITY,
 )
-from api.constants import ABOUT_US, PRIVACY, TERMS_OF_USE
-from api.utils import class_route, commit_entity_or_abort
+
 from auth.middleware import jwt_authenticated
-from auth.utils import get_user_from_request
+from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
 from models.database import db
-from models.feedback_topic import FeedbackTopic
 from models.feedback import Feedback
-from api.constants import V1_API_PREFIX
-from api.utils import generate_paginated_dict
-from auth.utils import require_admin_user
+from models.feedback_topic import FeedbackTopic
+from repositories.utils import commit_entity
 
+from api.constants import ABOUT_US, PRIVACY, TERMS_OF_USE, V1_API_PREFIX
+from api.utils import class_route, generate_paginated_dict
 
 feedback_endpoints = Blueprint(
     "Feedback", __name__, url_prefix=f"{V1_API_PREFIX}/applications/"
@@ -45,7 +44,7 @@ class FeedbackTopicsView(MethodView):
         except Exception as exc:
             abort(UNPROCESSABLE_ENTITY, exc)
 
-        commit_entity_or_abort(topic)
+        commit_entity(topic)
         result = topic.to_json()
         return result, CREATED
 
@@ -78,7 +77,7 @@ class FeedbackListView(MethodView):
         except Exception:
             abort(UNPROCESSABLE_ENTITY)
 
-        commit_entity_or_abort(feedback)
+        commit_entity(feedback)
         result = feedback.to_json()
         return result, CREATED
 

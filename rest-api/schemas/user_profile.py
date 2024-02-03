@@ -1,6 +1,10 @@
+from marshmallow import Schema, fields, post_load
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.users import Users
-from marshmallow import Schema, fields, post_load
+
+from schemas.admin_profile import AdminProfileSchema
+from schemas.patient_profile import PatientProfileSchema
+from schemas.provider_profile import ProviderProfileSchema
 
 
 class UserProfileSchema(SQLAlchemyAutoSchema):
@@ -16,20 +20,39 @@ class UserProfileSchema(SQLAlchemyAutoSchema):
     birthday = fields.Str(allow_none=True)
     phone = fields.Str(allow_none=True)
 
-    # patient_profile = Nested(
-    #     PatientProfileSchema, many=False, exclude=("user",), dump_only=True
-    # )
-    # admin_profiles= Nested(
-    #     "AdminProfileSchema", many=False, exclude=("user",), dump_only=True
-    # )
-    # caregiver_profile = Nested(
-    #     "CaregiverProfilesSchema", many=False, exclude=("user",), dump_only=True
-    # )
-    # provider_profile = Nested(
-    #     "ProviderProfilesSchema", many=False, exclude=("user",), dump_only=True
-    # )
+    patient_profile = fields.Method("get_patient_profile")
+    provider_profile = fields.Method("get_provider_profile")
+    admin_profile = fields.Method("get_admin_profile")
+
     created_at = auto_field(dump_only=True)
     updated_at = auto_field(dump_only=True)
+
+    def get_patient_profile(self, obj):
+        if obj.is_patient:
+            return PatientProfileSchema(
+                only=[
+                    "id",
+                ]
+            ).dump(obj.patient_profile)
+        return None
+
+    def get_provider_profile(self, obj):
+        if obj.is_provider:
+            return ProviderProfileSchema(
+                only=[
+                    "id",
+                ]
+            ).dump(obj.provider_profile)
+        return None
+
+    def get_admin_profile(self, obj):
+        if obj.is_admin:
+            return AdminProfileSchema(
+                only=[
+                    "id",
+                ]
+            ).dump(obj.admin_profile)
+        return None
 
 
 class UserProfileCreateSchema(Schema):

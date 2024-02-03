@@ -1,7 +1,8 @@
 
-from models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from models.base import Base, TimestampMixin
 
 
 class CaregiverProfile(TimestampMixin, Base):

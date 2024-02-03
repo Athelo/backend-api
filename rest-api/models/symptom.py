@@ -1,5 +1,6 @@
-from models.base import Base, TimestampMixin
 from sqlalchemy.orm import Mapped, mapped_column
+
+from models.base import Base, TimestampMixin
 
 
 class Symptom(TimestampMixin, Base):

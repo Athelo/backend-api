@@ -1,15 +1,17 @@
-from http.client import BAD_REQUEST, CREATED, OK, UNPROCESSABLE_ENTITY
+from http.client import CREATED, OK
+
 
 from api.utils import class_route, commit_entity_or_abort, generate_paginated_dict
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, request
 from flask.views import MethodView
-from marshmallow import ValidationError
 from models.database import db
 from models.saved_content import SavedContent
+from repositories.utils import commit_entity
 from schemas.saved_content import SavedContentCreateUpdateSchema, SavedContentSchema
 
+from api.utils import class_route, validate_json_body
 
 saved_content_endpoints = Blueprint(
     "My Saved Content", __name__, url_prefix="/api/v1/saved-content"
@@ -30,35 +32,21 @@ class SavedContentView(MethodView):
     @jwt_authenticated
     def post(self):
         user = get_user_from_request(request)
-        json_data = request.get_json()
-        if not json_data:
-            return {"message": "No input data provided"}, BAD_REQUEST
         schema = SavedContentCreateUpdateSchema()
-
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            return err.messages, UNPROCESSABLE_ENTITY
+        data = validate_json_body(schema)
 
         saved_content = SavedContent(
             external_content_id=data["external_content_id"], user_profile_id=user.id
         )
-        commit_entity_or_abort(saved_content)
+        commit_entity(saved_content)
         result = schema.dump(saved_content)
         return result, CREATED
 
     @jwt_authenticated
     def delete(self):
         user = get_user_from_request(request)
-        json_data = request.get_json()
-        if not json_data:
-            return {"message": "No input data provided"}, BAD_REQUEST
         schema = SavedContentSchema(partial=True)
-
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            return err.messages, UNPROCESSABLE_ENTITY
+        data = validate_json_body(schema)
 
         saved_content = (
             db.session.query(SavedContent)

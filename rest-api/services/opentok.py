@@ -1,7 +1,8 @@
-from opentok import Client, Roles, Session
+import json
+
 from flask import Flask
 from models.users import Users
-import json
+from opentok import Client, Roles, Session
 
 
 class OpenTokClient(object):

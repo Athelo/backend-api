@@ -1,6 +1,6 @@
+from marshmallow import Schema, fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.provider_profile import ProviderProfile
-from marshmallow import Schema, fields
 
 
 class ProviderProfileSchema(SQLAlchemyAutoSchema):
@@ -13,7 +13,9 @@ class ProviderProfileSchema(SQLAlchemyAutoSchema):
     provider_type = fields.Method("get_provider_type")
 
     def get_provider_type(self, obj):
-        return obj.provider_type.value
+        if obj.provider_type:
+            return obj.provider_type.value
+        return None
 
 
 class ProviderProfileCreateSchema(Schema):

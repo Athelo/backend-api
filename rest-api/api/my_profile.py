@@ -1,35 +1,30 @@
+from datetime import datetime
 from http.client import (
     ACCEPTED,
-    BAD_REQUEST,
-    NOT_FOUND,
-    UNPROCESSABLE_ENTITY,
-    UNAUTHORIZED,
     CREATED,
+    NOT_FOUND,
+    UNAUTHORIZED,
 )
 
-from api.utils import class_route, generate_paginated_dict, commit_entity_or_abort
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
 from flask.views import MethodView
-from marshmallow import ValidationError
-from models.database import db
-from schemas.user_profile import UserProfileSchema
 from models.admin_profile import AdminProfile
-from schemas.admin_profile import AdminProfileSchema
+from models.database import db
 from models.patient_profile import PatientProfile
-from schemas.patient_profile import PatientProfileCreateSchema, PatientProfileSchema
-from models.provider_profile import ProviderProfile, ProviderType
-from schemas.provider_profile import ProviderProfileSchema, ProviderProfileCreateSchema
-from api.constants import (
-    USER_PROFILE_RETURN_SCHEMA,
-    ALLOWED_ADMIN_DOMAINS,
-    DATETIME_FORMAT,
-)
-from zoneinfo import ZoneInfo
-from datetime import datetime
 from models.provider_availability import ProviderAvailability
+from models.provider_profile import ProviderProfile
+from repositories.user import create_admin_profile_for_user, deactivate_user
+from repositories.utils import commit_entity
+from schemas.admin_profile import AdminProfileSchema
+from schemas.patient_profile import PatientProfileCreateSchema, PatientProfileSchema
+from schemas.provider_profile import ProviderProfileCreateSchema, ProviderProfileSchema
+from schemas.user_profile import UserProfileSchema
+from zoneinfo import ZoneInfo
 
+from api.constants import DATETIME_FORMAT, USER_PROFILE_RETURN_SCHEMA
+from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 my_profile_endpoints = Blueprint("My Profile", __name__, url_prefix="/api/v1/users/me")
 
@@ -60,22 +55,15 @@ class UserProfileDetailView(MethodView):
 
     @jwt_authenticated
     def put(self):
-        json_data = request.get_json()
-        if not json_data:
-            return {"message": "No input data provided"}, BAD_REQUEST
-        schema = UserProfileSchema(partial=True)
-
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            return err.messages, UNPROCESSABLE_ENTITY
-
         user = get_user_from_request(request)
 
         if user is None:
             return {
                 "message": f"User Profile for {request.email} does not exist."
             }, NOT_FOUND
+
+        schema = UserProfileSchema(partial=True)
+        data = validate_json_body(schema)
 
         # Add TODO to remove later
         if data.get("first_name"):
@@ -90,7 +78,7 @@ class UserProfileDetailView(MethodView):
             user.phone = data["phone"]
         if data.get("active"):
             user.active = (data.get("active", True),)
-        commit_entity_or_abort(user)
+        commit_entity(user)
         result = schema.dump(user)
         return result, ACCEPTED
 
@@ -100,9 +88,7 @@ class UserProfileDeleteView(MethodView):
     @jwt_authenticated
     def delete(self):
         user = get_user_from_request(request)
-        user.active = False
-        # db.session.delete(user)
-        # db.session.commit()
+        deactivate_user(user)
         return {"message": "Attempted to delete the user"}, ACCEPTED
 
 
@@ -123,21 +109,10 @@ class AdminProfileView(MethodView):
     @jwt_authenticated
     def put(self):
         user = get_user_from_request(request)
-
-        domain = user.email.split("@")[1]
-
-        if not any(
-            allowed_domain
-            for allowed_domain in ALLOWED_ADMIN_DOMAINS
-            if allowed_domain == domain
-        ):
-            abort(UNAUTHORIZED, "user's email is not on a valid admin domain")
-
-        admin_profile = AdminProfile(user_id=user.id)
-        commit_entity_or_abort(admin_profile)
+        create_admin_profile_for_user(user)
 
         schema = AdminProfileSchema()
-        result = schema.dump(admin_profile)
+        result = schema.dump(user.admin_profile)
         return result, ACCEPTED
 
 
@@ -158,15 +133,9 @@ class PatientProfileView(MethodView):
     @jwt_authenticated
     def put(self):
         user = get_user_from_request(request)
-        json_data = request.get_json()
-        if not json_data:
-            abort(BAD_REQUEST, "No input data provided.")
-        schema = PatientProfileCreateSchema()
 
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
+        schema = PatientProfileCreateSchema()
+        data = validate_json_body(schema)
 
         cancer_status = data["cancer_status"]
 
@@ -177,7 +146,7 @@ class PatientProfileView(MethodView):
             patient_profile = PatientProfile(
                 user_id=user.id, cancer_status=cancer_status
             )
-        commit_entity_or_abort(patient_profile)
+        commit_entity(patient_profile)
 
         schema = PatientProfileSchema()
         result = schema.dump(patient_profile)
@@ -201,17 +170,8 @@ class ProviderProfileView(MethodView):
     @jwt_authenticated
     def put(self):
         user = get_user_from_request(request)
-        json_data = request.get_json()
-        if not json_data:
-            abort(BAD_REQUEST, "No input data provided.")
         schema = ProviderProfileCreateSchema()
-
-        try:
-            data = schema.load(json_data)
-            provider_type = ProviderType(data["provider_type"])
-
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
+        data = validate_json_body(schema)
 
         appointment_buffer = data["appointment_buffer_sec"]
 
@@ -226,7 +186,7 @@ class ProviderProfileView(MethodView):
                 provider_type=provider_type,
             )
 
-        commit_entity_or_abort(provider_profile)
+        commit_entity(provider_profile)
 
         schema = ProviderProfileSchema()
         result = schema.dump(provider_profile)
@@ -283,7 +243,7 @@ class ProviderAvailabilityView(MethodView):
             start_time=start_time,
             end_time=end_time,
         )
-        commit_entity_or_abort(availability)
+        commit_entity(availability)
         result = availability.to_json(timezone)
         return result, CREATED
 

@@ -1,8 +1,8 @@
 
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.base import Base, TimestampMixin
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 class ThreadPost(TimestampMixin, Base):

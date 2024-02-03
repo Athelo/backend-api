@@ -6,8 +6,8 @@ Create Date: 2024-01-20 23:56:59.109632
 
 """
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.exc import ProgrammingError

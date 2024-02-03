@@ -1,10 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
-from models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from zoneinfo import ZoneInfo
-from datetime import timedelta
+
+from models.base import Base, TimestampMixin
 
 
 class ProviderAvailability(TimestampMixin, Base):

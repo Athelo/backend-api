@@ -18,6 +18,26 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+## Developing
+VSCode is the expected environment for development. If using another editor, please find out how to configure it equivalently and update this readme
+
+### Linting 
+1. Install Ruff via extensions (VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
+2. Create `.vscode/settings.json` if it does not exist
+3. Edit the contents to be 
+```
+{
+    "[python]": {
+      "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports.ruff": "explicit"
+      },
+      "editor.defaultFormatter": "charliermarsh.ruff"
+    }
+  }
+```
+
+
 #### Migrations
 1. Make your changes to files in `rest-api/models`. Any new models must extend Base from models.base
 2. Import any new models in `rest-api/models/__init__.py`
