@@ -14,6 +14,17 @@ a = TypeVar("a")
 default_app = firebase_admin.initialize_app()
 
 
+def get_token(header) -> str:
+    split_header = header.split(" ")
+    if len(split_header) != 2:
+        return None
+    return header.split(" ")[1]
+
+
+def decode_token(token) -> dict:
+    return firebase_admin.auth.verify_id_token(token)
+
+
 def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
     """Use the Firebase Admin SDK to parse Authorization header to verify the
     user ID token.
@@ -25,14 +36,13 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
     def decorated_function(*args: a, **kwargs: a) -> a:
         header = request.headers.get("Authorization", None)
         if header:
-            split_header = header.split(" ")
-            if len(split_header) != 2:
+            token = get_token(header)
+            if token is None:
                 return Response(
                     status=403, response="Error with authentication: malformed header."
                 )
-            token = header.split(" ")[1]
             try:
-                decoded_token = firebase_admin.auth.verify_id_token(token)
+                decoded_token = decode_token(token)
             except Exception as e:
                 app.logger.exception(e)
                 return Response(status=403, response=f"Error with authentication: {e}")

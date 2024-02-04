@@ -20,6 +20,8 @@ def set_config(app: Flask):
     environment = os.environ.get("ENVIRONMENT", "")
     config_module = "config.config."
     match environment.lower():
+        case "test":
+            config_module = f"{config_module}LocalConfig"
         case "local":
             config_module = f"{config_module}LocalConfig"
         case "production":
