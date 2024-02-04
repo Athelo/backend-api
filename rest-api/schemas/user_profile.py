@@ -16,7 +16,7 @@ class UserProfileSchema(SQLAlchemyAutoSchema):
     last_name = fields.Str(required=True)
     display_name = fields.Str(allow_none=True)
     email = fields.Email(required=True)
-    active = fields.Bool(missing=True)
+    active = fields.Bool(load_default=True)
     birthday = fields.Str(allow_none=True)
     phone = fields.Str(allow_none=True)
 

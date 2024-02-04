@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pytest
 from models.admin_profile import AdminProfile
 from models.appointments.appointment import Appointment, AppointmentStatus
+from models.appointments.vonage_session import VonageSession
 from models.patient_profile import CancerStatus, PatientProfile
 from models.provider_profile import ProviderProfile
 from models.users import Users
@@ -85,3 +86,13 @@ def admin_user(database):
 
     database.session.commit()
     yield user
+
+
+@pytest.fixture
+def appointment_with_vonage_session(booked_appointment_in_one_week, database):
+    vonage_session = VonageSession(
+        appointment_id=booked_appointment_in_one_week.id, session_id="session_id"
+    )
+    database.session.add(vonage_session)
+    database.session.commit()
+    return vonage_session
