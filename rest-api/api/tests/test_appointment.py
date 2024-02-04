@@ -1,22 +1,27 @@
 from __future__ import annotations
 
+from unittest.mock import patch
+
 from api.constants import V1_API_PREFIX
+from flask.testing import FlaskClient
 
 
 class TestMainApi:
-    def test_get_appointment_detail(
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": "test@test.foo"},
+    )
+    def test_protected_valid_token(
         self,
-        app,
-        client,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
         booked_appointment_in_one_week,
         database,
     ):
-        def mock_return():
-            return print("NO 5 Sec Delay!!!")
-
-        # monkeypatch.setattr("monkeypatch_examples.calculate_sum.delay", mock_return)
-
-        response = client.get(
+        response = test_client.get(
             f"{V1_API_PREFIX}/appointment/{booked_appointment_in_one_week.id}/",
         )
 

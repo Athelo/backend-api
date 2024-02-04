@@ -10,7 +10,7 @@ os.environ[
 
 
 @pytest.fixture(scope="session")
-def authenticated_test_client():
+def test_client():
     test_app = create_app()
     test_client = test_app.test_client()
 

@@ -2,54 +2,55 @@ import os
 from datetime import datetime, timedelta
 
 import pytest
-from app import create_app, db
 from models.appointments.appointment import Appointment, AppointmentStatus
 from models.patient_profile import CancerStatus, PatientProfile
 from models.provider_profile import ProviderProfile
 from models.users import Users
-from sqlalchemy.orm import scoped_session, sessionmaker
 
 os.environ[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql://postgres:postgres@localhost/fsa_rollback_per_test"
 
 
-@pytest.fixture(scope="session")
-def client():
-    test_app = create_app()
-    test_client = test_app.test_client()
-
-    with test_app.app_context():
-        yield test_client
+valid_token = {"uid": "foo", "email": "test@test.com"}
 
 
-@pytest.fixture(scope="session")
-def database(test_client):
-    db.create_all()
+# @pytest.fixture(scope="session")
+# def client():
+#     test_app = create_app()
+#     test_client = test_app.test_client()
 
-    yield db
+#     with test_app.app_context():
+#         yield test_client
 
-    db.drop_all()
+
+# @pytest.fixture(scope="session")
+# def database(client):
+#     db.create_all()
+
+#     yield db
+
+#     db.drop_all()
 
 
-@pytest.fixture(autouse=True)
-def enable_transactional_tests(database):
-    """https://docs.sqlalchemy.org/en/20/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites"""
-    connection = database.engine.connect()
-    transaction = connection.begin()
+# @pytest.fixture(autouse=True)
+# def enable_transactional_tests(database):
+#     """https://docs.sqlalchemy.org/en/20/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites"""
+#     connection = database.engine.connect()
+#     transaction = connection.begin()
 
-    database.session = scoped_session(
-        session_factory=sessionmaker(
-            bind=connection,
-            join_transaction_mode="create_savepoint",
-        )
-    )
+#     database.session = scoped_session(
+#         session_factory=sessionmaker(
+#             bind=connection,
+#             join_transaction_mode="create_savepoint",
+#         )
+#     )
 
-    yield
+#     yield
 
-    database.session.close()
-    transaction.rollback()
-    connection.close()
+#     database.session.close()
+#     transaction.rollback()
+#     connection.close()
 
 
 # @pytest.fixture
