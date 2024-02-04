@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pytest
 from models.admin_profile import AdminProfile
 from models.appointments.appointment import Appointment, AppointmentStatus
+from models.appointments.vonage_session import VonageSession
 from models.patient_profile import CancerStatus, PatientProfile
 from models.provider_profile import ProviderProfile
 from models.users import Users
@@ -16,6 +17,8 @@ os.environ[
 valid_token = {"uid": "foo", "email": "test@test.com"}
 
 admin_user_email = "admin@athelohealth.com"
+
+patient_user_email = "patient@gmail.com"
 
 
 def create_user(first_name: str, last_name: str, email: str = None):
@@ -47,7 +50,7 @@ def provider_user(database):
 
 @pytest.fixture
 def patient_user(database):
-    user = create_user("Patient", "Patient")
+    user = create_user("Patient", "Patient", patient_user_email)
     database.session.add(user)
     database.session.commit()
 
@@ -85,3 +88,13 @@ def admin_user(database):
 
     database.session.commit()
     yield user
+
+
+@pytest.fixture
+def appointment_with_vonage_session(booked_appointment_in_one_week, database):
+    vonage_session = VonageSession(
+        appointment_id=booked_appointment_in_one_week.id, session_id="session_id"
+    )
+    database.session.add(vonage_session)
+    database.session.commit()
+    return booked_appointment_in_one_week

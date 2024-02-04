@@ -17,7 +17,7 @@ class PatientProfileSchema(SQLAlchemyAutoSchema):
 
 
 class PatientProfileCreateSchema(Schema):
-    active = fields.Bool(missing=True)  # Default to True if not provided
+    active = fields.Bool(load_default=True)  # Default to True if not provided
     cancer_status = fields.Str(required=True)
 
     @post_load
