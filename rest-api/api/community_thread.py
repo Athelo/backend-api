@@ -78,7 +78,7 @@ class CommunityThreadListView(MethodView):
         thread = CommunityThread(
             display_name=data["display_name"],
             description=data["description"],
-            owner_id=user.admin_profiles.id,
+            owner_id=user.admin_profile.id,
             participants=[user],
         )
         commit_entity(thread)

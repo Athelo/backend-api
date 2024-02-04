@@ -18,6 +18,8 @@ valid_token = {"uid": "foo", "email": "test@test.com"}
 
 admin_user_email = "admin@athelohealth.com"
 
+patient_user_email = "patient@gmail.com"
+
 
 def create_user(first_name: str, last_name: str, email: str = None):
     display_name = first_name + " " + last_name
@@ -48,7 +50,7 @@ def provider_user(database):
 
 @pytest.fixture
 def patient_user(database):
-    user = create_user("Patient", "Patient")
+    user = create_user("Patient", "Patient", patient_user_email)
     database.session.add(user)
     database.session.commit()
 
@@ -95,4 +97,4 @@ def appointment_with_vonage_session(booked_appointment_in_one_week, database):
     )
     database.session.add(vonage_session)
     database.session.commit()
-    return vonage_session
+    return booked_appointment_in_one_week

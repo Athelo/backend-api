@@ -92,7 +92,6 @@ class TestAppointment:
         )
 
         result = response.get_json()
-        print(response.text)
         assert response.status_code == 200
         assert result["id"] == appointment.id
         assert (
