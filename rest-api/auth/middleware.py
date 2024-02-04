@@ -37,14 +37,12 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
         header = request.headers.get("Authorization", None)
         if header:
             token = get_token(header)
-            app.logger.info(f"token: {token}")
             if token is None:
                 return Response(
                     status=403, response="Error with authentication: malformed header."
                 )
             try:
                 decoded_token = decode_token(token)
-                app.logger.info(f"decoded token: {decoded_token}")
             except Exception as e:
                 app.logger.exception(e)
                 return Response(status=403, response=f"Error with authentication: {e}")

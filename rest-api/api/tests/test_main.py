@@ -35,4 +35,3 @@ class TestMainApi:
     ):
         response = test_client.get("protected/", headers={"Authorization": "test"})
         assert response.status_code == 200
-        assert False
