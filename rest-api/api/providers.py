@@ -5,7 +5,7 @@ from api.constants import DATETIME_FORMAT
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, abort, request
 from models.database import db
-from models.appointments.appointment import Appointment
+from models.appointments.appointment import Appointment, AppointmentStatus
 from models.provider_availability import ProviderAvailability
 from models.provider_profile import ProviderProfile
 from sqlalchemy import and_
@@ -56,6 +56,9 @@ def get_provider_availability(provider_profile_id: int):
                 Appointment.start_time >= start_time,
                 Appointment.end_time <= end_time,
             )
+        )
+        .filter(
+            Appointment.status.in_([AppointmentStatus.BOOKED, AppointmentStatus.IN_PROGRESS])
         )
         .all()
     )
