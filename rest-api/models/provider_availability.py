@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from zoneinfo import ZoneInfo
 
+from api.constants import DATETIME_FORMAT, DEFAULT_DELAY_IN_MINUTES
 from models.base import Base, TimestampMixin
 
 
@@ -25,14 +26,36 @@ class ProviderAvailability(TimestampMixin, Base):
             "end_time": self.end_time.astimezone(timezone),
         }
 
-    def to_open_appointments_json(self, timezone: ZoneInfo) -> list[dict]:
+    def to_open_appointments_json(self, timezone: ZoneInfo, blocked_times: set) -> list[dict]:
         # Temporary - splits into 30 min chunks
-        next_appt_start = self.start_time.astimezone(timezone)
-        next_appt_end = self.start_time.astimezone(timezone) + timedelta(minutes=30)
+        # Add buffer from current time
+        thirty_minutes_from_now = datetime.utcnow() + timedelta(minutes=DEFAULT_DELAY_IN_MINUTES)
+        next_appt_start = max(self.start_time, thirty_minutes_from_now)
+        next_appt_start = round_to_next_thirty(next_appt_start)
+        next_appt_end = next_appt_start + timedelta(minutes=DEFAULT_DELAY_IN_MINUTES)
 
         appointments = []
-        while next_appt_end < self.end_time.replace(tzinfo=ZoneInfo("UTC")):
-            appointments.append(next_appt_start.strftime("%m/%d/%Y %I:%M %p"))
+        while next_appt_end <= self.end_time:
+            if next_appt_end.strftime(DATETIME_FORMAT) in blocked_times:
+                next_appt_end = next_appt_end + timedelta(minutes= 2 * DEFAULT_DELAY_IN_MINUTES)
+            elif next_appt_start.strftime(DATETIME_FORMAT) in blocked_times:
+                next_appt_end = next_appt_end + timedelta(minutes=DEFAULT_DELAY_IN_MINUTES)
+            else:
+                appointments.append(next_appt_start.astimezone(timezone).strftime("%m/%d/%Y %I:%M %p"))
             next_appt_start = next_appt_end
-            next_appt_end = next_appt_end + timedelta(minutes=30)
+            next_appt_end = next_appt_end + timedelta(minutes=DEFAULT_DELAY_IN_MINUTES)
+        print('\n\n\n\n\n\n\n')
         return appointments
+
+def round_to_next_thirty(timestamp: datetime):
+    if timestamp.minute == 0 or timestamp.minute == 30:
+        return timestamp
+    
+    delta = 0
+    if timestamp.minute > 0 and timestamp.minute < 30:
+        delta = 30 - timestamp.minute
+    if timestamp.minute > 30 and timestamp.minute < 60:
+        delta = 60 - timestamp.minute
+    timestamp += timedelta(minutes=delta)
+
+    return timestamp
