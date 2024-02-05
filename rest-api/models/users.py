@@ -1,6 +1,8 @@
 from typing import List
-from models.base import Base, TimestampMixin
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from models.base import Base, TimestampMixin
 
 
 class Users(TimestampMixin, Base):

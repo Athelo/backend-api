@@ -1,22 +1,22 @@
 from http.client import (
-    BAD_REQUEST,
     CREATED,
     UNAUTHORIZED,
     UNPROCESSABLE_ENTITY,
 )
 from typing import List
-from api.utils import class_route, commit_entity_or_abort
+
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request
 from flask import Blueprint, abort, request
 from flask.views import MethodView
-from marshmallow import ValidationError
 from models.database import db
-from schemas.message_channel import MessageChannelSchema, MessageChannelRequestSchema
 from models.message_channel import MessageChannel
 from models.users import Users
+from repositories.utils import commit_entity
+from schemas.message_channel import MessageChannelRequestSchema, MessageChannelSchema
 
 from use_cases.message_channel_use_case import get_message_channel_details
+from api.utils import class_route, validate_json_body
 
 message_channel_endpoints = Blueprint(
     "Message Channels", __name__, url_prefix="/api/v1/message-channels"
@@ -24,15 +24,8 @@ message_channel_endpoints = Blueprint(
 
 
 def validate_message_channel_request_data() -> dict:
-    json_data = request.get_json()
-    if not json_data:
-        abort(BAD_REQUEST, "No input data provided.")
     schema = MessageChannelRequestSchema()
-
-    try:
-        data = schema.load(json_data)
-    except ValidationError as err:
-        abort(UNPROCESSABLE_ENTITY, err.messages)
+    data = validate_json_body(schema)
 
     return data
 
@@ -95,8 +88,7 @@ class MessageChannelsView(MethodView):
             users=participants,
             users_hash=hash(get_participants_hash(participants)),
         )
-        print(channel.__dict__)
-        commit_entity_or_abort(channel)
+        commit_entity(channel)
         result = MessageChannelSchema().dump(channel)
         return result, CREATED
 

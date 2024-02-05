@@ -1,6 +1,6 @@
+from marshmallow import Schema, ValidationError, fields, post_load
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.patient_profile import CancerStatus, PatientProfile
-from marshmallow import Schema, ValidationError, fields, post_load
 
 
 class PatientProfileSchema(SQLAlchemyAutoSchema):
@@ -17,7 +17,7 @@ class PatientProfileSchema(SQLAlchemyAutoSchema):
 
 
 class PatientProfileCreateSchema(Schema):
-    active = fields.Bool(missing=True)  # Default to True if not provided
+    active = fields.Bool(load_default=True)  # Default to True if not provided
     cancer_status = fields.Str(required=True)
 
     @post_load

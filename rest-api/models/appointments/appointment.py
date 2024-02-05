@@ -1,10 +1,10 @@
 import enum
-
 from datetime import datetime
 
-from models.base import Base, TimestampMixin
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from models.base import Base, TimestampMixin
 
 
 class AppointmentStatus(enum.Enum):
@@ -63,8 +63,8 @@ class Appointment(TimestampMixin, Base):
                 "photo": "",
             },
             "patient": {"display_name": self.patient.user.display_name, "photo": ""},
-            "start_time": self.start_time,
-            "end_time": self.end_time,
+            "start_time": self.start_time.isoformat(),
+            "end_time": self.end_time.isoformat(),
             "zoom_join_url": self.zoom_meeting.join_url
             if self.zoom_meeting is not None
             else None,

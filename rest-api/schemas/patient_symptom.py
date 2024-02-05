@@ -1,7 +1,8 @@
+from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.patient_symptoms import PatientSymptoms
+
 from schemas.symptom import SymptomSchema
-from marshmallow import fields
 
 
 class PatientSymptomSchema(SQLAlchemyAutoSchema):

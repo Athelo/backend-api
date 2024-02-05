@@ -1,10 +1,10 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from models.admin_profile import AdminProfile
+from models.caregiver_profile import CaregiverProfile
 
 
-class AdminProfileSchema(SQLAlchemyAutoSchema):
+class CaregiverProfileSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = AdminProfile
+        model = CaregiverProfile
         include_fk = False
 
     id = auto_field(dump_only=True)

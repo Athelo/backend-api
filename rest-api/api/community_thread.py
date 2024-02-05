@@ -1,29 +1,27 @@
 from http.client import (
-    BAD_REQUEST,
-    CREATED,
-    UNPROCESSABLE_ENTITY,
     CONFLICT,
+    CREATED,
     NOT_FOUND,
     OK,
 )
-from api.utils import class_route, commit_entity_or_abort
+
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
-from marshmallow import ValidationError
+from models.community_thread import CommunityThread, ThreadParticipants
 from models.database import db
+from models.thread_post import ThreadPost
+from repositories.utils import commit_entity
 from schemas.community_thread import (
-    CommunityThreadSchema,
     CommunityThreadCreateSchema,
+    CommunityThreadSchema,
     group_message_schema_from_community_thread,
 )
-from models.community_thread import CommunityThread, ThreadParticipants
-from models.thread_post import ThreadPost
 from schemas.thread_post import ThreadPostSchema
-from api.constants import V1_API_PREFIX
-from api.utils import generate_paginated_dict
 
+from api.constants import V1_API_PREFIX
+from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 community_thread_endpoints = Blueprint(
     # "Community Threads", __name__, url_prefix=f"{V1_API_PREFIX}/community-threads"
@@ -74,24 +72,16 @@ class CommunityThreadListView(MethodView):
         user = get_user_from_request(request)
         require_admin_user(user)
 
-        json_data = request.get_json()
-        if not json_data:
-            abort(BAD_REQUEST, "No input data provided.")
-
         schema = CommunityThreadCreateSchema()
-
-        try:
-            data = schema.load(json_data)
-        except ValidationError as err:
-            abort(UNPROCESSABLE_ENTITY, err.messages)
+        data = validate_json_body(schema)
 
         thread = CommunityThread(
             display_name=data["display_name"],
             description=data["description"],
-            owner_id=user.admin_profiles.id,
+            owner_id=user.admin_profile.id,
             participants=[user],
         )
-        commit_entity_or_abort(thread)
+        commit_entity(thread)
         result = CommunityThreadSchema().dump(thread)
         return result, CREATED
 
@@ -165,16 +155,9 @@ class ThreadPostListView(MethodView):
 def update_community_thread(thread_id: int):
     user = get_user_from_request(request)
     require_admin_user(user)
-    json_data = request.get_json()
-    if not json_data:
-        abort(BAD_REQUEST, "No input data provided.")
-
     schema = CommunityThreadCreateSchema(partial=True)
 
-    try:
-        data = schema.load(json_data)
-    except ValidationError as err:
-        abort(UNPROCESSABLE_ENTITY, err.messages)
+    data = validate_json_body(request.get_json, schema)
 
     thread = db.session.get(CommunityThread, thread_id)
     if thread is None:
@@ -186,7 +169,7 @@ def update_community_thread(thread_id: int):
     if data.get("active"):
         thread.active = data["active"]
 
-    commit_entity_or_abort(thread)
+    commit_entity(thread)
 
     result = CommunityThreadSchema().dump(thread)
     return result, OK
@@ -214,7 +197,7 @@ def join_community_thread(thread_id: int):
         abort(CONFLICT, "user is already in the thread")
 
     community_thread.participants.append(user)
-    commit_entity_or_abort(community_thread)
+    commit_entity(community_thread)
 
 
 @community_thread_endpoints.route("/<int:thread_id>/leave/", methods=["GET"])
@@ -239,4 +222,4 @@ def leave_community_thread(thread_id: int):
         abort(CONFLICT, "user is not in thread")
 
     community_thread.participants.remove(user)
-    commit_entity_or_abort(community_thread)
+    commit_entity(community_thread)

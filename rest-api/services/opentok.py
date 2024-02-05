@@ -1,7 +1,8 @@
-from opentok import Client, Roles, Session
+import json
+
 from flask import Flask
 from models.users import Users
-import json
+from opentok import Client, Roles, Session
 
 
 class OpenTokClient(object):
@@ -22,7 +23,8 @@ class OpenTokClient(object):
     @classmethod
     def init_app(cls, app: Flask):
         if cls._instance is not None:
-            raise Exception("Already initialized")
+            app.logger.error("Attempted reinitialization of singlton OpenTokClient")
+            return
         cls._instance = cls.__new__(cls)
         try:
             api_key = app.config["VONAGE_API_KEY"]

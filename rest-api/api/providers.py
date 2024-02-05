@@ -1,16 +1,17 @@
+from datetime import datetime, timedelta
 from http.client import UNPROCESSABLE_ENTITY
 
-from sqlalchemy import or_
-
-from api.utils import generate_paginated_dict
+from api.constants import DATETIME_FORMAT
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, abort, request
 from models.database import db
-from models.provider_profile import ProviderProfile
-from zoneinfo import ZoneInfo
-from datetime import datetime, timedelta
+from models.appointments.appointment import Appointment, AppointmentStatus
 from models.provider_availability import ProviderAvailability
+from models.provider_profile import ProviderProfile
+from sqlalchemy import and_
+from zoneinfo import ZoneInfo
 
+from api.utils import generate_paginated_dict
 
 provider_endpoints = Blueprint(
     "ProviderProfiles", __name__, url_prefix="/api/v1/providers"
@@ -33,29 +34,40 @@ def get_provider_availability(provider_profile_id: int):
 
     timezone = ZoneInfo(request.args.get("tz", default="US/Mountain"))
 
-    start_time = (
-        datetime.strptime(date, "%m/%d/%Y")
-        .replace(tzinfo=timezone)
-        .astimezone(ZoneInfo("UTC"))
-    )
+    start_time = datetime.strptime(date, "%m/%d/%Y")
     end_time = start_time + timedelta(days=1)
 
     availabilities = (
         db.session.query(ProviderAvailability)
         .filter(ProviderAvailability.provider_id == provider_profile_id)
         .filter(
-            or_(
-                ProviderAvailability.start_time > start_time,
-                ProviderAvailability.end_time < end_time,
+            and_(
+                ProviderAvailability.start_time >= start_time,
+                ProviderAvailability.end_time <= end_time,
             )
         )
         .all()
     )
-    # TODO: remove booked appts from availability
+    appointments = (
+        db.session.query(Appointment)
+        .filter(Appointment.provider_id == provider_profile_id)
+        .filter(
+            and_(
+                Appointment.start_time >= start_time,
+                Appointment.end_time <= end_time,
+            )
+        )
+        .filter(
+            Appointment.status.in_([AppointmentStatus.BOOKED, AppointmentStatus.IN_PROGRESS])
+        )
+        .all()
+    )
 
+    appt_set = set([appt.start_time.strftime(DATETIME_FORMAT) for appt in appointments])
+    
     return generate_paginated_dict(
         [
-            availability.to_open_appointments_json(timezone)
+            availability.to_open_appointments_json(timezone, appt_set)
             for availability in availabilities
         ]
     )

@@ -1,15 +1,12 @@
 from datetime import datetime
+from http.client import ACCEPTED
 
 from auth.middleware import jwt_authenticated
-from flask import (
-    Blueprint,
-    render_template,
-    request,
-)
+from flask import Blueprint, render_template, request
 from flask import current_app as app
 from services.zoom import make_zoom_authorization_url
+
 from api.constants import V1_API_PREFIX
-from http.client import ACCEPTED
 
 main_endpoints = Blueprint("Main", __name__)
 

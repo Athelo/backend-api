@@ -1,8 +1,9 @@
 from typing import List
 
-from models.base import Base, TimestampMixin
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from models.base import Base, TimestampMixin
 
 
 # created as a class so we can query it easier

@@ -1,5 +1,5 @@
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from marshmallow import Schema, fields
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from models.message_channel import MessageChannel
 
 

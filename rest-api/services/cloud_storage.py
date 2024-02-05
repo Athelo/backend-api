@@ -1,6 +1,7 @@
-from google.cloud import storage
-from flask import Flask
 import base64
+
+from flask import Flask
+from google.cloud import storage
 
 google_cloud_storage_url = "https://storage.googleapis.com"
 
@@ -24,7 +25,9 @@ class CloudStorageService(object):
     @classmethod
     def init_app(cls, app: Flask):
         if cls._instance is not None:
-            raise Exception("Already initialized")
+            app.logger.error("Attempted reinitialization of singlton OpenTokClient")
+            return
+
         cls._instance = cls.__new__(cls)
         cls.client = storage.Client()
         cls.default_bucket = app.config.get("STORAGE_BUCKET")

@@ -1,12 +1,14 @@
-from api.constants import V1_API_PREFIX, DATE_FORMAT, DATETIME_FORMAT
-from flask import current_app as app
-from flask import abort
-from models.database import db
-from models.base import Base
-from http.client import UNPROCESSABLE_ENTITY
 from datetime import datetime
+from http.client import (
+    BAD_REQUEST,
+    UNPROCESSABLE_ENTITY,
+)
 
-from sqlalchemy.exc import IntegrityError, DatabaseError
+from flask import abort, request
+from flask import current_app as app
+from marshmallow import Schema, ValidationError
+
+from api.constants import DATE_FORMAT, DATETIME_FORMAT, V1_API_PREFIX
 
 
 # decorator code
@@ -40,22 +42,6 @@ def get_api_url():
     return app.config.get("BASE_URL") + V1_API_PREFIX
 
 
-def commit_entity_or_abort(entity: Base):
-    try:
-        db.session.add(entity)
-        db.session.commit()
-    except IntegrityError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot create db entity because {e.orig.args[0]['M']}",
-        )
-    except DatabaseError as e:
-        abort(
-            UNPROCESSABLE_ENTITY,
-            f"Cannot create db entiy because {e.orig.args[0]['M']}",
-        )
-
-
 def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
     try:
         full_datetime = datetime.fromisoformat(
@@ -73,6 +59,27 @@ def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
     json_data[field_name] = full_datetime.isoformat()
     return json_data
 
+
 def convertTimeStringToDateString(date_time_str: str):
-    date_split = date_time_str.split('T')
+    date_split = date_time_str.split("T")
     return date_split[0]
+
+
+def require_json_body():
+    if not request.get_json():
+        abort(BAD_REQUEST, "No input data provided.")
+
+
+def validate_json(json_data: dict, schema: Schema) -> dict:
+    try:
+        data = schema.load(json_data)
+
+    except ValidationError as err:
+        abort(UNPROCESSABLE_ENTITY, err.messages)
+
+    return data
+
+
+def validate_json_body(schema: Schema) -> dict:
+    require_json_body()
+    return validate_json(request.get_json(), schema)

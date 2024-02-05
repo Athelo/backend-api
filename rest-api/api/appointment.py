@@ -1,14 +1,15 @@
-from http.client import NOT_FOUND, UNPROCESSABLE_ENTITY, OK
-from api.utils import class_route
+from http.client import NOT_FOUND, OK, UNPROCESSABLE_ENTITY
+
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
-from models.database import db
 from models.appointments.appointment import Appointment, AppointmentStatus
-from api.constants import V1_API_PREFIX
+from models.database import db
 from services.opentok import OpenTokClient
 
+from api.constants import V1_API_PREFIX
+from api.utils import class_route
 
 appointment_endpoints = Blueprint(
     "Appointment",

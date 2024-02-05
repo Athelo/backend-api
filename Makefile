@@ -1,5 +1,8 @@
-.PHONY: 
-	help
+.DEFAULT_GOAL := help
+
+TESTPATH ?= ./
+
+.PHONY: help test
 
 help: 
 	@./help.sh $(MAKEFILE_LIST)
@@ -25,4 +28,6 @@ pdb: ## Attach to python container to debug (after adding import pdb; pdb.set_tr
 refresh-adc: ## refresh app default credentials so auth works
 	gcloud auth application-default login
 	cp ~/.config/gcloud/application_default_credentials.json ./rest-api/
-	
+
+test: ## run pytest
+	docker-compose exec rest-api env ENVIRONMENT=test TERM=xterm-256color bash -c pytest ${TESTPATH} --disable-warnings
