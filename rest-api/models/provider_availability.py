@@ -44,7 +44,6 @@ class ProviderAvailability(TimestampMixin, Base):
                 appointments.append(next_appt_start.astimezone(timezone).strftime("%m/%d/%Y %I:%M %p"))
             next_appt_start = next_appt_end
             next_appt_end = next_appt_end + timedelta(minutes=DEFAULT_DELAY_IN_MINUTES)
-        print('\n\n\n\n\n\n\n')
         return appointments
 
 def round_to_next_thirty(timestamp: datetime):
