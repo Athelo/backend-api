@@ -14,7 +14,7 @@ from models.admin_profile import AdminProfile
 from models.database import db
 from models.patient_profile import PatientProfile
 from models.provider_availability import ProviderAvailability
-from models.provider_profile import ProviderProfile
+from models.provider_profile import ProviderProfile, ProviderType
 from repositories.user import create_admin_profile_for_user, deactivate_user
 from repositories.utils import commit_entity
 from schemas.admin_profile import AdminProfileSchema
@@ -172,7 +172,7 @@ class ProviderProfileView(MethodView):
         user = get_user_from_request(request)
         schema = ProviderProfileCreateSchema()
         data = validate_json_body(schema)
-
+        provider_type = ProviderType(data["provider_type"])
         appointment_buffer = data["appointment_buffer_sec"]
 
         if user.is_provider:
