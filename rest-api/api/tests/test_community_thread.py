@@ -9,12 +9,17 @@ from api.tests.conftest import admin_user_email, patient_user_email
 from flask.testing import FlaskClient
 from models.community_thread import CommunityThread
 from models.users import Users
+from schemas.user_profile import UserProfileSchema
 
 thread_name_list = ["Remission", "Fertility", "Diet"]
+base_url = f"{V1_API_PREFIX}/chats/group-conversations"
 
 
 def create_community_thread(owner, name):
-    thread = CommunityThread(display_name=name, owner_id=owner.id, description="")
+    thread = CommunityThread(
+        display_name=name, owner_id=owner.id, description=f"{name} description"
+    )
+    thread.participants.append(owner.user)
     return thread
 
 
@@ -25,8 +30,9 @@ def community_threads(database, admin_user):
         thread = create_community_thread(admin_user.admin_profile, name)
         database.session.add(thread)
         threads.append(thread)
+
     database.session.commit()
-    return threads
+    return database.session.query(CommunityThread).all()
 
 
 def add_user_to_thread(user: Users, thread: CommunityThread, database):
@@ -35,7 +41,7 @@ def add_user_to_thread(user: Users, thread: CommunityThread, database):
     database.session.commit()
 
 
-class TestCommunityThread:
+class TestCommunityThreadList:
     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
     @patch(
         "auth.middleware.decode_token",
@@ -53,12 +59,11 @@ class TestCommunityThread:
         database,
     ):
         response = test_client.get(
-            f"{V1_API_PREFIX}/chats/group-conversations/",
+            f"{base_url}/",
             headers={"Authorization": "test"},
         )
 
         result = response.get_json()
-        print(response.text)
         assert response.status_code == 200
         assert len(result["results"]) == len(community_threads)
         for thread_json in result["results"]:
@@ -84,12 +89,11 @@ class TestCommunityThread:
 
         add_user_to_thread(patient_user, joined_thread, database)
         response = test_client.get(
-            f"{V1_API_PREFIX}/chats/group-conversations/",
+            f"{base_url}/",
             headers={"Authorization": "test"},
         )
 
         result = response.get_json()
-        print(response.text)
         assert response.status_code == 200
         assert len(result["results"]) == len(community_threads)
         for thread_json in result["results"]:
@@ -116,7 +120,7 @@ class TestCommunityThread:
     ):
         data = {"display_name": "Family Planning", "description": ""}
         response = test_client.put(
-            f"{V1_API_PREFIX}/chats/group-conversations/",
+            f"{base_url}/",
             headers={"Authorization": "test"},
             json=json.dumps(data),
         )
@@ -142,7 +146,7 @@ class TestCommunityThread:
     ):
         data = {"display_name": "Family Planning", "description": ""}
         response = test_client.put(
-            f"{V1_API_PREFIX}/chats/group-conversations/",
+            f"{base_url}/",
             headers={"Authorization": "test"},
             json=data,
         )
@@ -152,7 +156,268 @@ class TestCommunityThread:
         assert result["active"]
         assert result["created_at"][:-4] == result["updated_at"][:-4]
         assert result["owner"] == admin_user.admin_profile.id
-        assert len(result["participants"])
+        assert len(result["participants"]) == 1
         assert admin_user.id in result["participants"]
         assert len(result["posts"]) == 0
         assert result["description"] == data["description"]
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": admin_user_email},
+    )
+    def test_update_thread_as_admin(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread = community_threads[0]
+        new_name = f"{thread.display_name} New"
+        new_description = f"{thread.description} New"
+        data = {"display_name": new_name, "description": new_description}
+        response = test_client.post(
+            f"{base_url}/{thread.id}/",
+            headers={"Authorization": "test"},
+            json=data,
+        )
+
+        result = response.get_json()
+        assert response.status_code == 202
+        assert result["display_name"] == data["display_name"]
+        assert result["active"]
+        assert result["owner"] == admin_user.admin_profile.id
+        assert len(result["participants"]) == 1
+        assert admin_user.id in result["participants"]
+        assert len(result["posts"]) == 0
+        assert result["description"] == data["description"]
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_update_thread_as_patient(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread = community_threads[0]
+        new_name = f"{thread.display_name} New"
+        new_description = f"{thread.description} New"
+        data = {"display_name": new_name, "description": new_description}
+        response = test_client.post(
+            f"{base_url}/{thread.id}/",
+            headers={"Authorization": "test"},
+            json=data,
+        )
+
+        assert response.status_code == 401
+        assert "Only admins can perform this action" in response.text
+
+
+class TestCommunityThreadDetail:
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": admin_user_email},
+    )
+    def test_get_thread_detail_joined(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread: CommunityThread = community_threads[2]
+        response = test_client.get(
+            f"{base_url}/{thread.id}/",
+            headers={"Authorization": "test"},
+        )
+
+        result = response.get_json()
+        assert response.status_code == 200
+        assert result["belong_to"]
+        assert result["name"] == thread.display_name
+        assert result["owner"] == UserProfileSchema().dump(thread.owner.user)
+        assert len(result["user_profiles"]) == 1
+        assert admin_user.id in [user["id"] for user in result["user_profiles"]]
+        assert result["chat_room_type"] == 2
+        assert result["is_public"]
+        assert result["user_profiles_count"] == len(thread.participants)
+        assert result["chat_room_identifier"] == thread.id
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_get_thread_detail_not_joined(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread = community_threads[2]
+        response = test_client.get(
+            f"{base_url}/{thread.id}/",
+            headers={"Authorization": "test"},
+        )
+
+        result = response.get_json()
+        assert response.status_code == 200
+        assert not result["belong_to"]
+        assert result["name"] == thread.display_name
+        assert result["owner"] == UserProfileSchema().dump(thread.owner.user)
+        assert len(result["user_profiles"]) == 1
+        assert admin_user.id in [user["id"] for user in result["user_profiles"]]
+        assert result["chat_room_type"] == 2
+        assert result["is_public"]
+        assert result["user_profiles_count"] == len(thread.participants)
+        assert result["chat_room_identifier"] == thread.id
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_join_thread(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread = community_threads[1]
+        response = test_client.put(
+            f"{base_url}/{thread.id}/join/",
+            headers={"Authorization": "test"},
+        )
+        assert response.status_code == 202
+        assert response.text == ""
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": admin_user_email},
+    )
+    def test_join_thread_already_member(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread = community_threads[1]
+
+        response = test_client.put(
+            f"{base_url}/{thread.id}/join/",
+            headers={"Authorization": "test"},
+        )
+        assert response.status_code == 409
+        assert f"User {admin_user.id} is already in thread {thread.id}" in response.text
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_leave_thread(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread = community_threads[1]
+        thread.participants.append(patient_user)
+        database.session.add(thread)
+        database.session.commit()
+
+        response = test_client.put(
+            f"{base_url}/{thread.id}/leave/",
+            headers={"Authorization": "test"},
+        )
+        assert response.status_code == 202
+        assert response.text == ""
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": admin_user_email},
+    )
+    def test_leave_thread_as_owner(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread = community_threads[1]
+
+        response = test_client.put(
+            f"{base_url}/{thread.id}/leave/",
+            headers={"Authorization": "test"},
+        )
+        assert response.status_code == 409
+        assert "Thread owner cannot leave thread" in response.text
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_leave_thread_not_joined(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        test_client: FlaskClient,
+        community_threads,
+        admin_user,
+        patient_user,
+        database,
+    ):
+        thread = community_threads[2]
+        response = test_client.put(
+            f"{base_url}/{thread.id}/leave/",
+            headers={"Authorization": "test"},
+        )
+        assert response.status_code == 409
+        assert f"User {patient_user.id} is not in thread {thread.id}" in response.text

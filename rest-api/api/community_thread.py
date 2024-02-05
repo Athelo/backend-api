@@ -1,9 +1,4 @@
-from http.client import (
-    CONFLICT,
-    CREATED,
-    NOT_FOUND,
-    OK,
-)
+from http.client import ACCEPTED, CONFLICT, CREATED, NOT_FOUND, OK
 
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
@@ -103,7 +98,7 @@ def get_community_thread(thread_id: int):
         if participant.id == user.id
     )
 
-    return group_message_schema_from_community_thread(community_thread, belong_to)
+    return group_message_schema_from_community_thread(community_thread, belong_to), OK
 
 
 @class_route(
@@ -117,7 +112,7 @@ class ThreadPostListView(MethodView):
         )
         schema = ThreadPostSchema()
 
-        return generate_paginated_dict(schema.dump(posts, many=True))
+        return generate_paginated_dict(schema.dump(posts, many=True)), OK
 
     # @jwt_authenticated
     # def post(thread_id: int):
@@ -157,7 +152,7 @@ def update_community_thread(thread_id: int):
     require_admin_user(user)
     schema = CommunityThreadCreateSchema(partial=True)
 
-    data = validate_json_body(request.get_json, schema)
+    data = validate_json_body(schema)
 
     thread = db.session.get(CommunityThread, thread_id)
     if thread is None:
@@ -166,25 +161,22 @@ def update_community_thread(thread_id: int):
     # TODO: flesh out as more edit capability is needed
     if data.get("display_name"):
         thread.display_name = data["display_name"]
+    if data.get("description"):
+        thread.description = data["description"]
     if data.get("active"):
         thread.active = data["active"]
 
     commit_entity(thread)
 
     result = CommunityThreadSchema().dump(thread)
-    return result, OK
+    return result, ACCEPTED
 
 
-@community_thread_endpoints.route("/<int:thread_id>/join/", methods=["GET"])
+@community_thread_endpoints.route("/<int:thread_id>/join/", methods=["PUT"])
 @jwt_authenticated
 def join_community_thread(thread_id: int):
     user = get_user_from_request(request)
-    community_thread = (
-        db.session.query(CommunityThread)
-        .where(CommunityThread.id == thread_id)
-        .join(CommunityThread.users)
-        .one_or_none()
-    )
+    community_thread = db.session.get(CommunityThread, thread_id)
 
     if community_thread is None:
         abort(NOT_FOUND, f"thread {thread_id} does not exist")
@@ -194,20 +186,21 @@ def join_community_thread(thread_id: int):
         for participant in community_thread.participants
         if participant.id == user.id
     ):
-        abort(CONFLICT, "user is already in the thread")
+        abort(CONFLICT, f"User {user.id} is already in thread {thread_id}")
 
     community_thread.participants.append(user)
     commit_entity(community_thread)
+    return "", ACCEPTED
 
 
-@community_thread_endpoints.route("/<int:thread_id>/leave/", methods=["GET"])
+@community_thread_endpoints.route("/<int:thread_id>/leave/", methods=["PUT"])
 @jwt_authenticated
 def leave_community_thread(thread_id: int):
     user = get_user_from_request(request)
     community_thread = (
         db.session.query(CommunityThread)
         .where(CommunityThread.id == thread_id)
-        .join(CommunityThread.users)
+        .join(CommunityThread.participants)
         .one_or_none()
     )
 
@@ -219,7 +212,12 @@ def leave_community_thread(thread_id: int):
         for participant in community_thread.participants
         if participant.id == user.id
     ):
-        abort(CONFLICT, "user is not in thread")
+        abort(CONFLICT, f"User {user.id} is not in thread {community_thread.id}")
+
+    if user.is_admin and community_thread.owner_id == user.admin_profile.id:
+        abort(CONFLICT, "Thread owner cannot leave thread")
 
     community_thread.participants.remove(user)
     commit_entity(community_thread)
+
+    return "", ACCEPTED
