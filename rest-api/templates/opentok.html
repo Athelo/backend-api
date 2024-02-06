@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <link href="../static/appointment.css" rel="stylesheet" type="text/css">
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first-->
     <script src="https://www.gstatic.com/firebasejs/7.18/firebase-app.js"></script>
     <!-- In local dev, comment the line below out. Required for chrome once deployed. -->
@@ -60,34 +61,28 @@
             </div>
         </div>
     </div>
-
-
     <div class="section">
         <div class="row center">
             <div class="col s6 m10 offset-m1">
-                <div id="videos">
-                    <div id="subscriber"></div>
-                    <div id="publisher"></div>
-                </div>
-            </div>
-        </div>
-        <div class="section">
-            <div class="row center">
-                <div class="col s6 m10 offset-m1">
-                    <div class="card-panel">
-                        <textarea id="otTokenDisplay"></textarea>
+                <div class="card-panel">
+                    <div id="videos">
+                        <div id="subscriber"></div>
+                        <div id="publisher"></div>
+                        <button id="disconnectButton" class="btn green" disabled="true">Leave
+                            Session</button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
+    <script>
+        document.getElementById('signInButton').addEventListener("click", toggle)
+        document.getElementById('appointmentList').onchange = updateAppointmentDisplay
+        document.getElementById('connectButton').onclick = joinOpentokSession
+        document.getElementById('disconnectButton').onclick = leaveOpentokSession
 
-            document.getElementById('connectButton').onclick = createTokenForSession
-            document.getElementById('signInButton').addEventListener("click", toggle)
-            document.getElementById('appointmentList').onchange = updateAppointmentDisplay
-
-        </script>
+    </script>
 </body>
 
 
