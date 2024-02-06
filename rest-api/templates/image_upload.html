@@ -44,7 +44,19 @@
             <div class="col s6 m10 offset-m1">
                 <div class="card-panel">
                     <input type="file" id="fileInput" name="filename">
-                    <button class="waves-effect waves-light btn" id="uploadButton">Upload file</button>
+                    <button class="waves-effect waves-light btn" id="uploadJsonButton">Upload file as Json</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="row center">
+            <div class="col s6 m10 offset-m1">
+                <div class="card-panel">
+                    <form method="POST" action="/api/v1/common/image/" target="/" enctype="multipart/form-data">
+                        <p><input type="file" name="file" accept="image/*" required="true"></p>
+                        <p><button class="waves-effect waves-light btn" type="submit"> Submit as Form Data</button></p>
+                    </form>
                 </div>
             </div>
         </div>
@@ -52,7 +64,7 @@
     <script>
 
         document.getElementById('signInButton').addEventListener("click", toggle)
-        document.getElementById('uploadButton').onclick = uploadImage
+        document.getElementById('uploadJsonButton').onclick = uploadImageJson
 
     </script>
 </body>

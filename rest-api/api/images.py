@@ -42,14 +42,16 @@ def upload_image():
             "UPLOAD_EXTENSIONS"
         ] or file_ext != validate_image(uploaded_file.stream):
             abort(400)
-
+    image_bytes = uploaded_file.read()
     return {
-        "url": cloudStorageService.upload_image(filename, img_data, file_ext)
+        "url": cloudStorageService.upload_image(
+            filename, image_bytes, uploaded_file.content_type
+        )
     }, CREATED
 
 
 @jwt_authenticated
-@image_endpoints.route("-json/", methods=["POST"])
+@image_endpoints.route("/json/", methods=["POST"])
 def upload_image_json():
     cloudStorageService = CloudStorageService.instance()
     schema = ImageUploadSchema()
