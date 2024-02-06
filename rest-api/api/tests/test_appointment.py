@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-from api.constants import V1_API_PREFIX
-from api.tests.conftest import admin_user_email
 from flask.testing import FlaskClient
 from models.appointments.appointment import Appointment
+
+from api.constants import V1_API_PREFIX
+from api.tests.conftest import admin_user_email
 
 
 class TestAppointment:
