@@ -7,6 +7,8 @@ from models.database import getconn
 class Config(object):
     TESTING = False
     PORT = os.environ.get("PORT")
+    MAX_CONTENT_LENGTH = 1024 * 1024
+    UPLOAD_EXTENSIONS = [".jpg", ".png", ".gif"]
 
 
 class CloudConfig(Config):
