@@ -6,14 +6,12 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from models.community_thread import CommunityThread, ThreadParticipants
 from models.database import db
-from models.thread_post import ThreadPost
 from repositories.utils import commit_entity
 from schemas.community_thread import (
     CommunityThreadCreateSchema,
     CommunityThreadSchema,
     group_message_schema_from_community_thread,
 )
-from schemas.thread_post import ThreadPostSchema
 
 from api.constants import V1_API_PREFIX
 from api.utils import class_route, generate_paginated_dict, validate_json_body
@@ -99,50 +97,6 @@ def get_community_thread(thread_id: int):
     )
 
     return group_message_schema_from_community_thread(community_thread, belong_to), OK
-
-
-@class_route(
-    community_thread_endpoints, "/<int:thread_id>/posts/", "community_thread_posts"
-)
-class ThreadPostListView(MethodView):
-    @jwt_authenticated
-    def get(thread_id: int):
-        posts = (
-            db.session.query(ThreadPost).where(CommunityThread.id == thread_id).all()
-        )
-        schema = ThreadPostSchema()
-
-        return generate_paginated_dict(schema.dump(posts, many=True)), OK
-
-    # @jwt_authenticated
-    # def post(thread_id: int):
-    #     user = get_user_from_request(request)
-    #     thread = (
-    #         db.session.query(CommunityThread)
-    #         .where(CommunityThread == thread_id)
-    #         .one_or_none()
-    #     )
-    #     if thread is None:
-    #         abort(NOT_FOUND, f"Thread {thread_id} not found")
-
-    #     user_belongs_to_thread = any(
-    #         participant
-    #         for participant in thread.participants
-    #         if participant.id == user.id
-    #     )
-
-    #     if user_belongs_to_thread:
-    #         abort(
-    #             UNAUTHORIZED, "Cannot post to a group messagee that you haven't joined"
-    #         )
-    #     try:
-    #         post_data = ThreadPostCreateSchema().load(request.get_json())
-    #     except ValidationError as err:
-    #         abort(UNPROCESSABLE_ENTITY, err.messages)
-
-    #     post = ThreadPost(author_id=user, thread_id=, content=)
-
-    #     return generate_paginated_dict(schema.dump(posts, many=True))
 
 
 @community_thread_endpoints.route("/<int:thread_id>/", methods=["POST"])

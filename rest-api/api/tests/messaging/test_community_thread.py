@@ -3,42 +3,15 @@ from __future__ import annotations
 import json
 from unittest.mock import patch
 
-import pytest
-from api.constants import V1_API_PREFIX
-from api.tests.conftest import admin_user_email, patient_user_email
 from flask.testing import FlaskClient
 from models.community_thread import CommunityThread
-from models.users import Users
 from schemas.user_profile import UserProfileSchema
 
-thread_name_list = ["Remission", "Fertility", "Diet"]
+from api.constants import V1_API_PREFIX
+from api.tests.conftest import admin_user_email, patient_user_email
+from api.tests.messaging.conftest import add_user_to_thread
+
 base_url = f"{V1_API_PREFIX}/chats/group-conversations"
-
-
-def create_community_thread(owner, name):
-    thread = CommunityThread(
-        display_name=name, owner_id=owner.id, description=f"{name} description"
-    )
-    thread.participants.append(owner.user)
-    return thread
-
-
-@pytest.fixture
-def community_threads(database, admin_user):
-    threads = []
-    for name in thread_name_list:
-        thread = create_community_thread(admin_user.admin_profile, name)
-        database.session.add(thread)
-        threads.append(thread)
-
-    database.session.commit()
-    return database.session.query(CommunityThread).all()
-
-
-def add_user_to_thread(user: Users, thread: CommunityThread, database):
-    thread.participants.append(user)
-    database.session.add(thread)
-    database.session.commit()
 
 
 class TestCommunityThreadList:
