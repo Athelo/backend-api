@@ -19,6 +19,7 @@ valid_token = {"uid": "foo", "email": "test@test.com"}
 admin_user_email = "admin@athelohealth.com"
 
 patient_user_email = "patient@gmail.com"
+patient_user2_email = "patient2@gmail.com"
 
 
 def create_user(first_name: str, last_name: str, email: str = None):
@@ -55,6 +56,19 @@ def patient_user(database):
     database.session.commit()
 
     patient = PatientProfile(user_id=user.id, cancer_status=CancerStatus.REMISSION)
+    database.session.add(patient)
+
+    database.session.commit()
+    yield user
+
+
+@pytest.fixture
+def patient_user2(database):
+    user = create_user("Patient", "Patient", patient_user2_email)
+    database.session.add(user)
+    database.session.commit()
+
+    patient = PatientProfile(user_id=user.id, cancer_status=CancerStatus.ACTIVE)
     database.session.add(patient)
 
     database.session.commit()

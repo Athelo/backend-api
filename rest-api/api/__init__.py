@@ -7,12 +7,13 @@ from flask import abort
 from api.appointment import appointment_endpoints
 from api.appointments import appointments_endpoints
 from api.common import common_endpoints
-from api.community_thread import community_thread_endpoints
 from api.feedback import feedback_endpoints
 from api.images import image_endpoints
 from api.main import main_endpoints
 from api.message import message_endpoints
 from api.message_channel import message_channel_endpoints
+from api.messaging.community_thread import community_thread_endpoints
+from api.messaging.thread_post import thread_post_endpoints
 from api.my_profile import my_profile_endpoints
 from api.providers import provider_endpoints
 from api.saved_content import saved_content_endpoints
@@ -42,6 +43,7 @@ blueprints = [
     user_symptom_endpoints,
     zoom_endpoints,
     image_endpoints,
+    thread_post_endpoints,
 ]
 
 
