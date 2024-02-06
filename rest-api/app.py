@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import inject
 
 from flask_cors import CORS
 from cache import cache
@@ -48,8 +49,12 @@ def create_app() -> Flask:
         app.register_error_handler(IntegrityError, handle_database_error)
         app.register_error_handler(UnauthorizedException, handle_unauthorized)
 
-        OpenTokClient.init_app(app)
-        CloudStorageService.init_app(app)
+        def my_config(binder):
+            binder.bind(CloudStorageService, CloudStorageService(app.config.get("STORAGE_BUCKET")))
+            binder.bind(OpenTokClient, OpenTokClient(app.config.get("VONAGE_API_KEY"), app.config.get("VONAGE_API_SECRET")))
+
+        # Configure a shared injector.
+        inject.configure(my_config)
 
     ma = Marshmallow(app)  # noqa: F841
     app.logger.info("Running app!")

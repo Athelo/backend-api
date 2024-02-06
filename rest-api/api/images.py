@@ -4,6 +4,7 @@ from http.client import (
 
 from auth.middleware import jwt_authenticated
 from flask import Blueprint
+from inject import autoparams
 from schemas.image_upload import ImageUploadSchema
 from services.cloud_storage import CloudStorageService
 
@@ -19,8 +20,8 @@ image_endpoints = Blueprint(
 
 @jwt_authenticated
 @image_endpoints.route("/", methods=["POST"])
-def upload_image():
-    cloudStorageService = CloudStorageService.instance()
+@autoparams()
+def upload_image(cloud_storage_service: CloudStorageService):
     schema = ImageUploadSchema()
     data = validate_json_body(schema)
 
@@ -28,4 +29,4 @@ def upload_image():
     img_data = str.split(data["data"], ",")[-1]
     file_type = data["file_type"]
 
-    return {"url": cloudStorageService.upload_image(name, img_data, file_type)}, CREATED
+    return {"url": cloud_storage_service.upload_image(name, img_data, file_type)}, CREATED
