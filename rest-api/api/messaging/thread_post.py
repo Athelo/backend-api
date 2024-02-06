@@ -26,7 +26,7 @@ class ThreadPostListView(MethodView):
     def get(self, thread_id: int):
         posts = (
             db.session.query(ThreadPost)
-            .where(CommunityThread.id == thread_id)
+            .where(ThreadPost.thread_id == thread_id)
             .order_by(ThreadPost.created_at)
             .all()
         )

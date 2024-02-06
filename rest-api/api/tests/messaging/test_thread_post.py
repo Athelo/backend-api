@@ -66,13 +66,19 @@ class TestThreadPost:
             f"{base_url}/{thread.id}/posts/",
             headers={"Authorization": "test"},
         )
-
+        thread_posts = (
+            database.session.query(ThreadPost)
+            .where(ThreadPost.thread_id == thread.id)
+            .order_by(ThreadPost.created_at)
+            .all()
+        )
+        print(thread_posts)
         response_data = response.get_json()
         results = response_data["results"]
         assert response.status_code == 200
-        assert response_data["count"] == len(thread.posts)
+        assert response_data["count"] == len(thread_posts)
 
-        for i in range(len(thread.posts)):
+        for i in range(len(thread_posts)):
             print(results[i])
             assert results[i]["id"] == thread.posts[i].id
             assert results[i]["author_id"] == thread.posts[i].author_id

@@ -1,4 +1,3 @@
-
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -15,5 +14,5 @@ class ThreadPost(TimestampMixin, Base):
     )
     thread: Mapped["CommunityThread"] = relationship(
         back_populates="posts",
-        lazy="joined",
+        lazy="select",
     )
