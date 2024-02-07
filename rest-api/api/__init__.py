@@ -3,6 +3,7 @@ from __future__ import annotations
 from http.client import REQUEST_ENTITY_TOO_LARGE, UNAUTHORIZED, UNPROCESSABLE_ENTITY
 
 from flask import abort
+from flask import current_app as app
 
 from api.appointments import appointment_blueprints
 from api.common import common_endpoints
@@ -41,7 +42,13 @@ blueprints = (
 )
 
 
+def log_error(e):
+    print(e)
+    app.logger.error(e)
+
+
 def handle_database_error(e):
+    log_error(e)
     return (
         f"Cannot create db entity because {e.orig.args[0]['M']}",
         UNPROCESSABLE_ENTITY,
@@ -49,8 +56,10 @@ def handle_database_error(e):
 
 
 def handle_unauthorized(e):
+    log_error(e)
     return e.message, UNAUTHORIZED
 
 
 def too_large(e):
+    log_error(e)
     return "File is too large", REQUEST_ENTITY_TOO_LARGE
