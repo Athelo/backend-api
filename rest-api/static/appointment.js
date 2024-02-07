@@ -4,6 +4,7 @@ let curr_user = null;
 let appointments = null;
 let selected_session = null
 let selected_appt_id = null
+let active_session = null
 function initApp() {
     firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
@@ -132,7 +133,7 @@ function handleError(error) {
 }
 
 
-async function createTokenForSession() {
+async function joinOpentokSession() {
     if (!google_token) {
         window.alert('Must sign in to connect')
         return
@@ -157,11 +158,10 @@ async function createTokenForSession() {
         }).then(async (response) => {
             if (response.ok) {
                 let json = await response.json();
-                document.getElementById("otTokenDisplay").innerText = json["token"]
                 ot_token = json["token"]
             } else {
                 let text = await response.text();
-                document.getElementById("oTtokenDisplay").innerText = `${response.status}: ${response.statusText}\n${text}`
+                window.alert(`${response.status}: ${response.statusText}\n${text}`)
             }
         });
 
@@ -170,8 +170,12 @@ async function createTokenForSession() {
         return
     }
 
+    document.getElementById("connectButton").disabled = true;
+    document.getElementById("disconnectButton").disabled = false;
+
     // Initialize an OpenTok Session object
     var session = OT.initSession(apiKey, selected_session);
+    active_session = session
 
     // Subscribe to a newly created stream
     session.on('streamCreated', (event) => {
@@ -204,4 +208,16 @@ async function createTokenForSession() {
             session.publish(publisher, handleError);
         }
     });
+
+
+}
+
+async function leaveOpentokSession() {
+    if (active_session) {
+        active_session.disconnect();
+        document.getElementById("disconnectButton").disabled = true;
+        document.getElementById("connectButton").disabled = false;
+        active_session = null;
+    }
+
 }

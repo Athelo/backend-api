@@ -41,7 +41,7 @@ def zoom_homepage():
     return text % make_zoom_authorization_url()
 
 
-@main_endpoints.route("/opentok/")
+@main_endpoints.route("/video/")
 def opentok():
     key = app.config.get("VONAGE_API_KEY")
     return render_template("opentok.html", api_key=key)
