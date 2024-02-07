@@ -4,16 +4,14 @@ COPY requirements.txt /
 
 RUN pip install -r /requirements.txt
 
-ADD . /flask_app
-WORKDIR /flask_app
+ADD . /app
+WORKDIR /app
 
-EXPOSE 5000
-
-CMD gunicorn 'flask_app:create_app()' \
+CMD gunicorn app:app \
     --worker-class eventlet \
     -w 1 \
     --threads 8 \
-    --bind 0.0.0.0:5000 \
+    --bind 0.0.0.0:8081 \
     --reload \
     --access-logfile - \
     --error-logfile -

@@ -4,7 +4,7 @@ from flask import request, Response
 from functools import wraps
 from collections.abc import Callable
 
-from flask_app.utils.socketio_utils import decode_token
+from utils.socketio_utils import decode_token
 
 logger = logging.getLogger()
 

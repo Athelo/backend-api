@@ -1,28 +1,29 @@
 import requests
 from flask import request, current_app as app
-from flask_socketio import emit, Namespace
+from flask_socketio import Namespace
 
-from flask_app.websocket.socket import socketio
-from flask_app.cache import cache
-from flask_app.utils.middleware import websocket_jwt_authenticated
+from websocket.socket import socketio
+from cache import cache
+from utils.middleware import websocket_jwt_authenticated
 
 
-class MyCustomNamespace(Namespace):
+class ChatNamespace(Namespace):
     def on_connect(self):
         print(f"Client connected - {request.sid}")
-        emit("connectResponse", {request.sid})
+        self.emit("connectResponse", {"sessionId": request.sid})
 
     def on_sign_in(self, data):
         print(f"Client signed in - {request.sid}")
-        emit("signInResponse", data)
+        self.emit("signInResponse", data)
 
     def on_join_message_channel(self, data):
-        print(f"Client joined a message channel - {request.sid}")
+        session_id = request.sid
+        print(f"Client joined a message channel - {session_id}")
         user_id = int(data.get("userId"))
         message_channel_id = int(data.get("messageChannelId"))
         cache_channel_key = f"message_channel_{message_channel_id}"
 
-        cache.set(f"user_session_{request.sid}", f"{user_id}:{message_channel_id}")
+        cache.set(f"user_session_{session_id}", f"{user_id}:{message_channel_id}")
         channel_online_users = cache.get(cache_channel_key)
         if not channel_online_users:
             channel_online_users = set()
@@ -30,7 +31,7 @@ class MyCustomNamespace(Namespace):
         channel_online_users.add(user_id)
         channel_online_users = set(channel_online_users)
         cache.set(cache_channel_key, channel_online_users)
-        emit("joinMessageChannelResponse", list(channel_online_users), broadcast=True)
+        self.emit("joinMessageChannelResponse", list(channel_online_users))
 
     @websocket_jwt_authenticated
     def on_message(self, data):
@@ -54,16 +55,17 @@ class MyCustomNamespace(Namespace):
             "text": content,
             "time": msg["created_at"]
         }
-        emit("messageResponse", new_msg, broadcast=True)
+        self.emit("messageResponse", new_msg)
 
     @websocket_jwt_authenticated
     def on_typing(self, data):
         print("Client typing")
-        emit("typingResponse", data, broadcast=True)
+        self.emit("typingResponse", data)
 
     def on_disconnect(self):
-        print(f"Client disconnected - {request.sid}")
-        user_session = cache.get(f"user_session_{request.sid}")
+        session_id = request.sid
+        print(f"Client disconnected - {session_id}")
+        user_session = cache.get(f"user_session_{session_id}")
         if not user_session:
             return
 
@@ -83,12 +85,13 @@ class MyCustomNamespace(Namespace):
             return
 
         cache.set(cache_channel_key, channel_online_users)
-        emit("userDisconnectedResponse", list(channel_online_users), broadcast=True)
+        self.emit("userDisconnectedResponse", list(channel_online_users))
+        self.disconnect(session_id)
+
+
+socketio.on_namespace(ChatNamespace('/chat'))
 
 
 @socketio.on_error('/chat')
 def error_handler_chat(e):
-    pass
-
-
-socketio.on_namespace(MyCustomNamespace('/chat'))
+    print(f"An error occurred========================: {e}")
