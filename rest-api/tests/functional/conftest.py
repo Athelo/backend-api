@@ -21,6 +21,8 @@ admin_user_email = "admin@athelohealth.com"
 patient_user_email = "patient@gmail.com"
 patient_user2_email = "patient2@gmail.com"
 
+provider_user_email = "provider@gmail.com"
+
 
 def create_user(first_name: str, last_name: str, email: str = None):
     display_name = first_name + " " + last_name
@@ -38,7 +40,7 @@ def create_user(first_name: str, last_name: str, email: str = None):
 
 @pytest.fixture
 def provider_user(database):
-    user = create_user("Provider", "Provider")
+    user = create_user("Provider", "Provider", provider_user_email)
     database.session.add(user)
     database.session.commit()
 

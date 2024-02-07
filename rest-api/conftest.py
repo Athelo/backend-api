@@ -11,6 +11,7 @@ os.environ[
 
 @pytest.fixture(scope="session")
 def test_client():
+    os.environ["ENVIRONMENT"] = "test"
     test_app = create_app()
     test_client = test_app.test_client()
 

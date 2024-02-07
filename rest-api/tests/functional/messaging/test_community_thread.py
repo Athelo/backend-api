@@ -3,13 +3,12 @@ from __future__ import annotations
 import json
 from unittest.mock import patch
 
+from api.constants import V1_API_PREFIX
 from flask.testing import FlaskClient
 from models.community_thread import CommunityThread
 from schemas.user_profile import UserProfileSchema
-
-from api.constants import V1_API_PREFIX
-from api.tests.conftest import admin_user_email, patient_user_email
-from api.tests.messaging.conftest import add_user_to_thread
+from tests.functional.conftest import admin_user_email, patient_user_email
+from tests.functional.messaging.conftest import add_user_to_thread
 
 base_url = f"{V1_API_PREFIX}/chats/group-conversations"
 

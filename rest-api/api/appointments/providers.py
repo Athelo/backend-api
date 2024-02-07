@@ -1,16 +1,16 @@
 from datetime import datetime, timedelta
 from http.client import UNPROCESSABLE_ENTITY
 
-from api.constants import DATETIME_FORMAT
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, abort, request
-from models.database import db
 from models.appointments.appointment import Appointment, AppointmentStatus
+from models.database import db
 from models.provider_availability import ProviderAvailability
 from models.provider_profile import ProviderProfile
 from sqlalchemy import and_
 from zoneinfo import ZoneInfo
 
+from api.constants import DATETIME_FORMAT
 from api.utils import generate_paginated_dict
 
 provider_endpoints = Blueprint(
@@ -58,13 +58,15 @@ def get_provider_availability(provider_profile_id: int):
             )
         )
         .filter(
-            Appointment.status.in_([AppointmentStatus.BOOKED, AppointmentStatus.IN_PROGRESS])
+            Appointment.status.in_(
+                [AppointmentStatus.BOOKED, AppointmentStatus.IN_PROGRESS]
+            )
         )
         .all()
     )
 
     appt_set = set([appt.start_time.strftime(DATETIME_FORMAT) for appt in appointments])
-    
+
     return generate_paginated_dict(
         [
             availability.to_open_appointments_json(timezone, appt_set)
