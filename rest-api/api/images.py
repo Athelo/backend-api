@@ -44,16 +44,15 @@ def upload_image():
     if filename != "":
         file_ext = path.splitext(filename)[1]
         if file_ext not in app.config["UPLOAD_EXTENSIONS"]:
-            app.logger.error(
-                f"{file_ext} is not in allowed file extensions: {app.config['UPLOAD_EXTENSIONS']}"
-            )
-            abort(400)
+            message = f"{file_ext} is not in allowed file extensions: {app.config['UPLOAD_EXTENSIONS']}"
+            app.logger.error(message)
+            abort(400, message)
 
         validated_ext = validate_image(uploaded_file.stream)
         if file_ext != validated_ext:
-            app.logger.error(
-                f"File extension {file_ext} doesn't match extension in image data {validated_ext}"
-            )
+            message = f"File extension {file_ext} doesn't match extension in image data {validated_ext}"
+            app.logger.error(message)
+            abort(400, message)
 
     image_bytes = uploaded_file.read()
     return {
