@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 
-from api import blueprints, handle_database_error, handle_unauthorized
+from api import blueprints, handle_database_error, handle_unauthorized, too_large
 from auth.exceptions import UnauthorizedException
 from config.logging import setup_logging
 from flask import Flask
@@ -48,6 +48,7 @@ def create_app() -> Flask:
         app.register_error_handler(DatabaseError, handle_database_error)
         app.register_error_handler(IntegrityError, handle_database_error)
         app.register_error_handler(UnauthorizedException, handle_unauthorized)
+        app.register_error_handler(413, too_large)
 
         OpenTokClient.init_app(app)
         CloudStorageService.init_app(app)

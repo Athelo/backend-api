@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from http.client import UNAUTHORIZED, UNPROCESSABLE_ENTITY
+from http.client import REQUEST_ENTITY_TOO_LARGE, UNAUTHORIZED, UNPROCESSABLE_ENTITY
 
 from flask import abort
 
@@ -56,3 +56,7 @@ def handle_database_error(e):
 
 def handle_unauthorized(e):
     return e.message, UNAUTHORIZED
+
+
+def too_large(e):
+    return "File is too large", REQUEST_ENTITY_TOO_LARGE
