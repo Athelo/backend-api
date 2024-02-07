@@ -57,5 +57,5 @@ class LocalConfig(Config):
 
 
 class TestConfig(LocalConfig):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{LocalConfig.DB_USER}:{LocalConfig.DB_PASS}@db/{LocalConfig.DB_NAME}test"
     TESTING = True

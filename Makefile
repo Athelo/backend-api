@@ -31,4 +31,6 @@ refresh-adc: ## refresh app default credentials so auth works
 
 test: ## run pytest
 	docker-compose exec athelo-backend-api env ENVIRONMENT=test TERM=xterm-256color bash -c pytest ${TESTPATH} --disable-warnings
-	
+
+create-test-db: ## create test db for pytests
+	docker-compose exec db sh -c 'psql --username=athelo --dbname=athelo -c "create database athelotest"'

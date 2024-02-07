@@ -38,7 +38,7 @@ def create_user(first_name: str, last_name: str, email: str = None):
     return user
 
 
-@pytest.fixture
+@pytest.fixture()
 def provider_user(database):
     user = create_user("Provider", "Provider", provider_user_email)
     database.session.add(user)
@@ -51,7 +51,7 @@ def provider_user(database):
     yield user
 
 
-@pytest.fixture
+@pytest.fixture()
 def patient_user(database):
     user = create_user("Patient", "Patient", patient_user_email)
     database.session.add(user)
@@ -64,7 +64,7 @@ def patient_user(database):
     yield user
 
 
-@pytest.fixture
+@pytest.fixture()
 def patient_user2(database):
     user = create_user("Patient", "Patient", patient_user2_email)
     database.session.add(user)
@@ -77,7 +77,7 @@ def patient_user2(database):
     yield user
 
 
-@pytest.fixture
+@pytest.fixture()
 def booked_appointment_in_one_week(database, provider_user, patient_user):
     start_time = datetime.utcnow() + timedelta(days=7)
     appointment = Appointment(
