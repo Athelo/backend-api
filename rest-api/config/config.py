@@ -56,6 +56,6 @@ class LocalConfig(Config):
     STORAGE_BUCKET = "athelo-ad72bbe5-6171-49d6-b116-9a8236c4213a"
 
 
-class TestingConfig(Config):
-    DATABASE_URI = "sqlite:///:memory:"
+class TestConfig(LocalConfig):
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     TESTING = True

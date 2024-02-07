@@ -3,6 +3,8 @@ from __future__ import annotations
 from unittest.mock import patch
 
 from api.constants import V1_API_PREFIX
+from flask.testing import FlaskClient
+from models.appointments.appointment import Appointment
 from tests.functional.conftest import (
     admin_user_email,
     patient_user_email,
@@ -23,9 +25,17 @@ def verify_appointment_legacy_json(json_data, appointment, provider_user, patien
     verify_call_participant_data(json_data["provider"], provider_user)
     assert json_data["start_time"] == appointment.start_time.isoformat()
     assert json_data["end_time"] == appointment.end_time.isoformat()
-    assert json_data["zoom_host_url"] == appointment.zoom_meeting.zoom_host_url
-    assert json_data["zoom_join_url"] == appointment.zoom_meeting.zoom_join_url
-    assert json_data["vonage_session"] == appointment.vonage_session.session_id
+    if appointment.zoom_meeting:
+        assert json_data["zoom_host_url"] == appointment.zoom_meeting.zoom_host_url
+        assert json_data["zoom_join_url"] == appointment.zoom_meeting.zoom_join_url
+    else:
+        assert json_data["zoom_host_url"] == ""
+        assert json_data["zoom_join_url"] == ""
+
+    if appointment.vonage_session:
+        assert json_data["vonage_session"] == appointment.vonage_session.session_id
+    else:
+        assert json_data["vonage_session"] == ""
 
 
 class TestGetAppointmentDetail:
