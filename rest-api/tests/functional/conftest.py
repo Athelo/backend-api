@@ -22,6 +22,7 @@ patient_user_email = "patient@gmail.com"
 patient_user2_email = "patient2@gmail.com"
 
 provider_user_email = "provider@gmail.com"
+provider_user2_email = "provider2@gmail.com"
 
 
 def create_user(first_name: str, last_name: str, email: str = None):
@@ -41,6 +42,19 @@ def create_user(first_name: str, last_name: str, email: str = None):
 @pytest.fixture()
 def provider_user(database):
     user = create_user("Provider", "Provider", provider_user_email)
+    database.session.add(user)
+    database.session.commit()
+
+    provider = ProviderProfile(user_id=user.id, appointment_buffer_sec=1800)
+    database.session.add(provider)
+
+    database.session.commit()
+    yield user
+
+
+@pytest.fixture()
+def provider_user2(database):
+    user = create_user("Provider", "Provider", provider_user2_email)
     database.session.add(user)
     database.session.commit()
 

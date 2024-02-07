@@ -20,11 +20,15 @@ def is_current_user_or_403(request, user_id) -> None:
         raise Unauthorized()
 
 
-def require_admin_user(user: Users) -> None:
+def require_admin_user(
+    user: Users, message: str = "Only admins can perform this action"
+) -> None:
     if not user.is_admin:
-        abort(UNAUTHORIZED, "Only admins can perform this action")
+        abort(UNAUTHORIZED, message)
 
 
-def require_provider_user(user: Users) -> None:
+def require_provider_user(
+    user: Users, message: str = "Only providers can perform this action"
+) -> None:
     if not user.provider_profile:
-        abort(UNAUTHORIZED, "Only providers can perform this action")
+        abort(UNAUTHORIZED, message)
