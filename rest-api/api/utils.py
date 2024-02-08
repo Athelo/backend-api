@@ -53,7 +53,8 @@ def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
         except ValueError:
             try:
                 full_datetime = datetime.strptime(json_data[field_name], DATE_FORMAT)
-            except ValueError:
+            except ValueError as err:
+                app.logger.error(err)
                 abort(UNPROCESSABLE_ENTITY, f'Unable to parse "{field_name}"')
 
     json_data[field_name] = full_datetime.isoformat()
@@ -75,6 +76,7 @@ def validate_json(json_data: dict, schema: Schema) -> dict:
         data = schema.load(json_data)
 
     except ValidationError as err:
+        app.logger.error(err)
         abort(UNPROCESSABLE_ENTITY, err.messages)
 
     return data

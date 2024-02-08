@@ -34,14 +34,26 @@ def validate_image(stream):
 @image_endpoints.route("/", methods=["POST"])
 def upload_image():
     cloudStorageService = CloudStorageService.instance()
-    uploaded_file = request.files["file"]
+    try:
+        uploaded_file = request.files["file"]
+    except Exception as e:
+        app.logger.error(e)
+        raise e
+
     filename = secure_filename(uploaded_file.filename)
     if filename != "":
         file_ext = path.splitext(filename)[1]
-        if file_ext not in app.config[
-            "UPLOAD_EXTENSIONS"
-        ] or file_ext != validate_image(uploaded_file.stream):
-            abort(400)
+        if file_ext not in app.config["UPLOAD_EXTENSIONS"]:
+            message = f"{file_ext} is not in allowed file extensions: {app.config['UPLOAD_EXTENSIONS']}"
+            app.logger.error(message)
+            abort(400, message)
+
+        validated_ext = validate_image(uploaded_file.stream)
+        if file_ext != validated_ext:
+            message = f"File extension {file_ext} doesn't match extension in image data {validated_ext}"
+            app.logger.error(message)
+            abort(400, message)
+
     image_bytes = uploaded_file.read()
     return {
         "url": cloudStorageService.upload_image(
