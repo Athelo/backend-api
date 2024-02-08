@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from http.client import (
     CREATED,
     INTERNAL_SERVER_ERROR,
@@ -21,8 +23,9 @@ from services import opentokClient
 from services.zoom import create_zoom_meeting_with_provider
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
+from zoneinfo import ZoneInfo
 
-from api.constants import V1_API_PREFIX
+from api.constants import DATETIME_FORMAT, V1_API_PREFIX
 from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 appointments_endpoints = Blueprint(
@@ -82,11 +85,25 @@ class AppointmentListView(MethodView):
         schema = AppointmentCreateSchema()
         data = validate_json_body(schema)
 
+        timezone = ZoneInfo(data.get("timezone", "US/Mountain"))
+
+        start_time = (
+            data["start_time"]
+            .replace(tzinfo=timezone)
+            .astimezone(ZoneInfo("UTC"))
+        )
+
+        end_time = (
+            data["end_time"]
+            .replace(tzinfo=timezone)
+            .astimezone(ZoneInfo("UTC"))
+        )
+
         appointment = Appointment(
             patient_id=user.patient_profile.id,
             provider_id=data["provider_id"],
-            start_time=data["start_time"],
-            end_time=data["end_time"],
+            start_time=start_time,
+            end_time=end_time,
             status=AppointmentStatus.BOOKED,
         )
 
