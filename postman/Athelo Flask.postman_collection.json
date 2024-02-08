@@ -1904,6 +1904,24 @@
 					]
 				},
 				{
+					"name": "Appointment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/appointment/18",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"appointment",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "My Availability",
 					"request": {
 						"method": "GET",
