@@ -3,8 +3,12 @@ from __future__ import annotations
 from unittest.mock import patch
 
 from api.constants import V1_API_PREFIX
+from models.admin_profile import AdminProfile
 from tests.functional.conftest import (
+    admin_user_email,
+    patient_user2_email,
     patient_user_email,
+    provider_user2_email,
     provider_user_email,
 )
 
@@ -89,583 +93,564 @@ class TestGetAppointmentDetail:
             response.get_json(), appointment, provider_user, patient_user
         )
 
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_get_appointment_as_admin_and_patient(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        database,
+        test_client,
+        provider_user,
+        patient_user,
+    ):
+        admin = AdminProfile(user_id=patient_user.id, active=True)
+        database.session.add(admin)
+        database.session.commit()
+        appointment = booked_vonage_appointment
+        response = test_client.get(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_appointment_as_admin_and_patient(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+        assert response.status_code == 200
+        verify_appointment_legacy_json(
+            response.get_json(), appointment, provider_user, patient_user
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user_email},
+    )
+    def test_get_appointment_as_admin_and_provider(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        database,
+        provider_user,
+        patient_user,
+    ):
+        admin = AdminProfile(user_id=provider_user.id, active=True)
+        database.session.add(admin)
+        database.session.commit()
+        appointment = booked_vonage_appointment
+        response = test_client.get(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_appointment_as_admin_and_provider(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+        assert response.status_code == 200
+        verify_appointment_legacy_json(
+            response.get_json(), appointment, provider_user, patient_user
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": admin_user_email},
+    )
+    def test_get_appointment_as_admin_only(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+        admin_user,
+    ):
+        appointment = booked_vonage_appointment
+        response = test_client.get(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_appointment_as_admin_only(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+        assert response.status_code == 200
+        verify_appointment_legacy_json(
+            response.get_json(), appointment, provider_user, patient_user
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user2_email},
+    )
+    def test_get_appointment_as_provider_not_on_appointment(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+        provider_user2,
+    ):
+        appointment = booked_vonage_appointment
+        response = test_client.get(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_appointment_as_provider_not_on_appointment(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+        assert response.status_code == 401
+        assert (
+            "Appointment does not exist or the user does not have permissions to view it"
+            in response.text
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
-
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_appointment_as_patient_not_on_appointment(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
-
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
-
-
-# class TestDeleteAppointmentDetail:
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_delete_appointment_as_provider(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
-
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
-
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_delete_appointment_as_patient(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
-
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
-
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_delete_appointment_as_admin_and_patient(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
-
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
-
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_delete_appointment_as_admin_and_provider(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
-
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
-
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_delete_appointment_as_admin_only(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
-
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
-
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_delete_appointment_as_provider_not_on_appointment(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
-
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
-
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_delete_appointment_as_patient_not_on_appointment(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
-
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user2_email},
+    )
+    def test_get_appointment_as_patient_not_on_appointment(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+        patient_user2,
+    ):
+        appointment = booked_vonage_appointment
+        response = test_client.get(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
+        print(response.text)
+        assert response.status_code == 401
+        assert (
+            "Appointment does not exist or the user does not have permissions to view it"
+            in response.text
+        )
 
 
-# class TestGetAppointmentVonageDetail:
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_video_call_detail_as_provider(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+class TestDeleteAppointmentDetail:
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user_email},
+    )
+    def test_delete_appointment_as_provider(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+    ):
+        appointment = booked_vonage_appointment
+        response = test_client.delete(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+        assert response.status_code == 204
+        assert response.text == ""
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_video_call_detail_as_patient(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_delete_appointment_as_patient(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+    ):
+        appointment = booked_vonage_appointment
+        response = test_client.delete(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+        assert response.status_code == 204
+        assert response.text == ""
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_video_call_detail_as_admin_and_patient(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_delete_appointment_as_admin_and_patient(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+        database,
+    ):
+        admin = AdminProfile(user_id=patient_user.id, active=True)
+        database.session.add(admin)
+        database.session.commit()
+        appointment = booked_vonage_appointment
+        response = test_client.delete(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+        assert response.status_code == 204
+        assert response.text == ""
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_video_call_detail_as_admin_and_provider(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user_email},
+    )
+    def test_delete_appointment_as_admin_and_provider(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+        database,
+    ):
+        admin = AdminProfile(user_id=provider_user.id, active=True)
+        database.session.add(admin)
+        database.session.commit()
+        appointment = booked_vonage_appointment
+        response = test_client.delete(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+        assert response.status_code == 204
+        assert response.text == ""
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_video_call_detail_as_admin_only(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": admin_user_email},
+    )
+    def test_delete_appointment_as_admin_only(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+        admin_user,
+    ):
+        appointment = booked_vonage_appointment
+        response = test_client.delete(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+        assert response.status_code == 204
+        assert response.text == ""
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_video_call_detail_as_provider_not_on_appointment(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user2_email},
+    )
+    def test_delete_appointment_as_provider_not_on_appointment(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+        provider_user2,
+    ):
+        appointment = booked_vonage_appointment
+        response = test_client.delete(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+        assert response.status_code == 401
+        assert (
+            "Appointment does not exist or the user does not have permissions to delete it"
+            in response.text
+        )
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": patient_user_email},
-#     )
-#     def test_get_video_call_detail_as_patient_not_on_appointment(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#
-#         booked_vonage_appointment,
-#         test_client,
-#         provider_user,
-#         patient_user,
-#     ):
-#         appointment = booked_vonage_appointment
-#         response = test_client.get(
-#             f"{base_url}/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user2_email},
+    )
+    def test_delete_appointment_as_patient_not_on_appointment(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+        patient_user2,
+    ):
+        appointment = booked_vonage_appointment
+        response = test_client.delete(
+            f"{base_url}/{appointment.id}/",
+            headers={"Authorization": "test"},
+        )
 
-#         assert response.status_code == 200
-#         verify_appointment_legacy_json(
-#             response.get_json(), appointment, provider_user, patient_user
-#         )
+        assert response.status_code == 401
+        assert (
+            "Appointment does not exist or the user does not have permissions to delete it"
+            in response.text
+        )
 
 
-# class OldTests:
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": admin_user_email},
-#     )
-#     def test_get_appointment_detail_not_found(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#         test_client: FlaskClient,
-#         booked_appointment_in_one_week,
-#         admin_user,
-#
-#     ):
-#         appointment = booked_appointment_in_one_week
-#         response = test_client.get(
-#             f"{V1_API_PREFIX}/appointment/{appointment.id+1}/",
-#             headers={"Authorization": "test"},
-#         )
-#         assert response.status_code == 404
-#         assert "Appointment not found" in response.text
+class TestGetAppointmentVonageDetail:
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user_email},
+    )
+    def test_get_token_as_provider(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+    ):
+        appointment = booked_vonage_appointment
+        expected_token = "token"
+        with patch(
+            "services.opentokClient.create_host_token", return_value=expected_token
+        ):
+            response = test_client.get(
+                f"{base_url}/{appointment.id}/vonage-appointment-details/",
+                headers={"Authorization": "test"},
+            )
 
-#     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
-#     @patch(
-#         "auth.middleware.decode_token",
-#         autospec=True,
-#         return_value={"uid": "foo", "email": admin_user_email},
-#     )
-#     def test_appointment_with_vonage_details(
-#         self,
-#         get_token_mock,
-#         decode_token_mock,
-#         test_client: FlaskClient,
-#         appointment_with_vonage_session: Appointment,
-#         admin_user,
-#
-#     ):
-#         appointment = appointment_with_vonage_session
-#         response = test_client.get(
-#             f"{V1_API_PREFIX}/appointment/{appointment.id}/",
-#             headers={"Authorization": "test"},
-#         )
+        assert response.status_code == 200
+        assert response.get_json()["token"] == expected_token
 
-#         result = response.get_json()
-#         assert response.status_code == 200
-#         assert result["id"] == appointment.id
-#         assert (
-#             result["provider"]["display_name"] == appointment.provider.user.display_name
-#         )
-#         assert result["provider"]["photo"] == ""
-#         assert (
-#             result["patient"]["display_name"] == appointment.patient.user.display_name
-#         )
-#         assert result["patient"]["photo"] == ""
-#         assert result["zoom_join_url"] is None
-#         assert result["zoom_host_url"] is None
-#         assert result["vonage_session"] == appointment.vonage_session.session_id
-#         assert result["start_time"] == appointment.start_time.isoformat()
-#         assert result["end_time"] == appointment.end_time.isoformat()
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_get_token_as_patient(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+    ):
+        appointment = booked_vonage_appointment
+        expected_token = "token"
+        with patch(
+            "services.opentokClient.create_guest_token", return_value=expected_token
+        ):
+            response = test_client.get(
+                f"{base_url}/{appointment.id}/vonage-appointment-details/",
+                headers={"Authorization": "test"},
+            )
+
+        assert response.status_code == 200
+        assert response.get_json()["token"] == expected_token
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user_email},
+    )
+    def test_get_token_as_admin_and_patient(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+    ):
+        appointment = booked_vonage_appointment
+        expected_token = "token"
+        with patch(
+            "services.opentokClient.create_guest_token", return_value=expected_token
+        ):
+            response = test_client.get(
+                f"{base_url}/{appointment.id}/vonage-appointment-details/",
+                headers={"Authorization": "test"},
+            )
+
+        assert response.status_code == 200
+        assert response.get_json()["token"] == expected_token
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user_email},
+    )
+    def test_get_token_as_admin_and_provider(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user,
+        patient_user,
+    ):
+        appointment = booked_vonage_appointment
+        expected_token = "token"
+        with patch(
+            "services.opentokClient.create_host_token", return_value=expected_token
+        ):
+            response = test_client.get(
+                f"{base_url}/{appointment.id}/vonage-appointment-details/",
+                headers={"Authorization": "test"},
+            )
+
+        assert response.status_code == 200
+        assert response.get_json()["token"] == expected_token
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": admin_user_email},
+    )
+    def test_get_token_as_admin_only(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        admin_user,
+    ):
+        appointment = booked_vonage_appointment
+        expected_token = "token"
+        with patch(
+            "services.opentokClient.create_host_token", return_value=expected_token
+        ):
+            response = test_client.get(
+                f"{base_url}/{appointment.id}/vonage-appointment-details/",
+                headers={"Authorization": "test"},
+            )
+
+        print(response.text)
+        assert response.status_code == 200
+        assert response.get_json()["token"] == expected_token
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user2_email},
+    )
+    def test_get_token_as_provider_not_on_appointment(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        provider_user2,
+    ):
+        appointment = booked_vonage_appointment
+        expected_token = "token"
+        with patch(
+            "services.opentokClient.create_guest_token", return_value=expected_token
+        ):
+            response = test_client.get(
+                f"{base_url}/{appointment.id}/vonage-appointment-details/",
+                headers={"Authorization": "test"},
+            )
+        assert response.status_code == 401
+        assert (
+            "Appointment does not exist or the user does not have permissions to view it"
+            in response.text
+        )
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": patient_user2_email},
+    )
+    def test_get_token_as_patient_not_on_appointment(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_vonage_appointment,
+        test_client,
+        patient_user2,
+    ):
+        appointment = booked_vonage_appointment
+        expected_token = "token"
+        with patch(
+            "services.opentokClient.create_guest_token", return_value=expected_token
+        ):
+            response = test_client.get(
+                f"{base_url}/{appointment.id}/vonage-appointment-details/",
+                headers={"Authorization": "test"},
+            )
+
+        assert response.status_code == 401
+        assert (
+            "Appointment does not exist or the user does not have permissions to view it"
+            in response.text
+        )
+
+    @patch("auth.middleware.get_token", autospec=True, return_value="foo")
+    @patch(
+        "auth.middleware.decode_token",
+        autospec=True,
+        return_value={"uid": "foo", "email": provider_user_email},
+    )
+    def test_get_token_on_appointment_without_vonage_session(
+        self,
+        get_token_mock,
+        decode_token_mock,
+        booked_appointment_in_one_week,
+        test_client,
+        provider_user,
+        patient_user,
+    ):
+        appointment = booked_appointment_in_one_week
+        expected_token = "token"
+        with patch(
+            "services.opentokClient.create_guest_token", return_value=expected_token
+        ):
+            response = test_client.get(
+                f"{base_url}/{appointment.id}/vonage-appointment-details/",
+                headers={"Authorization": "test"},
+            )
+
+        assert response.status_code == 422
+        assert (
+            f"Appointment {appointment.id} isn&#39;t conducted through vonage"
+            in response.text
+        )

@@ -3,17 +3,13 @@ from __future__ import annotations
 
 import os
 
-from api import blueprints, handle_database_error, handle_unauthorized, too_large
-from auth.exceptions import UnauthorizedException
+from api import blueprints, error_handler_mapping
 from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
+from services import opentokClient
 from services.cloud_storage import CloudStorageService
-
-# from websocket.socketio import socketio
-from services.opentok import OpenTokClient
-from sqlalchemy.exc import DatabaseError, IntegrityError
 
 
 def set_config(app: Flask):
@@ -40,17 +36,15 @@ def create_app() -> Flask:
     with app.app_context():
         db.init_app(app)
         migrate.init_app(app, db)
-        # socketio.init_app(app)
 
         for blueprint in blueprints:
             app.register_blueprint(blueprint=blueprint)
 
-        app.register_error_handler(DatabaseError, handle_database_error)
-        app.register_error_handler(IntegrityError, handle_database_error)
-        app.register_error_handler(UnauthorizedException, handle_unauthorized)
-        app.register_error_handler(413, too_large)
+        for key in error_handler_mapping:
+            for value in error_handler_mapping[key]:
+                app.register_error_handler(value, key)
 
-        OpenTokClient.init_app(app)
+        opentokClient.init_app(app)
         CloudStorageService.init_app(app)
 
     ma = Marshmallow(app)  # noqa: F841

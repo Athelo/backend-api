@@ -2,8 +2,12 @@ from __future__ import annotations
 
 from http.client import REQUEST_ENTITY_TOO_LARGE, UNAUTHORIZED, UNPROCESSABLE_ENTITY
 
+from auth.exceptions import UnauthorizedException
 from flask import abort
+
+from sqlalchemy.exc import DatabaseError, IntegrityError
 from flask import current_app as app
+
 
 from api.appointments import appointment_blueprints
 from api.common import common_endpoints
@@ -63,3 +67,10 @@ def handle_unauthorized(e):
 def too_large(e):
     log_error(e)
     return "File is too large", REQUEST_ENTITY_TOO_LARGE
+
+
+error_handler_mapping = {
+    handle_database_error: [DatabaseError, IntegrityError],
+    handle_unauthorized: [UnauthorizedException],
+    too_large: [413],
+}
