@@ -51,6 +51,9 @@ class AppointmentDetailView(MethodView):
             )
 
         appointment.status = AppointmentStatus.CANCELLED
+        db.session.add(appointment)
+        db.session.commit()
+
         return "", NO_CONTENT
 
 
