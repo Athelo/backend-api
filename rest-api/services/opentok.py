@@ -23,7 +23,6 @@ class OpenTokClient(object):
             session_id, Roles.moderator, self.create_user_metadata(user)
         )
 
-    @staticmethod
     def create_user_metadata(self, user: Users) -> dict:
         return json.dumps({"name": user.display_name})
 
