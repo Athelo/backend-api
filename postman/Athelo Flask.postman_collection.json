@@ -1655,7 +1655,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"timezone\": \"US/Denver\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
+									"raw": "{\n    \"provider_id\": 1,\n    \"start_time\": \"2024-06-25T16:51:31.940026\",\n    \"end_time\": \"2024-06-25T17:51:31.940026\",\n    \"timezone\": \"US/Mountain\",\n    \"zoom_url\": \"appointment.zoom_url\",\n    \"zoom_token\":\" appointment.zoom_token\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
