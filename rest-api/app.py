@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import inject
 
 from api import blueprints, error_handler_mapping
 from config.logging import setup_logging
@@ -44,8 +45,12 @@ def create_app() -> Flask:
             for value in error_handler_mapping[key]:
                 app.register_error_handler(value, key)
 
-        opentokClient.init_app(app)
-        CloudStorageService.init_app(app)
+        def my_config(binder):
+            binder.bind(CloudStorageService, CloudStorageService(app.config.get("STORAGE_BUCKET")))
+            binder.bind(OpenTokClient, OpenTokClient(app.config.get("VONAGE_API_KEY"), app.config.get("VONAGE_API_SECRET")))
+
+        # Configure a shared injector.
+        inject.configure(my_config)
 
     ma = Marshmallow(app)  # noqa: F841
     app.logger.info("Running app!")

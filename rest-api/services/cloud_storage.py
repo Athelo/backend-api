@@ -1,36 +1,17 @@
 import base64
 
-from flask import Flask
 from google.cloud import storage
 
 google_cloud_storage_url = "https://storage.googleapis.com"
 
 
 class CloudStorageService(object):
-    _instance = None
     client = None
     default_bucket = None
 
-    def __init__(self):
-        raise Exception(
-            "call init_app(app) to initialize or instance() to get instance"
-        )
-
-    @classmethod
-    def instance(cls):
-        if cls._instance is None:
-            raise Exception("Class has not been initialized")
-        return cls._instance
-
-    @classmethod
-    def init_app(cls, app: Flask):
-        if cls._instance is not None:
-            app.logger.error("Attempted reinitialization of singlton OpenTokClient")
-            return
-
-        cls._instance = cls.__new__(cls)
-        cls.client = storage.Client()
-        cls.default_bucket = app.config.get("STORAGE_BUCKET")
+    def __init__(self, storage_bucket: str):
+        self.client = storage.Client()
+        self.default_bucket = storage_bucket
 
     def upload_image(
         self,
