@@ -19,7 +19,7 @@ from repositories.user import get_user_by_provider_id
 from repositories.utils import commit_entity
 from requests.exceptions import HTTPError
 from schemas.appointment import AppointmentCreateSchema
-from services.opentok import OpenTokClient
+from services import opentokClient
 from services.zoom import create_zoom_meeting_with_provider
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
@@ -38,7 +38,9 @@ appointments_endpoints = Blueprint(
 @class_route(appointments_endpoints, "/", "appointment_list")
 class AppointmentListView(MethodView):
     def get_current_user_appointments_query(self, user: Users) -> Query[Appointment]:
-        query = db.session.query(Appointment).filter(Appointment.status == AppointmentStatus.BOOKED)
+        query = db.session.query(Appointment).filter(
+            Appointment.status == AppointmentStatus.BOOKED
+        )
         if user.is_provider and user.is_patient:
             query = query.filter(
                 or_(
@@ -126,15 +128,14 @@ class AppointmentListView(MethodView):
 
         if video_type == VideoType.VONAGE:
             try:
-                client = OpenTokClient.instance()
-                session = client.create_session()
+                session = opentokClient.create_session()
                 appointment.vonage_session = VonageSession(
                     session_id=session.session_id
                 )
             except Exception as exc:
                 abort(
                     INTERNAL_SERVER_ERROR,
-                    f"Failed to create zoom meeting - {exc.response}",
+                    f"Failed to create opentok meeting - {exc.response}",
                 )
 
         commit_entity(appointment)
