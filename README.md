@@ -41,8 +41,13 @@ VSCode is the expected environment for development. If using another editor, ple
 ```
 
 ### Unit tests
-Run all unit tests with `make test`. To run a subset of tests, provide `TESTPATH` with the relative path
-starting after `rest-api`. Example: `make test TESTPATH=api` would run all test files beneath `/rest-api/api`.
+Before running tests for the first time, run `make create-test-db` in order to create the test db. TODO: automate this
+
+
+Run all tests with `make test`. ~~To run a subset of tests, provide `TESTPATH` with the relative path
+starting after `rest-api`. Example: `make test TESTPATH=api` would run all test files beneath `/rest-api/api`.~~ TODO: get test paths working again. 
+
+If you would like to run a specific test, use `make bash-shell` to get a bash shell in the docker container and interact with pytest from there.
 
 ### Migrations
 1. Make your changes to files in `rest-api/models`. Any new models must extend Base from models.base

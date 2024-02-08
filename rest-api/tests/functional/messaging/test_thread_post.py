@@ -3,12 +3,11 @@ from __future__ import annotations
 from unittest.mock import patch
 
 import pytest
+from api.constants import V1_API_PREFIX
 from flask.testing import FlaskClient
 from models.thread_post import ThreadPost
-
-from api.constants import V1_API_PREFIX
-from api.tests.conftest import patient_user2_email, patient_user_email
-from api.tests.messaging.conftest import (
+from tests.functional.conftest import patient_user2_email, patient_user_email
+from tests.functional.messaging.conftest import (
     add_user_to_thread,
     create_community_thread,
     thread_name_list,

@@ -10,6 +10,8 @@ class Config(object):
     WEBSOCKET_JWT_ALGORITHM = os.environ.get("WEBSOCKET_JWT_ALGORITHM", "HS256")
     WEBSOCKET_JWT_SECRET_KEY = os.environ.get("WEBSOCKET_JWT_SECRET_KEY", "secret")
     REDIS_URL = os.environ.get("REDIS_URL")
+    MAX_CONTENT_LENGTH = 1024 * 1024
+    UPLOAD_EXTENSIONS = [".jpg", ".png", ".gif"]
 
 
 class CloudConfig(Config):
@@ -65,7 +67,8 @@ class LocalConfig(Config):
     STORAGE_BUCKET = "athelo-ad72bbe5-6171-49d6-b116-9a8236c4213a"
 
 
-class TestingConfig(Config):
-    DATABASE_URI = "sqlite:///:memory:"
+class TestConfig(LocalConfig):
+    SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{LocalConfig.DB_USER}:{LocalConfig.DB_PASS}@db/{LocalConfig.DB_NAME}test"
     TESTING = True
-    ALLOWED_ADMIN_DOMAINS = ["athelohealth.com", "gmail.com"]
+    VONAGE_API_KEY = "1"
+    VONAGE_API_SECRET = "key"

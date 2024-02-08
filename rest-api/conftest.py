@@ -4,13 +4,10 @@ import pytest
 from app import create_app, db
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-os.environ[
-    "SQLALCHEMY_DATABASE_URI"
-] = "postgresql://postgres:postgres@localhost/fsa_rollback_per_test"
-
 
 @pytest.fixture(scope="session")
 def test_client():
+    os.environ["ENVIRONMENT"] = "test"
     test_app = create_app()
     test_client = test_app.test_client()
 
@@ -19,7 +16,7 @@ def test_client():
 
 
 @pytest.fixture(scope="session")
-def database(test_client):
+def database():
     db.create_all()
 
     yield db
@@ -30,6 +27,7 @@ def database(test_client):
 @pytest.fixture(autouse=True)
 def enable_transactional_tests(database):
     """https://docs.sqlalchemy.org/en/20/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites"""
+    print("connect to db")
     connection = database.engine.connect()
     transaction = connection.begin()
 

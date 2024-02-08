@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from http.client import (
     CREATED,
     INTERNAL_SERVER_ERROR,
@@ -22,8 +24,9 @@ from services.zoom import create_zoom_meeting_with_provider
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
 from inject import autoparams
+from zoneinfo import ZoneInfo
 
-from api.constants import V1_API_PREFIX
+from api.constants import DATETIME_FORMAT, V1_API_PREFIX
 from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 appointments_endpoints = Blueprint(
@@ -36,7 +39,9 @@ appointments_endpoints = Blueprint(
 @class_route(appointments_endpoints, "/", "appointment_list")
 class AppointmentListView(MethodView):
     def get_current_user_appointments_query(self, user: Users) -> Query[Appointment]:
-        query = db.session.query(Appointment)
+        query = db.session.query(Appointment).filter(
+            Appointment.status == AppointmentStatus.BOOKED
+        )
         if user.is_provider and user.is_patient:
             query = query.filter(
                 or_(
@@ -82,11 +87,25 @@ class AppointmentListView(MethodView):
         schema = AppointmentCreateSchema()
         data = validate_json_body(schema)
 
+        timezone = ZoneInfo(data.get("timezone", "US/Mountain"))
+
+        start_time = (
+            data["start_time"]
+            .replace(tzinfo=timezone)
+            .astimezone(ZoneInfo("UTC"))
+        )
+
+        end_time = (
+            data["end_time"]
+            .replace(tzinfo=timezone)
+            .astimezone(ZoneInfo("UTC"))
+        )
+
         appointment = Appointment(
             patient_id=user.patient_profile.id,
             provider_id=data["provider_id"],
-            start_time=data["start_time"],
-            end_time=data["end_time"],
+            start_time=start_time,
+            end_time=end_time,
             status=AppointmentStatus.BOOKED,
         )
 
@@ -118,7 +137,7 @@ class AppointmentListView(MethodView):
             except Exception as exc:
                 abort(
                     INTERNAL_SERVER_ERROR,
-                    f"Failed to create zoom meeting - {exc.response}",
+                    f"Failed to create opentok meeting - {exc.response}",
                 )
 
         commit_entity(appointment)

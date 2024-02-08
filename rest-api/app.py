@@ -5,15 +5,13 @@ import inject
 
 from flask_cors import CORS
 from cache import cache
-from api import blueprints, handle_database_error, handle_unauthorized
-from auth.exceptions import UnauthorizedException
+from api import blueprints, error_handler_mapping
 from config.logging import setup_logging
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
 from services.cloud_storage import CloudStorageService
 from services.opentok import OpenTokClient
-from sqlalchemy.exc import DatabaseError, IntegrityError
 
 
 def set_config(app: Flask):
@@ -21,14 +19,14 @@ def set_config(app: Flask):
     config_module = "config.config."
     match environment.lower():
         case "test":
-            config_module = f"{config_module}LocalConfig"
+            config_module = f"{config_module}TestConfig"
         case "local":
             config_module = f"{config_module}LocalConfig"
         case "production":
             config_module = f"{config_module}ProductionConfig"
         case "staging" | _:
             config_module = f"{config_module}StagingConfig"
-
+    app.logger.debug(f"Using {config_module}")
     app.config.from_object(config_module)
 
 
@@ -45,9 +43,9 @@ def create_app() -> Flask:
         for blueprint in blueprints:
             app.register_blueprint(blueprint=blueprint)
 
-        app.register_error_handler(DatabaseError, handle_database_error)
-        app.register_error_handler(IntegrityError, handle_database_error)
-        app.register_error_handler(UnauthorizedException, handle_unauthorized)
+        for key in error_handler_mapping:
+            for value in error_handler_mapping[key]:
+                app.register_error_handler(value, key)
 
         def my_config(binder):
             binder.bind(CloudStorageService, CloudStorageService(app.config.get("STORAGE_BUCKET")))

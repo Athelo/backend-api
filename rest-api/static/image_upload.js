@@ -57,7 +57,7 @@ function toggle() {
   }
 }
 
-async function uploadImage() {
+async function uploadImageJson() {
   let req_headers = {}
   if (google_token !== null) {
     req_headers = {
@@ -71,7 +71,7 @@ async function uploadImage() {
   reader.addEventListener("load", async () => {
     fileString = reader.result
     try {
-      await fetch("/api/v1/common/image", {
+      await fetch("/api/v1/common/image/json/", {
         credentials: 'include',
         method: 'POST',
         headers: req_headers,
@@ -95,7 +95,6 @@ async function uploadImage() {
     }
   })
 
-  // const fileBytes = await selectedFile.arrayBuffer()
   reader.readAsDataURL(selectedFile)
 
 
@@ -111,33 +110,5 @@ async function getToken() {
   })
 }
 
-async function performGetAndUpdateElements(element, endpoint) {
-  document.getElementById(element).innerText = ''
-  let req_headers = {}
-  if (google_token !== null) {
-    req_headers = {
-      'Authorization': `Bearer ${google_token}`,
-    }
-  }
-  try {
-    await fetch(endpoint, {
-      credentials: 'include',
-      method: 'GET',
-      headers: req_headers,
-    }).then(async (response) => {
-      if (response.ok) {
-        let text = await response.text();
-        document.getElementById(element).innerText = text
-      } else {
-        let text = await response.text();
-        document.getElementById(element).innerText = `${response.status}: ${response.statusText}\n${text}`
-      }
-    });
-
-  } catch (err) {
-    document.getElementById(element).innerText = `Error when submitting vote: ${err}`
-    window.alert(`Something went wrong... Please try again!\n${err}`);
-  }
-}
 
 

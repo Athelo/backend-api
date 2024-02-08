@@ -1,4 +1,4 @@
-from http.client import NOT_FOUND, OK, UNPROCESSABLE_ENTITY
+from http.client import NO_CONTENT, NOT_FOUND, OK, UNPROCESSABLE_ENTITY
 
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
@@ -6,7 +6,7 @@ from flask import Blueprint, abort, request
 from flask.views import MethodView
 from models.appointments.appointment import Appointment, AppointmentStatus
 from models.database import db
-from services.opentok import OpenTokClient
+from services import opentokClient
 
 from api.constants import V1_API_PREFIX
 from api.utils import class_route
@@ -30,7 +30,10 @@ class AppointmentDetailView(MethodView):
             appointment.provider.user_id == user.id
             or appointment.patient.user_id == user.id
         ):
-            require_admin_user(user)
+            require_admin_user(
+                user,
+                "Appointment does not exist or the user does not have permissions to view it",
+            )
 
         return appointment.to_legacy_json()
 
@@ -42,9 +45,16 @@ class AppointmentDetailView(MethodView):
             appointment.provider.user_id == user.id
             or appointment.patient.user_id == user.id
         ):
-            require_admin_user(user)
+            require_admin_user(
+                user,
+                "Appointment does not exist or the user does not have permissions to delete it",
+            )
 
         appointment.status = AppointmentStatus.CANCELLED
+        db.session.add(appointment)
+        db.session.commit()
+
+        return "", NO_CONTENT
 
 
 @appointment_endpoints.route(
@@ -60,17 +70,23 @@ def get_video_appointment_details(appointment_id: int):
         appointment.provider.user_id == user.id
         or appointment.patient.user_id == user.id
     ):
-        require_admin_user(user)
+        require_admin_user(
+            user,
+            "Appointment does not exist or the user does not have permissions to view it",
+        )
 
     if not appointment.is_vonage_appointment:
         abort(
             UNPROCESSABLE_ENTITY,
             f"Appointment {appointment_id} isn't conducted through vonage",
         )
-    client = OpenTokClient.instance()
     if user.is_patient:
-        token = client.create_guest_token(appointment.vonage_session.session_id, user)
+        token = opentokClient.create_guest_token(
+            appointment.vonage_session.session_id, user
+        )
     else:
-        token = client.create_guest_token(appointment.vonage_session.session_id, user)
+        token = opentokClient.create_host_token(
+            appointment.vonage_session.session_id, user
+        )
     result = {"token": token}
     return result, OK
