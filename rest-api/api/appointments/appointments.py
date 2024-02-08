@@ -35,7 +35,7 @@ appointments_endpoints = Blueprint(
 @class_route(appointments_endpoints, "/", "appointment_list")
 class AppointmentListView(MethodView):
     def get_current_user_appointments_query(self, user: Users) -> Query[Appointment]:
-        query = db.session.query(Appointment)
+        query = db.session.query(Appointment).filter(Appointment.status == AppointmentStatus.BOOKED)
         if user.is_provider and user.is_patient:
             query = query.filter(
                 or_(
