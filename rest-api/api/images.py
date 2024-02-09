@@ -7,6 +7,7 @@ from os import path
 from auth.middleware import jwt_authenticated
 from flask import Blueprint, abort, request
 from flask import current_app as app
+from inject import autoparams
 from schemas.image_upload import ImageUploadSchema
 from services.cloud_storage import CloudStorageService
 from werkzeug.utils import secure_filename
@@ -32,8 +33,8 @@ def validate_image(stream):
 
 @jwt_authenticated
 @image_endpoints.route("/", methods=["POST"])
-def upload_image():
-    cloudStorageService = CloudStorageService.instance()
+@autoparams()
+def upload_image(cloud_storage_service: CloudStorageService):
     try:
         uploaded_file = request.files["file"]
     except Exception as e:
@@ -56,7 +57,7 @@ def upload_image():
 
     image_bytes = uploaded_file.read()
     return {
-        "url": cloudStorageService.upload_image(
+        "url": cloud_storage_service.upload_image(
             filename, image_bytes, uploaded_file.content_type
         )
     }, CREATED
@@ -64,8 +65,8 @@ def upload_image():
 
 @jwt_authenticated
 @image_endpoints.route("/json/", methods=["POST"])
-def upload_image_json():
-    cloudStorageService = CloudStorageService.instance()
+@autoparams()
+def upload_image_json(cloud_storage_service: CloudStorageService):
     schema = ImageUploadSchema()
     data = validate_json_body(schema)
 
@@ -73,4 +74,6 @@ def upload_image_json():
     img_data = str.split(data["data"], ",")[-1]
     file_type = data["file_type"]
 
-    return {"url": cloudStorageService.upload_image(name, img_data, file_type)}, CREATED
+    return {
+        "url": cloud_storage_service.upload_image(name, img_data, file_type)
+    }, CREATED
