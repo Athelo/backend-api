@@ -15,7 +15,7 @@ from services.opentok import OpenTokClient
 
 def set_config(app: Flask):
     environment = os.environ.get("ENVIRONMENT", "")
-    config_module = "config.config.LocalConfig"
+    config_module = "config.config."
     match environment.lower():
         case "test":
             config_module = f"{config_module}TestConfig"
