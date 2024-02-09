@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from http.client import (
     CREATED,
     INTERNAL_SERVER_ERROR,
@@ -10,6 +8,7 @@ from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
+from inject import autoparams
 from models.appointments.appointment import Appointment, AppointmentStatus, VideoType
 from models.appointments.vonage_session import VonageSession
 from models.appointments.zoom_meeting import ZoomMeeting
@@ -19,13 +18,13 @@ from repositories.user import get_user_by_provider_id
 from repositories.utils import commit_entity
 from requests.exceptions import HTTPError
 from schemas.appointment import AppointmentCreateSchema
-from services import opentokClient
+from services.opentok import OpenTokClient
 from services.zoom import create_zoom_meeting_with_provider
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
 from zoneinfo import ZoneInfo
 
-from api.constants import DATETIME_FORMAT, V1_API_PREFIX
+from api.constants import V1_API_PREFIX
 from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 appointments_endpoints = Blueprint(
@@ -71,7 +70,8 @@ class AppointmentListView(MethodView):
         return generate_paginated_dict(results)
 
     @jwt_authenticated
-    def post(self):
+    @autoparams()
+    def post(self, opentok_client: OpenTokClient):
         user = get_user_from_request(request)
         video_type_arg = request.args.get("video_type")
         if video_type_arg is None:
@@ -88,16 +88,10 @@ class AppointmentListView(MethodView):
         timezone = ZoneInfo(data.get("timezone", "US/Mountain"))
 
         start_time = (
-            data["start_time"]
-            .replace(tzinfo=timezone)
-            .astimezone(ZoneInfo("UTC"))
+            data["start_time"].replace(tzinfo=timezone).astimezone(ZoneInfo("UTC"))
         )
 
-        end_time = (
-            data["end_time"]
-            .replace(tzinfo=timezone)
-            .astimezone(ZoneInfo("UTC"))
-        )
+        end_time = data["end_time"].replace(tzinfo=timezone).astimezone(ZoneInfo("UTC"))
 
         appointment = Appointment(
             patient_id=user.patient_profile.id,
@@ -128,7 +122,7 @@ class AppointmentListView(MethodView):
 
         if video_type == VideoType.VONAGE:
             try:
-                session = opentokClient.create_session()
+                session = opentok_client.create_session()
                 appointment.vonage_session = VonageSession(
                     session_id=session.session_id
                 )
