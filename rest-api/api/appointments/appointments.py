@@ -65,7 +65,10 @@ class AppointmentListView(MethodView):
         else:
             query = self.get_current_user_appointments_query(user)
 
-        appts = query.all()
+        if query is None:
+            return generate_paginated_dict([])
+
+        appts = query.order_by(Appointment.start_time).all()
         results = [appointment.to_legacy_json() for appointment in appts]
         return generate_paginated_dict(results)
 
