@@ -1,4 +1,5 @@
 import imghdr
+import io
 from base64 import b64encode
 from http.client import (
     CREATED,
@@ -55,14 +56,17 @@ def upload_image():
             app.logger.error(message)
             abort(400, message)
 
-    image_bytes = uploaded_file.read()
-    image_data = b64encode(image_bytes)
+    file_data = uploaded_file.read()
 
-    return {
-        "url": cloudStorageService.upload_image(
-            filename, image_data, uploaded_file.content_type
-        )
-    }, CREATED
+    value_as_a_stream = io.BytesIO(file_data)  # io.BytesIO
+    uploaded_file_url = cloudStorageService.upload_file(
+        filename,
+        value_as_a_stream,
+        len(file_data),
+        file_type=uploaded_file.mimetype,
+    )
+
+    return {"url": uploaded_file_url}, CREATED
 
 
 @jwt_authenticated
