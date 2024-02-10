@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html>
 <html lang="en">
 
 <head>
-    <title>Athelo Admin Login</title>
+    <title>Athelo Admin</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first-->
@@ -32,7 +31,7 @@
     <nav class="navbar navbar-dark darkPurple fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Athelo Admin</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+            <button class=" navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -69,47 +68,23 @@
          Your app may use that space for branding, controls and other customizations.-->
 
     <main class="container">
-        <div class="container themed-container text-center p-5">
-            <h6 id="message"> </h6>
-            <button class="btn btn-secondary" id="googleSignInButton">Sign In with
-                Google</button>
+        <div class="bg-body-tertiary p-5 rounded">
+            <h1>Video Appointments</h1>
+            <p class="lead">Access your upcoming appointments and join video calls.</p>
+            <a class="btn btn-lg btn-primary" href="/video" role="button">Video Appointments »</a>
         </div>
-
-        <div class="container themed-container text-center p-5" id="passwordAuthContainer">
-
-            <form id="passwordAuthForm">
-                <div class="mb-3">
-                    <label for="inputEmail" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="inputEmail">
-                </div>
-                <div class="mb-3">
-                    <label for="inputPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="inputPassword">
-                </div>
-                <button type="submit" class="btn btn-primary" onclick="passwordSignIn">Submit</button>
-            </form>
-
-
-
-
-
+        <div class="bg-body-tertiary p-5 rounded">
+            <h1>Test Image Upload</h1>
+            <p class="lead">Upload jpg or png fields to google cloud storage.</p>
+            <a class="btn btn-lg btn-primary" href="/images" role="button">Upload images »</a>
+        </div>
+        <div class="bg-body-tertiary p-5 rounded">
+            <h1>Dev Tools</h1>
+            <p class="lead">Get a JWT for postman and test public or private endpoints. </p>
+            <a class="btn btn-lg btn-primary" href="/dev" role="button">Dev Tools »</a>
         </div>
 
     </main>
-
-
-    <script>
-        window.onload = function () {
-            initApp();
-        };
-        document.getElementById('googleSignInButton').addEventListener("click", toggle)
-        var form = document.getElementById('passwordAuthForm');
-        if (form.attachEvent) {
-            form.attachEvent("submit", passwordSignIn);
-        } else {
-            form.addEventListener("submit", passwordSignIn);
-        }
-    </script>
 </body>
 
 </html>

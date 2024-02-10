@@ -1,61 +1,21 @@
-firebase.initializeApp(config);
-let token = null;
-let curr_user = null;
 function initApp() {
-  firebase.auth().onAuthStateChanged(async (user) => {
+  firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      document.getElementById("message").innerHTML = "Welcome, " + user.email;
-      document.getElementById('signInButton').innerText = 'Sign Out';
-      curr_user = user
-      await getToken()
-    }
-    else {
-      document.getElementById("message").innerHTML = "No user signed in.";
-      document.getElementById('signInButton').innerText = 'Sign In with Google';
-      google_token = ''
-      curr_user = null
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/v8/firebase.User
+      var uid = user.uid;
+
+      // ...
+    } else {
+      // User is signed out
+      // ...
     }
   });
+
 }
 window.onload = function () {
   initApp();
 };
-
-function signIn() {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.addScope('https://www.googleapis.com/auth/userinfo.email');
-  firebase
-    .auth()
-    .signInWithPopup(provider)
-    .then(result => {
-      // Returns the signed in user along with the provider's credential
-      console.log(`${result.user.displayName} logged in.`);
-      window.alert(`Welcome ${result.user.displayName}!`);
-    })
-    .catch(err => {
-      console.log(`Error during sign in: ${err.message}`);
-      window.alert(`Sign in failed. Retry or check your browser logs.`);
-    });
-}
-
-function signOut() {
-  firebase
-    .auth()
-    .signOut()
-    .catch(err => {
-      console.log(`Error during sign out: ${err.message}`);
-      window.alert(`Sign out failed. Retry or check your browser logs.`);
-    });
-}
-
-// Toggle Sign in/out button
-function toggle() {
-  if (!firebase.auth().currentUser) {
-    signIn();
-  } else {
-    signOut();
-  }
-}
 
 async function uploadImageJson() {
   let req_headers = {}

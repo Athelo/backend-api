@@ -1,20 +1,20 @@
-firebase.initializeApp(config);
-
-let token = null;
-let curr_user = null;
+let google_token = null
 function initApp() {
+    firebase.initializeApp(config);
     firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
             document.getElementById("message").innerHTML = "Welcome, " + user.email;
             document.getElementById('googleSignInButton').innerText = 'Sign Out';
             document.getElementById('passwordAuthContainer').hidden = true
-            curr_user = user
+            document.getElementById('authButton').innerText = 'Sign Out';
+            await getToken()
+            setSessionData()
         }
         else {
             document.getElementById("message").innerHTML = "";
             document.getElementById('googleSignInButton').innerText = 'Sign In with Google';
             document.getElementById('passwordAuthContainer').hidden = false
-            google_token = ''
+            document.getElementById('authButton').innerText = 'Sign In';
         }
     });
 }
@@ -31,8 +31,6 @@ function signIn() {
         .then(result => {
             // Returns the signed in user along with the provider's credential
             console.log(`${result.user.displayName} logged in.`);
-            window.alert(`Welcome ${result.user.displayName}!`);
-            window.location = "/dev"
         })
         .catch(err => {
             console.log(`Error during sign in: ${err.message}`);
@@ -60,8 +58,9 @@ function toggle() {
 }
 
 function passwordSignIn() {
-    email = document.getElementById('email').value
-    password = document.getElementById('pass').value
+    console.log("sign in")
+    email = document.getElementById('inputEmail').value
+    password = document.getElementById('inputPassword').value
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((result) => {
             console.log(`${result.user.displayName} logged in.`);
@@ -74,3 +73,34 @@ function passwordSignIn() {
         });
 
 }
+async function setSessionData() {
+    let req_headers = {}
+    if (google_token !== null) {
+        req_headers = {
+            'Authorization': `Bearer ${google_token}`,
+        }
+    }
+    try {
+        await fetch("/login", {
+            credentials: 'include',
+            method: 'POST',
+            headers: req_headers,
+        }).then(async (response) => {
+            if (!response.ok) {
+                let text = await response.text();
+                window.alert(`${response.status}: ${response.statusText}\n${text}`)
+            }
+        });
+
+    } catch (err) {
+        window.alert(`Something went wrong... Please try again!\n${err}`);
+    }
+}
+
+
+async function getToken() {
+    google_token = await firebase.auth().currentUser.getIdToken().catch((error) => {
+        document.getElementById('tokenDisplay').textContent = error.message
+    })
+}
+
