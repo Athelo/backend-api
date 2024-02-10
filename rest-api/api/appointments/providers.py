@@ -36,6 +36,8 @@ def get_provider_availability(provider_profile_id: int):
 
     start_time = datetime.strptime(date, "%m/%d/%Y")
     end_time = start_time + timedelta(days=1)
+    # To account for windows that end on the following day, allow for end time to end at noon
+    end_time.replace(hour=12, minute=00, second=00)
 
     availabilities = (
         db.session.query(ProviderAvailability)
