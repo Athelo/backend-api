@@ -27,6 +27,7 @@
 </head>
 
 <body>
+
     <nav class="teal darken-3">
         <div class="nav-wrapper container">
             <a class="brand-logo" href="/login">ATHELO ADMIN</a>
@@ -34,6 +35,8 @@
                 <li class="active"><a href="/video">Video Appointments</a></li>
                 <li><a href="/images">Image Upload</a></li>
                 <li><a href="/dev">Dev Tools</a></li>
+                <li><a href=" /login">Login/Logout</a></li>
+
             </ul>
         </div>
     </nav>
@@ -83,6 +86,7 @@
     </div>
 
     <script>
+
         document.getElementById('signInButton').addEventListener("click", toggle)
         document.getElementById('appointmentList').onchange = updateAppointmentDisplay
         document.getElementById('connectButton').onclick = joinOpentokSession
