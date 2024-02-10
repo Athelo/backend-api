@@ -4,10 +4,8 @@ from http.client import REQUEST_ENTITY_TOO_LARGE, UNAUTHORIZED, UNPROCESSABLE_EN
 
 from auth.exceptions import UnauthorizedException
 from flask import abort
-
-from sqlalchemy.exc import DatabaseError, IntegrityError
 from flask import current_app as app
-
+from sqlalchemy.exc import DatabaseError, IntegrityError
 
 from api.appointments import appointment_blueprints
 from api.common import common_endpoints
@@ -24,6 +22,7 @@ from api.user_feeling import user_feeling_endpoints
 from api.user_feelings_and_symptoms import user_feeling_and_symptom_endpoints
 from api.user_profile import user_profile_endpoints
 from api.user_symptom import user_symptom_endpoints
+from api.webapp import webapp_endpoints
 
 blueprints = (
     [
@@ -40,6 +39,7 @@ blueprints = (
         user_profile_endpoints,
         user_symptom_endpoints,
         image_endpoints,
+        webapp_endpoints,
     ]
     + appointment_blueprints
     + messaging_blueprints
