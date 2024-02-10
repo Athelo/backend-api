@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from api.constants import V1_API_PREFIX
 from models.admin_profile import AdminProfile
+from models.appointments.appointment import AppointmentStatus
 from tests.functional.conftest import (
     admin_user_email,
     patient_user2_email,
@@ -261,6 +262,7 @@ class TestDeleteAppointmentDetail:
 
         assert response.status_code == 204
         assert response.text == ""
+        assert appointment.status == AppointmentStatus.CANCELLED
 
     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
     @patch(
@@ -285,6 +287,7 @@ class TestDeleteAppointmentDetail:
 
         assert response.status_code == 204
         assert response.text == ""
+        assert appointment.status == AppointmentStatus.CANCELLED
 
     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
     @patch(
@@ -313,6 +316,7 @@ class TestDeleteAppointmentDetail:
 
         assert response.status_code == 204
         assert response.text == ""
+        assert appointment.status == AppointmentStatus.CANCELLED
 
     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
     @patch(
@@ -341,6 +345,7 @@ class TestDeleteAppointmentDetail:
 
         assert response.status_code == 204
         assert response.text == ""
+        assert appointment.status == AppointmentStatus.CANCELLED
 
     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
     @patch(
@@ -366,6 +371,7 @@ class TestDeleteAppointmentDetail:
 
         assert response.status_code == 204
         assert response.text == ""
+        assert appointment.status == AppointmentStatus.CANCELLED
 
     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
     @patch(
@@ -394,6 +400,7 @@ class TestDeleteAppointmentDetail:
             "Appointment does not exist or the user does not have permissions to delete it"
             in response.text
         )
+        assert appointment.status == AppointmentStatus.BOOKED
 
     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
     @patch(
@@ -422,6 +429,7 @@ class TestDeleteAppointmentDetail:
             "Appointment does not exist or the user does not have permissions to delete it"
             in response.text
         )
+        assert appointment.status == AppointmentStatus.BOOKED
 
 
 class TestGetAppointmentVonageDetail:
