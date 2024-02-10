@@ -17,7 +17,7 @@ from repositories.user import get_user_by_provider_id
 from repositories.utils import commit_entity
 from requests.exceptions import HTTPError
 from schemas.appointment import AppointmentCreateSchema
-from services.opentok import OpenTokClient
+from services import opentokClient
 from services.zoom import create_zoom_meeting_with_provider
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
@@ -109,8 +109,7 @@ class AppointmentListView(MethodView):
 
         if video_type == VideoType.VONAGE:
             try:
-                client = OpenTokClient.instance()
-                session = client.create_session()
+                session = opentokClient.create_session()
                 appointment.vonage_session = VonageSession(
                     session_id=session.session_id
                 )
