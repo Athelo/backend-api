@@ -8,12 +8,15 @@ function initApp() {
             document.getElementById("message").innerHTML = "Welcome, " + user.email;
             document.getElementById('googleSignInButton').innerText = 'Sign Out';
             document.getElementById('passwordAuthContainer').hidden = true
+            document.getElementById('nav-mobile').hidden = false
             curr_user = user
         }
         else {
             document.getElementById("message").innerHTML = "";
             document.getElementById('googleSignInButton').innerText = 'Sign In with Google';
             document.getElementById('passwordAuthContainer').hidden = false
+            document.getElementById('nav-mobile').hidden = true
+
             google_token = ''
         }
     });
@@ -68,7 +71,7 @@ function passwordSignIn() {
             window.alert(`Welcome ${result.user.displayName}!`);
             window.location = "/dev"
         })
-        .catch((error) => {
+        .catch((err) => {
             console.log(`Error during sign in: ${err.message}`);
             window.alert(`Sign in failed. Retry or check your browser logs.`);
         });
