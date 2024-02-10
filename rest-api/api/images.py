@@ -1,4 +1,5 @@
 import imghdr
+from base64 import b64encode
 from http.client import (
     CREATED,
 )
@@ -55,9 +56,11 @@ def upload_image():
             abort(400, message)
 
     image_bytes = uploaded_file.read()
+    image_data = b64encode(image_bytes)
+
     return {
         "url": cloudStorageService.upload_image(
-            filename, image_bytes, uploaded_file.content_type
+            filename, image_data, uploaded_file.content_type
         )
     }, CREATED
 
