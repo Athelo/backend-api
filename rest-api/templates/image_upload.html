@@ -8,8 +8,8 @@
 
 {% block main %}
 <div class="container themed-container text-center p-5">
-    <input type="file" class="form-control" id="fileInput" name="filename">
-    <button class="btn btn-primary" id="uploadJsonButton">Upload file as Json</button>
+    <input type="file" class="form-control" id="fileInput" name="filename" required="true">
+    <button class="btn btn-primary" type="submit" id="uploadJsonButton">Upload file as Json</button>
 </div>
 
 <div class="container themed-container text-center p-5">
@@ -18,15 +18,9 @@
         <p><button class="btn btn-primary" type="submit"> Submit as Form Data</button></p>
     </form>
 </div>
-
-
-{% endblock %}
-
-{% block javascript %}
-{{ super() }}
 <script>
-
     document.getElementById('uploadJsonButton').onclick = uploadImageJson
-
 </script>
+
+
 {% endblock %}

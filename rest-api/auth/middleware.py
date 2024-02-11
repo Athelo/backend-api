@@ -59,8 +59,9 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print(f'checking login for session: {request.url} {session["user"]}')
-        if session["user"] is None:
+        user = session.get("user")
+        print(f"checking login for session: {request.url} {user}")
+        if user is None:
             return redirect(url_for("Webapp.render_login"))
         return f(*args, **kwargs)
 

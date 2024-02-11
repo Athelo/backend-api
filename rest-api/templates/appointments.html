@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{%block head %}
+{{ super() }}
+
+<title>Athelo Admin</title>
+<script src="../static/js/appointment.js"></script>
+
+<script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+<script type="text/javascript">
+    var apiKey = '{{ api_key }}';
+</script>
+{# <link href="../static/appointment.css" rel="stylesheet" type="text/css"> #}
+{% endblock %}
+
+
+{% block main %}
+<div class="d-grid gap-2">
+
+    <div class="container themed-container text-center p-5">
+        <select id='appointmentList' class="form-select" name="appointmentList">
+            <option value=" none">Select an Appointment</option>
+        </select>
+        <p id="appointmentDisplay" style="white-space: pre-line;">No appointment selected</p>
+        <button id="connectButton" class="btn btn-primary" disabled="true">Connect to Session</button>
+    </div>
+    <div id="videos" class="container themed-container text-center p-5">
+        <div class="row" id="videoRow" style="height: 50vh;">
+            <div class="col">
+                <div id="subscriber"></div>
+            </div>
+            <div class="col">
+                <div id="publisher"></div>
+            </div>
+        </div>
+        <div class="row flex-grow-1">
+            <button id="disconnectButton" class="btn btn-primary" disabled="true">Leave
+                    Session</button>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{%block pageSetupAsync%}
+<script>
+    async function pageSetupAsync(user){
+        await getAppointments()
+    }
+</script>
+<script>
+console.log("setting on change/on click")
+    document.getElementById('appointmentList').onchange = updateAppointmentDisplay
+    document.getElementById('connectButton').onclick = joinOpentokSession
+    document.getElementById('disconnectButton').onclick = leaveOpentokSession
+</script>
+{%endblock%}
+
+
+
+

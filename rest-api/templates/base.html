@@ -58,7 +58,7 @@
                     </ul>
 
                     <div class="d-grid gap-2 p-5">
-                        <button class="btn btn-secondary" id="authButton" onclick="authButtonClick"></button>
+                        <button class="btn btn-secondary" id="authButton"></button>
                     </div>
 
                 </div>
@@ -73,34 +73,108 @@
         {% endblock %}
 
     </main>
-    {% block javascript %}
+   
+    <!-- The contents of myscript.js will be loaded inside the script tag -->
+
+    {%block getToken%}
     <script>
+    async function getToken() {
+        google_token = await firebase.auth().currentUser.getIdToken().catch((error) => {
+            window.alert = error.message
+        })
+    }
+    </script>
+    {% endblock%}
+
+
+    {% block pageSetupAsync %}
+    <script>
+        async function pageSetupAsync(user){
+            return
+        }
+    </script>
+    {% endblock %}
+    {% block pageSetup %}
+    <script>
+        function pageSetup(user){
+            return
+        }
+    </script>
+    {% endblock %}
+    {% block noAuthPageSetup %}
+    <script>
+        async function noAuthPageSetupAsync(){
+            return
+        }
+    </script>
+    {% endblock %}
+    
+    {% block noAuthPageSetupAsync %}
+    <script>
+        function noAuthPageSetupAsync(){
+            return
+        }
+    </script>
+    {% endblock %}
+
+     <script>
+        let curr_user = null
+     
         function initApp() {
+            console.log('init app')
             firebase.initializeApp(config);
             firebase.auth().onAuthStateChanged(async (user) => {
-                if (user) {
-                    // User is signed in, see docs for a list of available properties
-                    // https://firebase.google.com/docs/reference/js/v8/firebase.User
-                    var uid = user.uid;
-                    curr_user = user
-                    document.getElementById('authButton').innerText = 'Sign Out';
-                    await getToken()
-                } else {
-                    window.location = "login"
-
+                try{
+                    if (user) {
+                        // User is signed in, see docs for a list of available properties
+                        // https://firebase.google.com/docs/reference/js/v8/firebase.User
+                        var uid = user.uid;
+                        curr_user = user
+                        document.getElementById('authButton').innerText = 'Sign Out';
+                        await getToken()
+                        await pageSetupAsync(user)
+                        pageSetup(user)
+                    } else {
+                        await noAuthPageSetupAsync()
+                        noAuthPageSetup()
+                        if (window.location.pathname != "/login"){
+                            window.location = "login"
+                        }
+                            
+                    }
+                } catch (error){
+                    console.log(`Error during auth change event: ${error.message}`);
+                    window.alert(`Sign out failed. Retry or check your browser logs.`);
                 }
-            });
+                
+            });;
 
         }
 
-        window.onload = function () {
+        window.onload = function() {
             initApp();
         };
 
+        
+        function authButtonClick() {
+            if (curr_user != null) {
+                firebase
+                    .auth()
+                    .signOut()
+                    .catch(err => {
+                        console.log(`Error during sign out: ${err.message}`);
+                        window.alert(`Sign out failed. Retry or check your browser logs.`);
+                    });
+
+            }
+            window.location = window.location.origin + "/login"
+        }
+
+        document.getElementById('authButton').onclick = authButtonClick
+
+
 
     </script>
-    <!-- The contents of myscript.js will be loaded inside the script tag -->
-    {% endblock %}
 
 </body>
 

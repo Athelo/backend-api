@@ -20,20 +20,7 @@ window.onload = function () {
     initApp();
 };
 
-async function getToken() {
-    if (curr_user == null) {
-        window.alert("Please sign in to get a token.")
-    }
-    google_token = await firebase.auth().currentUser.getIdToken().catch((error) => {
-        document.getElementById('tokenDisplay').textContent = error.message
-    })
-    if (google_token) {
-        document.getElementById('tokenDisplay').textContent = `${google_token}`
-    } else {
-        document.getElementById('tokenDisplay').textContent = 'Unable to get token'
-    }
 
-}
 
 async function getPublicEndpoint() {
     await performGetAndUpdateElements('publicEndpointMessage', '/public/')

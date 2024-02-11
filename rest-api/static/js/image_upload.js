@@ -1,22 +1,3 @@
-function initApp() {
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/v8/firebase.User
-      var uid = user.uid;
-
-      // ...
-    } else {
-      // User is signed out
-      // ...
-    }
-  });
-
-}
-window.onload = function () {
-  initApp();
-};
-
 async function uploadImageJson() {
   let req_headers = {}
   if (google_token !== null) {
@@ -55,20 +36,15 @@ async function uploadImageJson() {
     }
   })
 
+  if (selectedFile == null) {
+    window.alert("Please select a file")
+    return
+  }
+
   reader.readAsDataURL(selectedFile)
 
-
 }
 
-
-async function getToken() {
-  if (curr_user == null) {
-    window.alert("Please sign in to get a token.")
-  }
-  google_token = await firebase.auth().currentUser.getIdToken().catch((error) => {
-    window.alert(error.message)
-  })
-}
 
 
 

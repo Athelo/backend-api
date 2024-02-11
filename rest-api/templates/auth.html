@@ -1,115 +1,74 @@
-<!DOCTYPE html>
-<html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <title>Athelo Admin Login</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first-->
-    <script src="https://www.gstatic.com/firebasejs/7.18/firebase-app.js"></script>
-    <!-- Add Firebase Auth service-->
-    <script src="https://www.gstatic.com/firebasejs/7.18/firebase-auth.js"></script>
-    <script src="../static/js/config.js"></script>
-    <link href="../static/css/colors.css" rel="stylesheet">
-    <link href="../static/css/nav.css" rel="stylesheet">
-    <script src="../static/js/firebase_auth.js"></script>
-    <link rel="icon"
-        href="https://images.squarespace-cdn.com/content/v1/6001010b0b53fb47a674a59b/1613272769404-PLOO64FFEVEB0Y5MN1ZN/favicon.ico?format=100w">
+{%block head %}
+{{ super() }}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-</head>
+<title>Athelo Admin</title>
+<script src="../static/js/firebase_auth.js"></script>
+{% endblock %}
 
-<body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-        </script>
+{% block main %}
+<div class="container themed-container text-center p-5">
+    <h6 id="message"> </h6>
+    <button class="btn btn-primary" id="googleSignInButton">Sign In with
+        Google</button>
+</div>
 
-    <!-- <nav class="navbar bg-body-tertiary"> -->
+<div class="container themed-container text-center p-5" id="passwordAuthContainer">
 
-
-    <nav class="navbar navbar-dark darkPurple fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Athelo Admin</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end text-bg-dark darkPurple" tabindex="-1" id="offcanvasDarkNavbar"
-                aria-labelledby="offcanvasDarkNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Athelo Admin</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link " aria-current="page" href="/video">Video Appointments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " aria-current="page" href="/images">Image Upload</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " aria-current="page" href="/dev">Dev Tools</a>
-                        </li>
-                    </ul>
-
-                    <div class="d-grid gap-2 p-5">
-                        <button class="btn btn-secondary" id="authButton" onclick="authButtonClick"></button>
-                    </div>
-
-                </div>
-            </div>
+    <div id="passwordAuthForm">
+        <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="inputEmail" required="true">
         </div>
-    </nav>
-    <!-- The surrounding HTML is left untouched by FirebaseUI.
-         Your app may use that space for branding, controls and other customizations.-->
-
-    <main class="container">
-        <div class="container themed-container text-center p-5">
-            <h6 id="message"> </h6>
-            <button class="btn btn-secondary" id="googleSignInButton">Sign In with
-                Google</button>
+        <div class="mb-3">
+            <label for="inputPassword" class="form-label" >Password</label>
+            <input type="password" class="form-control" id="inputPassword" required="true">
         </div>
+        <button type="submit" class="btn btn-primary" id='passwordAuthSubmitButton'>Submit</button>
+    </div>
+</div>
 
-        <div class="container themed-container text-center p-5" id="passwordAuthContainer">
+{%endblock%}
 
-            <form id="passwordAuthForm">
-                <div class="mb-3">
-                    <label for="inputEmail" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="inputEmail">
-                </div>
-                <div class="mb-3">
-                    <label for="inputPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="inputPassword">
-                </div>
-                <button type="submit" class="btn btn-primary" onclick="passwordSignIn">Submit</button>
-            </form>
-
-
-
-
-
-        </div>
-
-    </main>
-
-
+{% block pageSetupAsync %}
     <script>
-        window.onload = function () {
-            initApp();
-        };
-        document.getElementById('googleSignInButton').addEventListener("click", toggle)
-        var form = document.getElementById('passwordAuthForm');
-        if (form.attachEvent) {
-            form.attachEvent("submit", passwordSignIn);
-        } else {
-            form.addEventListener("submit", passwordSignIn);
+        async function pageSetupAsync(user){
+            document.getElementById("message").innerHTML = "Welcome, " + user.email;
+            document.getElementById('googleSignInButton').innerText = 'Sign Out';
+            document.getElementById('passwordAuthContainer').hidden = true  
+            setSessionData()
         }
     </script>
-</body>
+    {% endblock %}
 
-</html>
+    {% block noAuthPageSetup %}
+    <script>
+        function noAuthPageSetup(){
+            document.getElementById("message").innerHTML = "";
+            document.getElementById('googleSignInButton').innerText = 'Sign In with Google';
+            document.getElementById('passwordAuthContainer').hidden = false
+            document.getElementById('authButton').innerText = 'Sign In';
+        }
+    </script>
+    {%endblock%}
+    
+    {% block noAuthPageSetupAsync %}
+    <script>
+        async function noAuthPageSetupAsync(){
+            await clearSessionData()
+        }
+    </script>
+    <script>
+        document.getElementById('googleSignInButton').addEventListener("click", toggle)
+        var form = document.getElementById('passwordAuthForm');
+        document.getElementById('passwordAuthSubmitButton').onclick = passwordSignIn
+        {# if (form.attachEvent) {
+            console.log("attaching event")
+            form.attachEvent("submit", passwordSignIn);
+        } else {
+            console.log("attaching event listener")
+            form.addEventListener("submit", passwordSignIn);
+        } #}
+    </script>
+    {% endblock %}

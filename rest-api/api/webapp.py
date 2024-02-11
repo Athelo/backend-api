@@ -46,6 +46,7 @@ def render_dev() -> str:
 @webapp_endpoints.route("/", methods=["GET"])
 @login_required
 def render_index():
+    print("index function")
     return render_template("index.html")
 
 
@@ -62,7 +63,7 @@ def zoom_homepage():
 @login_required
 def opentok():
     key = app.config.get("VONAGE_API_KEY")
-    return render_template("opentok.html", api_key=key)
+    return render_template("appointments.html", api_key=key)
 
 
 @webapp_endpoints.route("/images/")
@@ -80,9 +81,14 @@ def render_login(next=None):
 @webapp_endpoints.route("/login", methods=["POST"])
 @jwt_authenticated
 def set_session_from_token():
-    print("setting info")
     user = get_user_from_request(request)
-    print(user)
     session["user"] = user.email
-    print(session["user"])
     return redirect(url_for("Webapp.render_dev"))
+
+
+@webapp_endpoints.route("/logout", methods=["POST"])
+def clear_session():
+    print("clearing session")
+    if session.get("user"):
+        session.pop("user")
+    return redirect(url_for("Webapp.render_login"))
