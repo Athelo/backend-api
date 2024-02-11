@@ -134,11 +134,13 @@
                         await getToken()
                         await pageSetupAsync(user)
                         pageSetup(user)
+                       
+
                     } else {
                         await noAuthPageSetupAsync()
                         noAuthPageSetup()
                         if (window.location.pathname != "/login"){
-                            window.location = "login"
+                            window.location = window.location.origin + "/login"
                         }
                             
                     }

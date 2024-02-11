@@ -6,9 +6,12 @@ function signIn() {
     firebase
         .auth()
         .signInWithPopup(provider)
-        .then(result => {
+        .then(async result => {
             // Returns the signed in user along with the provider's credential
             console.log(`${result.user.displayName} logged in.`);
+            await setSessionData()
+            window.location = window.location.origin
+
         })
         .catch(err => {
             console.log(`Error during Google sign in: ${err.message}`);
@@ -45,9 +48,10 @@ function passwordSignIn() {
     console.log(firebase)
 
     firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((result) => {
+        .then(async (result) => {
             console.log(`${result.user.displayName} logged in.`);
-            window.alert(`Welcome ${result.user.displayName}!`);
+            await setSessionData()
+            window.location = window.location.origin
         })
         .catch((error) => {
             console.log(`Error during email/password sign in: ${error.message}`);
@@ -68,6 +72,7 @@ async function setSessionData() {
             credentials: 'include',
             method: 'POST',
             headers: req_headers,
+            redirect: 'follow'
         }).then(async (response) => {
             if (!response.ok) {
                 let text = await response.text();

@@ -28,7 +28,14 @@ async function getAppointments() {
                     appointments[items[i]["id"]] = items[i]
                 }
             } else {
-                window.alert('Something went wrong... Please try again!');
+                message = await response.text()
+                if (response.status == 404) {
+                    window.alert(`Got result NOT_FOUND when fetching appointments. Is this user properly set up? (${message})`);
+                } else {
+                    window.alert('Something went wrong... Please try again!');
+                }
+                console.log(`Error fetching appointments: ${message}`)
+
             }
         });
 

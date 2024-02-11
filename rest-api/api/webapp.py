@@ -1,5 +1,4 @@
 from auth.middleware import jwt_authenticated, login_required
-from auth.utils import get_user_from_request
 from flask import (
     Blueprint,
     g,
@@ -81,8 +80,7 @@ def render_login(next=None):
 @webapp_endpoints.route("/login", methods=["POST"])
 @jwt_authenticated
 def set_session_from_token():
-    user = get_user_from_request(request)
-    session["user"] = user.email
+    session["user"] = request.email
     return redirect(url_for("Webapp.render_dev"))
 
 
