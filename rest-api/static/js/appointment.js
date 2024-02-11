@@ -47,7 +47,6 @@ async function getAppointments() {
 
 
 function updateAppointmentDisplay() {
-    console.log("updating appt display")
     appointmentSelect = document.getElementById('appointmentList')
     appointmentDisplay = document.getElementById('appointmentDisplay')
     connectButton = document.getElementById('connectButton').disabled = false

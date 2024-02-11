@@ -1,32 +1,10 @@
-function initApp() {
-    firebase.initializeApp(config);
-    firebase.auth().onAuthStateChanged(async (user) => {
-        if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/v8/firebase.User
-            var uid = user.uid;
-            curr_user = user
-            document.getElementById('authButton').innerText = 'Sign Out';
-            await getToken()
-            // ...
-        } else {
-            window.location = "login"
-            document.getElementById('authButton').innerText = 'Sign In';
-        }
-    });
-
-}
-window.onload = function () {
-    initApp();
-};
-
-
-
 async function getPublicEndpoint() {
+    console.log('Testing public endpoint')
     await performGetAndUpdateElements('publicEndpointMessage', '/public/')
 }
 
 async function getProtectedEndpoint() {
+    console.log('Testing public endpoint')
     await performGetAndUpdateElements('protectedEndpointMessage', '/protected/')
 }
 

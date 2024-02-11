@@ -27,6 +27,7 @@ function signOut() {
             console.log(`Error during sign out: ${err.message}`);
             window.alert(`Sign out failed. Retry or check your browser logs.`);
         });
+    clearSessionData()
 
 }
 
@@ -40,12 +41,8 @@ function toggle() {
 }
 
 function passwordSignIn() {
-    console.log("sign in")
     email = document.getElementById('inputEmail').value
     password = document.getElementById('inputPassword').value
-    console.log(email)
-    console.log(password)
-    console.log(firebase)
 
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then(async (result) => {
@@ -61,12 +58,16 @@ function passwordSignIn() {
 
 }
 async function setSessionData() {
+    await getToken()
     let req_headers = {}
     if (google_token !== null) {
         req_headers = {
             'Authorization': `Bearer ${google_token}`,
         }
+    } else {
+        console.log("Error during configuring session data: no google token")
     }
+
     try {
         await fetch("/login", {
             credentials: 'include',

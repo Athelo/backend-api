@@ -32,18 +32,17 @@
     </div>
 </div>
 
-
-{% endblock %}
-
-{% block javascript %}
-{{ super() }}
 <script>
     document.getElementById('getTokenButton').onclick = copyToken
     document.getElementById('getPublicButton').onclick = getPublicEndpoint
     document.getElementById('getProtectedButton').onclick = getProtectedEndpoint
 
 </script>
+
+
 {% endblock %}
+
+
 
 {%block getToken%}
 <script>
