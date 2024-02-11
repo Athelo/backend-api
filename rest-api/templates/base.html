@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.18/firebase-auth.js"></script>
     <script src="../static/js/config.js"></script>
     <link href="../static/css/colors.css" rel="stylesheet">
-    <link href="../static/css/nav.css" rel="stylesheet">]
+    <link href="../static/css/nav.css" rel="stylesheet">
     <script src="../static/js/nav.js"></script>
     <link rel="icon"
         href="https://images.squarespace-cdn.com/content/v1/6001010b0b53fb47a674a59b/1613272769404-PLOO64FFEVEB0Y5MN1ZN/favicon.ico?format=100w">
@@ -58,7 +58,7 @@
                     </ul>
 
                     <div class="d-grid gap-2 p-5">
-                        <button class="btn btn-secondary" id="authButton"></button>
+                        <button class="btn btn-secondary" id="authButton" data-bs-dismiss="offcanvas"></button>
                     </div>
 
                 </div>
@@ -103,7 +103,7 @@
     {% endblock %}
     {% block noAuthPageSetup %}
     <script>
-        async function noAuthPageSetupAsync(){
+        async function noAuthPageSetup(){
             return
         }
     </script>
@@ -167,7 +167,6 @@
                     });
 
             }
-            window.location = window.location.origin + "/login"
         }
 
         document.getElementById('authButton').onclick = authButtonClick
