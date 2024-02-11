@@ -37,6 +37,7 @@
             document.getElementById("message").innerHTML = "Welcome, " + user.email;
             document.getElementById('googleSignInButton').innerText = 'Sign Out';
             document.getElementById('passwordAuthContainer').hidden = true  
+            document.getElementById('navbarToggle').hidden = false
             setSessionData()
         }
     </script>
@@ -49,6 +50,7 @@
             document.getElementById('googleSignInButton').innerText = 'Sign In with Google';
             document.getElementById('passwordAuthContainer').hidden = false
             document.getElementById('authButton').innerText = 'Sign In';
+            document.getElementById('navbarToggle').hidden = true
         }
     </script>
     {%endblock%}
@@ -63,12 +65,6 @@
         document.getElementById('googleSignInButton').addEventListener("click", toggle)
         var form = document.getElementById('passwordAuthForm');
         document.getElementById('passwordAuthSubmitButton').onclick = passwordSignIn
-        {# if (form.attachEvent) {
-            console.log("attaching event")
-            form.attachEvent("submit", passwordSignIn);
-        } else {
-            console.log("attaching event listener")
-            form.addEventListener("submit", passwordSignIn);
-        } #}
+        
     </script>
     {% endblock %}
