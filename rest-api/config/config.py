@@ -28,6 +28,7 @@ class CloudConfig(Config):
     VONAGE_API_KEY = os.environ.get("VONAGE_API_KEY")
     VONAGE_API_SECRET = os.environ.get("VONAGE_API_SECRET")
     STORAGE_BUCKET = os.environ.get("STORAGE_BUCKET")
+    SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 class ProductionConfig(CloudConfig):
