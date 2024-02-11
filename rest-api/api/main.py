@@ -10,11 +10,6 @@ from api.constants import V1_API_PREFIX
 main_endpoints = Blueprint("Main", __name__)
 
 
-@main_endpoints.route("/", methods=["GET"])
-def hello_world():
-    return "Hello World! This is Athelo Health's API"
-
-
 @main_endpoints.route("/public/", methods=["GET"])
 def public():
     return f"This is Athelo Health's API, and it is {datetime.utcnow()}"

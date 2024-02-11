@@ -1,72 +1,26 @@
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <title>ATHLEO DEV TOOLS</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first-->
-    <script src="https://www.gstatic.com/firebasejs/7.18/firebase-app.js"></script>
-    <!-- Add Firebase Auth service-->
-    <script src="https://www.gstatic.com/firebasejs/7.18/firebase-auth.js"></script>
-    <!-- In local dev, comment the line below out. Required for chrome once deployed. -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
-    <script src="../static/config.js"></script>
-    <script src="../static/image_upload.js"></script>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
-</head>
+{%block head %}
+{{ super() }}
+<title>Athelo Admin</title>
+<script src="../static/js/image_upload.js"></script>
+{% endblock %}
 
-<body>
-    <nav class="teal darken-3">
-        <div class="nav-wrapper container"><a class="brand-logo center" href="#!">ATHELO DEV TOOLS</a>
-        </div>
-    </nav>
-    <div class="section">
-        <div class="center">
-            <h4 id="">
+{% block main %}
+<div class="container themed-container text-center p-5">
+    <input type="file" class="form-control" id="fileInput" name="filename" required="true">
+    <button class="btn btn-primary" type="submit" id="uploadJsonButton">Upload file as Json</button>
+</div>
 
-            </h4>
-        </div>
-        <div class="section">
-            <div class="row center">
-                <div class="col s6 m10 offset-m1">
-                    <div class="card-panel">
-                        <h6 id="message"> No user signed in. </h6>
-                        <button class="waves-effect waves-light btn" id="signInButton">Sign In with Google</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="section">
-        <div class="row center">
-            <div class="col s6 m10 offset-m1">
-                <div class="card-panel">
-                    <input type="file" id="fileInput" name="filename">
-                    <button class="waves-effect waves-light btn" id="uploadJsonButton">Upload file as Json</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="section">
-        <div class="row center">
-            <div class="col s6 m10 offset-m1">
-                <div class="card-panel">
-                    <form method="POST" action="/api/v1/common/image/" target="/" enctype="multipart/form-data">
-                        <p><input type="file" name="file" accept="image/*" required="true"></p>
-                        <p><button class="waves-effect waves-light btn" type="submit"> Submit as Form Data</button></p>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
+<div class="container themed-container text-center p-5">
+    <form method="POST" action="/api/v1/common/image/" target="/" enctype="multipart/form-data">
+        <p><input type="file" class="form-control" name="file" accept="image/*" required="true"></p>
+        <p><button class="btn btn-primary" type="submit"> Submit as Form Data</button></p>
+    </form>
+</div>
+<script>
+    document.getElementById('uploadJsonButton').onclick = uploadImageJson
+</script>
 
-        document.getElementById('signInButton').addEventListener("click", toggle)
-        document.getElementById('uploadJsonButton').onclick = uploadImageJson
 
-    </script>
-</body>
-
-</html>
+{% endblock %}

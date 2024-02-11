@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{%block head %}
+{{ super() }}
+
+<title>Athelo Admin</title>
+{% endblock %}
+
+{% block main %}
+ <div class="bg-body-tertiary p-5 rounded">
+    <h1>Video Appointments</h1>
+    <p class="lead">Access your upcoming appointments and join video calls.</p>
+    <a class="btn btn-lg btn-primary" href="/video" role="button">Video Appointments »</a>
+</div>
+<div class="bg-body-tertiary p-5 rounded">
+    <h1>Test Image Upload</h1>
+    <p class="lead">Upload jpg or png fields to google cloud storage.</p>
+    <a class="btn btn-lg btn-primary" href="/images" role="button">Upload images »</a>
+</div>
+<div class="bg-body-tertiary p-5 rounded">
+    <h1>Dev Tools</h1>
+    <p class="lead">Get a JWT for postman and test public or private endpoints. </p>
+    <a class="btn btn-lg btn-primary" href="/dev" role="button">Dev Tools »</a>
+</div>
+{%endblock%}
