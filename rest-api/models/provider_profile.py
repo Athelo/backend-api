@@ -25,11 +25,9 @@ class ProviderProfile(TimestampMixin, Base):
     appointment_buffer_sec: Mapped[int] = mapped_column(Integer())
     appointments: Mapped[List["Appointment"]] = relationship(
         back_populates="provider",
-        lazy="joined",
     )
     availability: Mapped[List["ProviderAvailability"]] = relationship(
         back_populates="provider",
-        lazy="joined",
     )
     zoom_user_id: Mapped[str] = mapped_column(nullable=True)
     zoom_refresh_token: Mapped[str] = mapped_column(nullable=True)

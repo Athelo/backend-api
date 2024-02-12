@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from http.client import (
     CREATED,
     INTERNAL_SERVER_ERROR,
@@ -26,7 +24,7 @@ from sqlalchemy.orm import Query
 from inject import autoparams
 from zoneinfo import ZoneInfo
 
-from api.constants import DATETIME_FORMAT, V1_API_PREFIX
+from api.constants import V1_API_PREFIX
 from api.utils import class_route, generate_paginated_dict, validate_json_body
 
 appointments_endpoints = Blueprint(
@@ -67,7 +65,10 @@ class AppointmentListView(MethodView):
         else:
             query = self.get_current_user_appointments_query(user)
 
-        appts = query.all()
+        if query is None:
+            return generate_paginated_dict([])
+
+        appts = query.order_by(Appointment.start_time).all()
         results = [appointment.to_legacy_json() for appointment in appts]
         return generate_paginated_dict(results)
 
@@ -90,16 +91,10 @@ class AppointmentListView(MethodView):
         timezone = ZoneInfo(data.get("timezone", "US/Mountain"))
 
         start_time = (
-            data["start_time"]
-            .replace(tzinfo=timezone)
-            .astimezone(ZoneInfo("UTC"))
+            data["start_time"].replace(tzinfo=timezone).astimezone(ZoneInfo("UTC"))
         )
 
-        end_time = (
-            data["end_time"]
-            .replace(tzinfo=timezone)
-            .astimezone(ZoneInfo("UTC"))
-        )
+        end_time = data["end_time"].replace(tzinfo=timezone).astimezone(ZoneInfo("UTC"))
 
         appointment = Appointment(
             patient_id=user.patient_profile.id,

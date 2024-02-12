@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{%block head %}
+{{ super() }}
+
+<title>Athelo Admin</title>
+<script src="../static/js/firebase_auth.js"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container themed-container text-center p-5">
+    <h6 id="message"> </h6>
+    <button class="btn btn-primary" id="googleSignInButton">Sign In with
+        Google</button>
+</div>
+
+<div class="container themed-container text-center p-5" id="passwordAuthContainer">
+
+    <div id="passwordAuthForm">
+        <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="inputEmail" required="true">
+        </div>
+        <div class="mb-3">
+            <label for="inputPassword" class="form-label" >Password</label>
+            <input type="password" class="form-control" id="inputPassword" required="true">
+        </div>
+        <button type="submit" class="btn btn-primary" id='passwordAuthSubmitButton'>Submit</button>
+    </div>
+</div>
+
+{%endblock%}
+
+{% block pageSetupAsync %}
+    <script>
+        async function pageSetupAsync(user){
+            document.getElementById("message").innerHTML = "Welcome, " + user.email;
+            document.getElementById('googleSignInButton').innerText = 'Sign Out';
+            document.getElementById('passwordAuthContainer').hidden = true  
+            document.getElementById('navbarToggle').hidden = false
+        }
+    </script>
+    {% endblock %}
+
+    {% block noAuthPageSetup %}
+    <script>
+        function noAuthPageSetup(){
+            document.getElementById("message").innerHTML = "";
+            document.getElementById('googleSignInButton').innerText = 'Sign In with Google';
+            document.getElementById('passwordAuthContainer').hidden = false
+            document.getElementById('authButton').innerText = 'Sign In';
+            document.getElementById('navbarToggle').hidden = true
+        }
+    </script>
+    {%endblock%}
+    
+    {% block noAuthPageSetupAsync %}
+    <script>
+        async function noAuthPageSetupAsync(){
+            await clearSessionData()
+        }
+    </script>
+    <script>
+        document.getElementById('googleSignInButton').addEventListener("click", toggle)
+        var form = document.getElementById('passwordAuthForm');
+        document.getElementById('passwordAuthSubmitButton').onclick = passwordSignIn
+        
+    </script>
+    {% endblock %}
