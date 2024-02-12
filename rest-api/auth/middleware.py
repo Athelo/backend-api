@@ -6,7 +6,7 @@ from typing import TypeVar
 
 import firebase_admin
 from firebase_admin import auth  # noqa: F401
-from flask import Response, request
+from flask import Response, redirect, request, session, url_for
 from flask import current_app as app
 
 a = TypeVar("a")
@@ -52,5 +52,17 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
         request.uid = decoded_token["uid"]
         request.email = decoded_token["email"]
         return func(*args, **kwargs)
+
+    return decorated_function
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = session.get("user")
+        print(f"checking login for session: {request.url} {user}")
+        if user is None:
+            return redirect(url_for("Webapp.render_login"))
+        return f(*args, **kwargs)
 
     return decorated_function

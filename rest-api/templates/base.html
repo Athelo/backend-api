@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first-->
+    <script src="https://www.gstatic.com/firebasejs/7.18/firebase-app.js"></script>
+    <!-- Add Firebase Auth service-->
+    <script src="https://www.gstatic.com/firebasejs/7.18/firebase-auth.js"></script>
+    <script src="../static/js/config.js"></script>
+    <link href="../static/css/colors.css" rel="stylesheet">
+    <link href="../static/css/nav.css" rel="stylesheet">
+    <script src="../static/js/nav.js"></script>
+    <!-- In local dev, comment the line below out. Required for chrome once deployed. -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    <link rel="icon"
+        href="https://images.squarespace-cdn.com/content/v1/6001010b0b53fb47a674a59b/1613272769404-PLOO64FFEVEB0Y5MN1ZN/favicon.ico?format=100w">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    {% endblock %}
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+        </script>
+
+    <!-- <nav class="navbar bg-body-tertiary"> -->
+
+
+    <nav class="navbar navbar-dark darkPurple fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Athelo Admin</a>
+            <button id='navbarToggle' class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end text-bg-dark darkPurple" tabindex="-1" id="offcanvasDarkNavbar"
+                aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Athelo Admin</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link " href="/video">Video Appointments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/images">Image Upload</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/dev">Dev Tools</a>
+                        </li>
+                    </ul>
+
+                    <div class="d-grid gap-2 p-5">
+                        <button class="btn btn-secondary" id="authButton" data-bs-dismiss="offcanvas"></button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- The surrounding HTML is left untouched by FirebaseUI.
+         Your app may use that space for branding, controls and other customizations.-->
+
+    <main class="container">
+        {% block main %}
+        {% endblock %}
+
+    </main>
+   
+    <!-- The contents of myscript.js will be loaded inside the script tag -->
+
+    {%block getToken%}
+    <script>
+    async function getToken() {
+        google_token = await firebase.auth().currentUser.getIdToken().catch((error) => {
+            window.alert = error.message
+        })
+    }
+    </script>
+    {% endblock%}
+
+
+    {% block pageSetupAsync %}
+    <script>
+        async function pageSetupAsync(user){
+            return
+        }
+    </script>
+    {% endblock %}
+    {% block pageSetup %}
+    <script>
+        function pageSetup(user){
+            return
+        }
+    </script>
+    {% endblock %}
+    {% block noAuthPageSetup %}
+    <script>
+        async function noAuthPageSetup(){
+            return
+        }
+    </script>
+    {% endblock %}
+    
+    {% block noAuthPageSetupAsync %}
+    <script>
+        function noAuthPageSetupAsync(){
+            return
+        }
+    </script>
+    {% endblock %}
+
+     <script>
+        let curr_user = null
+     
+        function initApp() {
+            console.log('init app')
+            firebase.initializeApp(config);
+            firebase.auth().onAuthStateChanged(async (user) => {
+                try{
+                    if (user) {
+                        // User is signed in, see docs for a list of available properties
+                        // https://firebase.google.com/docs/reference/js/v8/firebase.User
+                        var uid = user.uid;
+                        curr_user = user
+                        document.getElementById('authButton').innerText = 'Sign Out';
+                        await getToken()
+                        await pageSetupAsync(user)
+                        pageSetup(user)
+                       
+
+                    } else {
+                        await noAuthPageSetupAsync()
+                        noAuthPageSetup()
+                        if (window.location.pathname != "/login"){
+                            window.location = window.location.origin + "/login"
+                        }
+                            
+                    }
+                } catch (error){
+                    console.log(`Error during auth change event: ${error.message}`);
+                    window.alert(`Sign out failed. Retry or check your browser logs.`);
+                }
+                
+            });;
+
+        }
+
+        window.onload = function() {
+            initApp();
+        };
+
+        
+        function authButtonClick() {
+            if (curr_user != null) {
+                firebase
+                    .auth()
+                    .signOut()
+                    .catch(err => {
+                        console.log(`Error during sign out: ${err.message}`);
+                        window.alert(`Sign out failed. Retry or check your browser logs.`);
+                    });
+
+            }
+        }
+
+        document.getElementById('authButton').onclick = authButtonClick
+
+
+
+    </script>
+
+</body>
+
+</html>

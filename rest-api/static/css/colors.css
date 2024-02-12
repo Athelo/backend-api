@@ -1,0 +1,91 @@
+.black {
+    color: #181717
+}
+
+.white {
+    color: #FFFFFF
+}
+
+.background {
+    background-color: #F9F9F9
+}
+
+.lightGrey {
+    color: #FAFAFA
+}
+
+.gray {
+    color: #6D6D6D
+}
+
+.disableGray {
+    color: #EEEEEE
+}
+
+.lightGreen {
+    color: #B5DE71
+}
+
+.green {
+    color: #8FCC25
+}
+
+.pastelGreen {
+    color: #81B821
+}
+
+.lightOlivaceous {
+    color: #68951B
+}
+
+.bg-olivaceous {
+    background-color: #456212
+}
+
+.btn-olivaceous {
+    background-color: #456212
+}
+
+.lightPurple {
+    color: #988098
+}
+
+.purple {
+    color: #FFFFFF;
+    background-color: #80627F
+}
+
+.darkPurple {
+    background-color: #623E61;
+    color: #FFFFFF;
+}
+
+.lightGray {
+    color: #AFAFAF
+}
+
+/* .remSleepColor">@color/lightOlivaceous
+} */
+.lightSleepColor {
+    color: #7FC704
+}
+
+.deepSleepColor {
+    color: #DEEEC3
+}
+
+.totalSleepGradientStart {
+    color: #2B4302
+}
+
+.totalSleepGradientEnd {
+    color: #7B9157
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited {
+    background-color: #416503 !important;
+    border-color: #FFFFFF !important;
+}
