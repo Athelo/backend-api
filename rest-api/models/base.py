@@ -20,7 +20,7 @@ class Base(DeclarativeBase):
 
 
 class TimestampMixin:
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.utcnow(), onupdate=datetime.utcnow()
+        default=datetime.utcnow, onupdate=datetime.utcnow
     )
