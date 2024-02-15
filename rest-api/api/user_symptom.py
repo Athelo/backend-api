@@ -118,16 +118,20 @@ class UserSymptomDetailView(MethodView):
         result = schema.dump(symptom)
         return result, ACCEPTED
 
+    @jwt_authenticated
     def delete(self, symptom_id):
-        schema = PatientSymptomSchema()
         symptom = db.session.get(PatientSymptoms, symptom_id)
         if symptom is None:
             return {"message": f"Cannot access user symptom {symptom_id}"}, NOT_FOUND
         is_current_user_or_403(request, symptom.user_profile_id)
 
+        schema = PatientSymptomSchema()
+        json_res = schema.dump(symptom)
+
         db.session.delete(symptom)
         db.session.commit()
-        return schema.dump(symptom), ACCEPTED
+
+        return json_res, ACCEPTED
 
 
 @class_route(user_symptom_endpoints, "/user_symptoms/summary/", "my_symptoms_summary")

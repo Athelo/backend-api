@@ -1,6 +1,7 @@
 from http.client import CREATED
 
 from auth.middleware import jwt_authenticated
+from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, request
 from flask.views import MethodView
 from models.database import db
@@ -15,7 +16,6 @@ symptom_endpoints = Blueprint("Symptom", __name__, url_prefix="/api/v1/health/sy
 
 @class_route(symptom_endpoints, "/", "symptoms")
 class SyptomsView(MethodView):
-    # TODO: admin perms?
     @jwt_authenticated
     def get(self):
         symptoms = db.session.scalars(db.select(Symptom)).all()
@@ -24,8 +24,10 @@ class SyptomsView(MethodView):
 
     @jwt_authenticated
     def post(self):
+        user = get_user_from_request(request)
+        require_admin_user(user)
         schema = SymptomSchema()
-        data = validate_json_body(request.json_body(), schema)
+        data = validate_json_body(schema)
 
         symptom = Symptom(name=data["name"], description=data["description"])
         commit_entity(symptom)
