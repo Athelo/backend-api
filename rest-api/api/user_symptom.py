@@ -118,18 +118,12 @@ class UserSymptomDetailView(MethodView):
         result = schema.dump(symptom)
         return result, ACCEPTED
 
-    def delete(self, user_profile_id, symptom_id):
+    def delete(self, symptom_id):
         schema = PatientSymptomSchema()
         symptom = db.session.get(PatientSymptoms, symptom_id)
         if symptom is None:
-            return {
-                "message": f"User Symptom {user_profile_id} does not exist."
-            }, NOT_FOUND
-
-        if symptom.user_profile_id != user_profile_id:
-            return {
-                "message": f"User symptom {symptom_id} does not belong to User {user_profile_id}"
-            }, UNPROCESSABLE_ENTITY
+            return {"message": f"Cannot access user symptom {symptom_id}"}, NOT_FOUND
+        is_current_user_or_403(request, symptom.user_profile_id)
 
         db.session.delete(symptom)
         db.session.commit()
