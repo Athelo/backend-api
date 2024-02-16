@@ -9,9 +9,16 @@ from models.symptom import Symptom
 from repositories.utils import commit_entity
 from schemas.symptom import SymptomSchema
 
-from api.utils import class_route, generate_paginated_dict, validate_json_body
+from api.utils import (
+    V1_API_PREFIX,
+    class_route,
+    generate_paginated_dict,
+    validate_json_body,
+)
 
-symptom_endpoints = Blueprint("Symptom", __name__, url_prefix="/api/v1/health/symptoms")
+symptom_endpoints = Blueprint(
+    "Symptom", __name__, url_prefix=f"{V1_API_PREFIX}/health/symptoms"
+)
 
 
 @class_route(symptom_endpoints, "/", "symptoms")
