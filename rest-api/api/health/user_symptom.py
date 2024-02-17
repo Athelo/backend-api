@@ -22,19 +22,21 @@ from api.utils import (
     validate_json_body,
 )
 
+# TODO: Make all url paths kebab case
 user_symptom_endpoints = Blueprint(
-    "My Symptoms", __name__, url_prefix=f"{V1_API_PREFIX}/health/"
+    "My Symptoms", __name__, url_prefix=f"{V1_API_PREFIX}/health/user_symptoms"
 )
 
 
-@class_route(user_symptom_endpoints, "/user_symptoms/", "my_symptoms")
-class UserSymptomsView(MethodView):
+@class_route(user_symptom_endpoints, "/", "my_symptoms")
+class UserSymptomListView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
         symptoms = (
             db.session.query(PatientSymptoms)
             .filter_by(user_profile_id=user.id)
+            .order_by(PatientSymptoms.id)
             .join(Symptom)
             .all()
         )
@@ -75,7 +77,7 @@ class UserSymptomsView(MethodView):
 
 @class_route(
     user_symptom_endpoints,
-    "/user_symptoms/<int:symptom_id>/",
+    "/<int:symptom_id>/",
     "user_symptom_detail",
 )
 class UserSymptomDetailView(MethodView):

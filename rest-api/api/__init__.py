@@ -21,7 +21,6 @@ from api.saved_content import saved_content_endpoints
 from api.user_feeling import user_feeling_endpoints
 from api.user_feelings_and_symptoms import user_feeling_and_symptom_endpoints
 from api.user_profile import user_profile_endpoints
-from api.user_symptom import user_symptom_endpoints
 from api.webapp import webapp_endpoints
 
 blueprints = (
@@ -36,7 +35,6 @@ blueprints = (
         user_feeling_endpoints,
         user_feeling_and_symptom_endpoints,
         user_profile_endpoints,
-        user_symptom_endpoints,
         image_endpoints,
         webapp_endpoints,
     ]
