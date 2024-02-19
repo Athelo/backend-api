@@ -136,7 +136,7 @@ class UserSymptomDetailView(MethodView):
         return json_res, ACCEPTED
 
 
-@class_route(user_symptom_endpoints, "/user_symptoms/summary/", "my_symptoms_summary")
+@class_route(user_symptom_endpoints, "/summary/", "my_symptoms_summary")
 class UserSymptomsSummaryView(MethodView):
     @jwt_authenticated
     def get(self):
