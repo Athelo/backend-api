@@ -38,6 +38,8 @@ class ProviderAvailability(TimestampMixin, Base):
         app.logger.warn('---------------------------------------------')
         app.logger.warn(f'timing debug: start and end time {self.start_time}, {self.end_time}')
         app.logger.warn(f'timing debug: blocked_times {blocked_times}')
+        app.logger.warn(f'timing debug: next_appt_start before loop {next_appt_start}')
+        app.logger.warn(f'timing debug: next_appt_end before loop {next_appt_end}')
         appointments = []
         while next_appt_end <= self.end_time:
             app.logger.warn(f'timing debug: next_appt_start {next_appt_start}')
