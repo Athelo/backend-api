@@ -31,11 +31,13 @@ class ProviderAvailability(TimestampMixin, Base):
         # Add buffer from current time
         thirty_minutes_from_now = datetime.utcnow() + timedelta(minutes=DEFAULT_DELAY_IN_MINUTES)
         next_appt_start = max(self.start_time, thirty_minutes_from_now)
+        app.logger.warn(f'timing debug: now: {datetime.utcnow()},  30 mins from now: {thirty_minutes_from_now}')
+        app.logger.warn(f'timing debug: start time assignment: {next_appt_start}')
         next_appt_start = round_to_next_thirty(next_appt_start)
+        app.logger.warn(f'timing debug: start time rounded to next thirty: {next_appt_start}')
         next_appt_end = next_appt_start + timedelta(minutes=DEFAULT_DELAY_IN_MINUTES)
+        app.logger.warn(f'timing debug: next_appt_end assignment: {next_appt_end}')
 
-        app.logger.warn('\n\n\n\n\n\n\n\n\n\n')
-        app.logger.warn('---------------------------------------------')
         app.logger.warn(f'timing debug: start and end time {self.start_time}, {self.end_time}')
         app.logger.warn(f'timing debug: blocked_times {blocked_times}')
         app.logger.warn(f'timing debug: next_appt_start before loop {next_appt_start}')
