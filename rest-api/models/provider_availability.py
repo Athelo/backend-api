@@ -36,12 +36,12 @@ class ProviderAvailability(TimestampMixin, Base):
 
         app.logger.warn('\n\n\n\n\n\n\n\n\n\n')
         app.logger.warn('---------------------------------------------')
-        app.logger.warn('timing debug: start and end time', self.start_time, self.end_time)
-        app.logger.warn('timing debug: blocked_times', blocked_times)
+        app.logger.warn(f'timing debug: start and end time {self.start_time}, {self.end_time}')
+        app.logger.warn(f'timing debug: blocked_times {blocked_times}')
         appointments = []
         while next_appt_end <= self.end_time:
-            app.logger.warn('timing debug: next_appt_start', next_appt_start)
-            app.logger.warn('timing debug: next_appt_end', next_appt_end)
+            app.logger.warn(f'timing debug: next_appt_start {next_appt_start}')
+            app.logger.warn(f'timing debug: next_appt_end {next_appt_end}')
             if next_appt_end.strftime(DATETIME_FORMAT) in blocked_times:
                 next_appt_end = next_appt_end + timedelta(minutes= 2 * DEFAULT_DELAY_IN_MINUTES)
             elif next_appt_start.strftime(DATETIME_FORMAT) in blocked_times:
