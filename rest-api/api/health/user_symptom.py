@@ -1,4 +1,4 @@
-from http.client import ACCEPTED, CREATED, NOT_FOUND, UNPROCESSABLE_ENTITY
+from http.client import ACCEPTED, CREATED, FORBIDDEN, NOT_FOUND, UNPROCESSABLE_ENTITY
 
 from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, is_current_user_or_403
@@ -85,10 +85,12 @@ class UserSymptomDetailView(MethodView):
     def get(self, symptom_id):
         user = get_user_from_request(request)
         symptom = db.session.get(PatientSymptoms, symptom_id)
+        if symptom is None:
+            return {"message": "Symptom is not accessible or does not exist"}, NOT_FOUND
         if symptom.user_profile_id != user.id:
             return {
                 "message": f"User symptom {symptom_id} does not belong to User {user.email}"
-            }, UNPROCESSABLE_ENTITY
+            }, FORBIDDEN
 
         schema = PatientSymptomSchema()
         return schema.dump(symptom)
