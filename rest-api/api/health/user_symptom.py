@@ -19,7 +19,6 @@ from api.utils import (
     generate_paginated_dict,
     require_json_body,
     validate_json,
-    validate_json_body,
 )
 
 # TODO: Make all url paths kebab case
@@ -98,7 +97,10 @@ class UserSymptomDetailView(MethodView):
     @jwt_authenticated
     def put(self, symptom_id):
         schema = PatientSymptomUpdateSchema(partial=True)
-        data = validate_json_body(schema)
+        json_data = convertDateToDatetimeIfNecessary(
+            request.get_json(), "occurrence_date"
+        )
+        data = validate_json(json_data, schema)
 
         symptom = db.session.get(PatientSymptoms, symptom_id)
         is_current_user_or_403(request, symptom.user_profile_id)
@@ -120,6 +122,9 @@ class UserSymptomDetailView(MethodView):
 
         commit_entity(symptom)
         result = schema.dump(symptom)
+        result["occurrence_date"] = convertTimeStringToDateString(
+            result["occurrence_date"]
+        )
         return result, ACCEPTED
 
     @jwt_authenticated
