@@ -20,4 +20,4 @@ class PatientSymptomUpdateSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = PatientSymptoms
         include_fk = True
-        exclude = ("id", "created_at", "updated_at", "user_profile_id")
+        exclude = ("created_at", "updated_at", "user_profile_id")

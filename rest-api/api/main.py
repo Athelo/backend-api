@@ -21,7 +21,7 @@ def protected():
     return f"{request.uid} ({request.email}) is authenticated at {datetime.utcnow()}"
 
 
-@main_endpoints.route(f"{V1_API_PREFIX}/test-logging")
+@main_endpoints.route(f"{V1_API_PREFIX}/test-logging/")
 def test_logging():
     app.logger.critical("This is a critical log")
     app.logger.fatal("This is a fatal log")

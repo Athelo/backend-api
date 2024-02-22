@@ -122,14 +122,13 @@ async function joinOpentokSession() {
 
     // Subscribe to a newly created stream
     session.on('streamCreated', (event) => {
-        // const subscriberOptions = {
-        //     insertMode: 'append',
-        //     width: '100%',
-        //     height: '100%'
-        //     style: { nameDisplayMode: "auto" }
-        // };
-        // session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
-        session.subscribe(event.stream, 'subscriber', handleError);
+        const subscriberOptions = {
+            insertMode: 'append',
+            width: '480',
+            height: '360'
+            //style: { nameDisplayMode: "auto" }
+        };
+        session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
     });
 
     session.on('sessionDisconnected', (event) => {
