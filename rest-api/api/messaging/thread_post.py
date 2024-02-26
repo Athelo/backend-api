@@ -27,7 +27,7 @@ class ThreadPostListView(MethodView):
         posts = (
             db.session.query(ThreadPost)
             .where(CommunityThread.id == thread_id)
-            .order_by(ThreadPost.created_at)
+            .order_by(ThreadPost.id)
             .all()
         )
         schema = ThreadPostSchema()

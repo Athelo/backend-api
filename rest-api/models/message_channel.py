@@ -23,6 +23,7 @@ class MessageChannel(TimestampMixin, Base):
     messages: Mapped[List["Message"]] = relationship(
         back_populates="channel",
         lazy="joined",
+        order_by="Message.id",
     )
     users: Mapped[List["Users"]] = relationship(secondary=channel_members_table)
     users_hash: Mapped[int] = mapped_column(
