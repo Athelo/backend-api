@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from api.constants import DATETIME_FORMAT, DEFAULT_DELAY_IN_MINUTES
 from models.base import Base, TimestampMixin
-
+from flask import current_app as app
 
 class ProviderAvailability(TimestampMixin, Base):
     __tablename__ = "provider_availability"

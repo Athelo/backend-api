@@ -1,23 +1,22 @@
 from __future__ import annotations
 
 import os
-import inject
 
-from flask_cors import CORS
-from cache import cache
+import inject
 from api import blueprints, error_handler_mapping
+from cache import cache
 from config.logging import setup_logging
 from flask import Flask
+from flask_cors import CORS
 from flask_marshmallow import Marshmallow
 from models.database import db, migrate
 from services.cloud_storage import CloudStorageService
 from services.opentok import OpenTokClient
 
 
-def set_config(app: Flask):
-    environment = os.environ.get("ENVIRONMENT", "")
+def set_config(app: Flask, environment: str):
     config_module = "config.config."
-    match environment.lower():
+    match environment:
         case "test":
             config_module = f"{config_module}TestConfig"
         case "local":
@@ -32,7 +31,9 @@ def set_config(app: Flask):
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    set_config(app)
+    environment = os.environ.get("ENVIRONMENT", "")
+    environment = environment.lower()
+    set_config(app, environment)
     setup_logging(app)
     cache.init_app(app, {"CACHE_TYPE": "RedisCache", "CACHE_REDIS_URL": app.config.get("REDIS_URL")})
 
@@ -47,12 +48,24 @@ def create_app() -> Flask:
             for value in error_handler_mapping[key]:
                 app.register_error_handler(value, key)
 
-        def my_config(binder):
-            binder.bind(CloudStorageService, CloudStorageService(app.config.get("STORAGE_BUCKET")))
-            binder.bind(OpenTokClient, OpenTokClient(app.config.get("VONAGE_API_KEY"), app.config.get("VONAGE_API_SECRET")))
+        def configure_with_binder(binder):
+            binder.bind(
+                CloudStorageService,
+                CloudStorageService(app.config.get("STORAGE_BUCKET")),
+            )
+            binder.bind(
+                OpenTokClient,
+                OpenTokClient(
+                    app.config.get("VONAGE_API_KEY"),
+                    app.config.get("VONAGE_API_SECRET"),
+                ),
+            )
 
         # Configure a shared injector.
-        inject.configure(my_config)
+        if environment == "test":
+            inject.clear_and_configure(configure_with_binder)
+        else:
+            inject.configure(configure_with_binder)
 
     ma = Marshmallow(app)  # noqa: F841
     app.logger.info("Running app!")

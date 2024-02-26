@@ -433,6 +433,8 @@ class TestDeleteAppointmentDetail:
 
 
 class TestGetAppointmentVonageDetail:
+    PATCH_BASE_URL = "services.opentok.OpenTokClient"
+
     @patch("auth.middleware.get_token", autospec=True, return_value="foo")
     @patch(
         "auth.middleware.decode_token",
@@ -451,7 +453,7 @@ class TestGetAppointmentVonageDetail:
         appointment = booked_vonage_appointment
         expected_token = "token"
         with patch(
-            "services.opentokClient.create_host_token", return_value=expected_token
+            f"{self.PATCH_BASE_URL}.create_host_token", return_value=expected_token
         ):
             response = test_client.get(
                 f"{base_url}/{appointment.id}/vonage-appointment-details/",
@@ -479,7 +481,7 @@ class TestGetAppointmentVonageDetail:
         appointment = booked_vonage_appointment
         expected_token = "token"
         with patch(
-            "services.opentokClient.create_guest_token", return_value=expected_token
+            f"{self.PATCH_BASE_URL}.create_guest_token", return_value=expected_token
         ):
             response = test_client.get(
                 f"{base_url}/{appointment.id}/vonage-appointment-details/",
@@ -507,7 +509,7 @@ class TestGetAppointmentVonageDetail:
         appointment = booked_vonage_appointment
         expected_token = "token"
         with patch(
-            "services.opentokClient.create_guest_token", return_value=expected_token
+            f"{self.PATCH_BASE_URL}.create_guest_token", return_value=expected_token
         ):
             response = test_client.get(
                 f"{base_url}/{appointment.id}/vonage-appointment-details/",
@@ -535,7 +537,7 @@ class TestGetAppointmentVonageDetail:
         appointment = booked_vonage_appointment
         expected_token = "token"
         with patch(
-            "services.opentokClient.create_host_token", return_value=expected_token
+            f"{self.PATCH_BASE_URL}.create_host_token", return_value=expected_token
         ):
             response = test_client.get(
                 f"{base_url}/{appointment.id}/vonage-appointment-details/",
@@ -562,7 +564,7 @@ class TestGetAppointmentVonageDetail:
         appointment = booked_vonage_appointment
         expected_token = "token"
         with patch(
-            "services.opentokClient.create_host_token", return_value=expected_token
+            f"{self.PATCH_BASE_URL}.create_host_token", return_value=expected_token
         ):
             response = test_client.get(
                 f"{base_url}/{appointment.id}/vonage-appointment-details/",
@@ -590,7 +592,7 @@ class TestGetAppointmentVonageDetail:
         appointment = booked_vonage_appointment
         expected_token = "token"
         with patch(
-            "services.opentokClient.create_guest_token", return_value=expected_token
+            f"{self.PATCH_BASE_URL}.create_guest_token", return_value=expected_token
         ):
             response = test_client.get(
                 f"{base_url}/{appointment.id}/vonage-appointment-details/",
@@ -619,7 +621,7 @@ class TestGetAppointmentVonageDetail:
         appointment = booked_vonage_appointment
         expected_token = "token"
         with patch(
-            "services.opentokClient.create_guest_token", return_value=expected_token
+            f"{self.PATCH_BASE_URL}.create_guest_token", return_value=expected_token
         ):
             response = test_client.get(
                 f"{base_url}/{appointment.id}/vonage-appointment-details/",
@@ -650,7 +652,7 @@ class TestGetAppointmentVonageDetail:
         appointment = booked_appointment_in_one_week
         expected_token = "token"
         with patch(
-            "services.opentokClient.create_guest_token", return_value=expected_token
+            f"{self.PATCH_BASE_URL}.create_guest_token", return_value=expected_token
         ):
             response = test_client.get(
                 f"{base_url}/{appointment.id}/vonage-appointment-details/",

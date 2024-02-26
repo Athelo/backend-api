@@ -8,15 +8,13 @@ from models.database import db
 from models.users import Users
 from repositories.user import (
     create_admin_profile_for_user,
-    create_caregiver_profile_for_user,
     create_patient_profile_for_user,
     create_provider_profile_for_user,
     get_user_by_email,
 )
 from repositories.utils import commit_entity
 from schemas.admin_profile import AdminProfileSchema
-from schemas.caregiver_profile import CaregiverProfileSchema
-from schemas.patient_profile import PatientProfileSchema
+from schemas.patient_profile import PatientProfileCreateSchema, PatientProfileSchema
 from schemas.provider_profile import ProviderProfileSchema
 from schemas.user_profile import UserProfileCreateSchema, UserProfileSchema
 
@@ -92,7 +90,7 @@ def create_provider(user_id: int):
     create_provider_profile_for_user(user)
 
     schema = ProviderProfileSchema()
-    result = schema.dump(user.admin_profile)
+    result = schema.dump(user.provider_profile)
     return result
 
 
@@ -100,21 +98,26 @@ def create_provider(user_id: int):
 @jwt_authenticated
 def create_patient(user_id: int):
     require_admin_user(get_user_by_email(request.email))
+
+    schema = PatientProfileCreateSchema()
+    data = validate_json_body(schema)
+    print(data)
+
     user = db.session.get(Users, user_id)
-    create_patient_profile_for_user(user)
+    create_patient_profile_for_user(user, data["cancer_status"])
 
     schema = PatientProfileSchema()
-    result = schema.dump(user.admin_profile)
+    result = schema.dump(user.patient_profile)
     return result
 
 
-@user_profile_endpoints.route("/<int:user_id>/caregiver", methods=["PUT"])
-@jwt_authenticated
-def create_caregiver(user_id: int):
-    require_admin_user(get_user_by_email(request.email))
-    user = db.session.get(Users, user_id)
-    create_caregiver_profile_for_user(user)
+# @user_profile_endpoints.route("/<int:user_id>/caregiver", methods=["PUT"])
+# @jwt_authenticated
+# def create_caregiver(user_id: int):
+#     require_admin_user(get_user_by_email(request.email))
+#     user = db.session.get(Users, user_id)
+#     create_caregiver_profile_for_user(user)
 
-    schema = CaregiverProfileSchema()
-    result = schema.dump(user.admin_profile)
-    return result
+#     schema = CaregiverProfileSchema()
+#     result = schema.dump(user.admin_profile)
+#     return result

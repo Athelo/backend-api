@@ -22,19 +22,21 @@ from api.utils import (
     validate_json_body,
 )
 
+# TODO: Make all url paths kebab case
 user_symptom_endpoints = Blueprint(
-    "My Symptoms", __name__, url_prefix=f"{V1_API_PREFIX}/health/"
+    "My Symptoms", __name__, url_prefix=f"{V1_API_PREFIX}/health/user_symptoms"
 )
 
 
-@class_route(user_symptom_endpoints, "/user_symptoms/", "my_symptoms")
-class UserSymptomsView(MethodView):
+@class_route(user_symptom_endpoints, "/", "my_symptoms")
+class UserSymptomListView(MethodView):
     @jwt_authenticated
     def get(self):
         user = get_user_from_request(request)
         symptoms = (
             db.session.query(PatientSymptoms)
             .filter_by(user_profile_id=user.id)
+            .order_by(PatientSymptoms.id)
             .join(Symptom)
             .all()
         )
@@ -75,7 +77,7 @@ class UserSymptomsView(MethodView):
 
 @class_route(
     user_symptom_endpoints,
-    "/user_symptoms/<int:symptom_id>/",
+    "/<int:symptom_id>/",
     "user_symptom_detail",
 )
 class UserSymptomDetailView(MethodView):
@@ -118,25 +120,23 @@ class UserSymptomDetailView(MethodView):
         result = schema.dump(symptom)
         return result, ACCEPTED
 
-    def delete(self, user_profile_id, symptom_id):
-        schema = PatientSymptomSchema()
+    @jwt_authenticated
+    def delete(self, symptom_id):
         symptom = db.session.get(PatientSymptoms, symptom_id)
         if symptom is None:
-            return {
-                "message": f"User Symptom {user_profile_id} does not exist."
-            }, NOT_FOUND
+            return {"message": f"Cannot access user symptom {symptom_id}"}, NOT_FOUND
+        is_current_user_or_403(request, symptom.user_profile_id)
 
-        if symptom.user_profile_id != user_profile_id:
-            return {
-                "message": f"User symptom {symptom_id} does not belong to User {user_profile_id}"
-            }, UNPROCESSABLE_ENTITY
+        schema = PatientSymptomSchema()
+        json_res = schema.dump(symptom)
 
         db.session.delete(symptom)
         db.session.commit()
-        return schema.dump(symptom), ACCEPTED
+
+        return json_res, ACCEPTED
 
 
-@class_route(user_symptom_endpoints, "/user_symptoms/summary/", "my_symptoms_summary")
+@class_route(user_symptom_endpoints, "/summary/", "my_symptoms_summary")
 class UserSymptomsSummaryView(MethodView):
     @jwt_authenticated
     def get(self):

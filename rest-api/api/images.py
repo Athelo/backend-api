@@ -6,9 +6,9 @@ from http.client import (
 from os import path
 
 from auth.middleware import jwt_authenticated
-from inject import autoparams
 from flask import Blueprint, abort, request
 from flask import current_app as app
+from inject import autoparams
 from schemas.image_upload import ImageUploadSchema
 from services.cloud_storage import CloudStorageService
 from werkzeug.utils import secure_filename
@@ -61,7 +61,7 @@ def upload_image(cloud_storage_service: CloudStorageService):
 
     return {
         "url": cloud_storage_service.upload_image(
-            filename, image_bytes, uploaded_file.content_type
+            filename, image_data, uploaded_file.content_type
         )
     }, CREATED
 
@@ -77,4 +77,6 @@ def upload_image_json(cloud_storage_service: CloudStorageService):
     img_data = str.split(data["data"], ",")[-1]
     file_type = data["file_type"]
 
-    return {"url": cloud_storage_service.upload_image(name, img_data, file_type)}, CREATED
+    return {
+        "url": cloud_storage_service.upload_image(name, img_data, file_type)
+    }, CREATED
