@@ -8,6 +8,7 @@ from auth.middleware import jwt_authenticated
 from auth.utils import get_user_from_request, require_admin_user
 from flask import Blueprint, abort, request
 from flask.views import MethodView
+from inject import autoparams
 from models.appointments.appointment import Appointment, AppointmentStatus, VideoType
 from models.appointments.vonage_session import VonageSession
 from models.appointments.zoom_meeting import ZoomMeeting
@@ -17,7 +18,7 @@ from repositories.user import get_user_by_provider_id
 from repositories.utils import commit_entity
 from requests.exceptions import HTTPError
 from schemas.appointment import AppointmentCreateSchema
-from services import opentokClient
+from services.opentok import OpenTokClient
 from services.zoom import create_zoom_meeting_with_provider
 from sqlalchemy import or_
 from sqlalchemy.orm import Query
@@ -72,7 +73,8 @@ class AppointmentListView(MethodView):
         return generate_paginated_dict(results)
 
     @jwt_authenticated
-    def post(self):
+    @autoparams()
+    def post(self, opentok_client: OpenTokClient):
         user = get_user_from_request(request)
         video_type_arg = request.args.get("video_type")
         if video_type_arg is None:
@@ -123,7 +125,7 @@ class AppointmentListView(MethodView):
 
         if video_type == VideoType.VONAGE:
             try:
-                session = opentokClient.create_session()
+                session = opentok_client.create_session()
                 appointment.vonage_session = VonageSession(
                     session_id=session.session_id
                 )
