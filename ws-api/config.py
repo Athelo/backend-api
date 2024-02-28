@@ -6,7 +6,7 @@ class Config:
     REDIS_URL = os.environ.get("REDIS_URL")
     PORT = os.environ.get("PORT", 8081)
     DEBUG = True
-    TESTING = False
+    TESTING = True
     WEBSOCKET_JWT_ALGORITHM = os.environ.get("WEBSOCKET_JWT_ALGORITHM", "HS256")
     WEBSOCKET_JWT_SECRET_KEY = os.environ.get("WEBSOCKET_JWT_SECRET_KEY", "secret")
     REST_API_SERVER_URL = os.environ.get("REST_API_SERVER_URL", "http://rest-api:8080")
@@ -17,7 +17,8 @@ class StagingConfig(Config):
 
 
 class ProdConfig(Config):
-    pass
+    DEBUG = False
+    TESTING = False
 
 
 if os.environ.get("ENVIRONMENT") == "prod":

@@ -14,7 +14,7 @@ services:
       - ENVIRONMENT=local
       - GOOGLE_APPLICATION_CREDENTIALS=application_default_credentials.json
       - GOOGLE_CLOUD_PROJECT=test-deploy-402816
-      - REDIS_URL=redis://default:redispassword@redis:6379
+      - REDIS_URL=redis://default:redispassword@redis:6379/0
     stdin_open: true
     tty: true
 #    command: python3 app.py
@@ -29,18 +29,16 @@ services:
     build: ./ws-api
     image: ws-api
     container_name: ws-api
-    restart: always
+    restart: on-failure
     depends_on:
-      redis:
-        condition: service_healthy
+      - rest-api
+      - redis
     volumes:
       - ./ws-api:/app
-    ports:
-      - "8081:8081"
     networks:
       - athelo_network
     environment:
-      - REDIS_URL=redis://default:redispassword@redis:6379
+      - REDIS_URL=redis://default:redispassword@redis:6379/0
   db:
     image: postgres:15
     container_name: postgres

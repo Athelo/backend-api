@@ -15,5 +15,3 @@ CMD gunicorn app:app \
     --reload \
     --access-logfile - \
     --error-logfile -
-
-
