@@ -4,7 +4,7 @@ services:
   rest-api:
     build: ./rest-api
     restart: always
-    image: rest-api
+    image: us-central1-docker.pkg.dev/test-deploy-402816/cloud-run-socketio-deploy/rest-api
     container_name: rest-api
     volumes: 
       - ./rest-api:/app
@@ -18,25 +18,15 @@ services:
     stdin_open: true
     tty: true
 #    command: python3 app.py
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - athelo_network
   ws-api:
     build: ./ws-api
-    image: ws-api
+    image: us-central1-docker.pkg.dev/test-deploy-402816/cloud-run-socketio-deploy/ws-api
     container_name: ws-api
     restart: on-failure
-    depends_on:
-      - rest-api
-      - redis
     volumes:
       - ./ws-api:/app
-    networks:
-      - athelo_network
+    ports:
+      - "8081:8081"
     environment:
       - REDIS_URL=redis://default:redispassword@redis:6379/0
   db:
@@ -44,17 +34,12 @@ services:
     container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=athelo
       - POSTGRES_PASSWORD=athelo
       - POSTGRES_DB=athelo
-    networks:
-      - athelo_network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U athelo" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
   redis:
     image: sameersbn/redis:4.0.9-3
     container_name: redis
@@ -65,13 +50,6 @@ services:
     volumes:
       - redis_data:/var/lib/redis
     restart: always
-    networks:
-      - athelo_network
-    healthcheck:
-      test: [ "CMD-SHELL", "redis-cli", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
   nginx:
     image: nginx:1.25.3-alpine
     container_name: nginx
@@ -80,16 +58,6 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
-    depends_on:
-      - rest-api
-      - ws-api
-    networks:
-      - athelo_network
-
 volumes:
   postgres_data:
   redis_data:
-
-networks:
-  athelo_network:
-    driver: bridge
