@@ -4,7 +4,7 @@ services:
   rest-api:
     build: ./rest-api
     restart: always
-    image: us-central1-docker.pkg.dev/test-deploy-402816/cloud-run-socketio-deploy/rest-api
+    image: rest-api
     container_name: rest-api
     volumes: 
       - ./rest-api:/app
@@ -20,7 +20,7 @@ services:
 #    command: python3 app.py
   ws-api:
     build: ./ws-api
-    image: us-central1-docker.pkg.dev/test-deploy-402816/cloud-run-socketio-deploy/ws-api
+    image: ws-api
     container_name: ws-api
     restart: on-failure
     volumes:
