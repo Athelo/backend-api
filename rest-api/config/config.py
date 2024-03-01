@@ -48,7 +48,7 @@ class LocalConfig(Config):
     DB_PASS = "athelo"
     DB_PORT = 5432
     PORT = os.environ.get("PORT", 8080)
-    DB_HOST = os.environ.get("DB_HOST", "localhost")
+    DB_HOST = os.environ.get("DB_HOST", "db")
     SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
     LOG_LEVEL = logging.DEBUG
     DEBUG = True
