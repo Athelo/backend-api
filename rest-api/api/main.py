@@ -30,4 +30,4 @@ def test_logging():
     app.logger.warning("This is a warning log")
     app.logger.info("This is an info log")
     app.logger.debug("This is a debug log")
-    return "", ACCEPTED
+    return "here we go", ACCEPTED
