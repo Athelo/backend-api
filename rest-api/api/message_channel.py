@@ -47,7 +47,7 @@ def validate_message_channel_request_participants(data: dict) -> List[Users]:
                 f"Cannot create or interact with channel because user {user_id} does not exist.",
             )
 
-    if user not in participants:
+    if not user.is_admin and user not in participants:
         abort(
             UNAUTHORIZED,
             f"Cannot interact with a message channel that doesn't include the current user. Current user {user.id}.",
