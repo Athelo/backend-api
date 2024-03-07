@@ -7,6 +7,9 @@ from models.database import getconn
 class Config(object):
     TESTING = False
     PORT = os.environ.get("PORT")
+    WEBSOCKET_JWT_ALGORITHM = os.environ.get("WEBSOCKET_JWT_ALGORITHM", "HS256")
+    WEBSOCKET_JWT_SECRET_KEY = os.environ.get("WEBSOCKET_JWT_SECRET_KEY", "secret")
+    REDIS_URL = os.environ.get("REDIS_URL")
     MAX_CONTENT_LENGTH = 1024 * 1024
     UPLOAD_EXTENSIONS = [".jpg", ".png", ".gif"]
 
@@ -22,13 +25,13 @@ class CloudConfig(Config):
     INSTANCE_CONNECTION_NAME = os.environ.get("INSTANCE_CONNECTION_NAME")
     DEBUG = False
     SECRET_KEY = os.environ.get("SECRET_KEY")
+    ALLOWED_ADMIN_DOMAINS = ["athelohealth.com"]
     BASE_URL = "https://athelo-api-bki2ktapnq-uc.a.run.app/"
     ZOOM_CLIENT_ID = os.environ.get("ZOOM_CLIENT_ID")
     ZOOM_CLIENT_SECRET = os.environ.get("ZOOM_CLIENT_SECRET")
     VONAGE_API_KEY = os.environ.get("VONAGE_API_KEY")
     VONAGE_API_SECRET = os.environ.get("VONAGE_API_SECRET")
     STORAGE_BUCKET = os.environ.get("STORAGE_BUCKET")
-    SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 class ProductionConfig(CloudConfig):
@@ -44,11 +47,18 @@ class LocalConfig(Config):
     DB_USER = "athelo"
     DB_PASS = "athelo"
     DB_PORT = 5432
-    PORT = 8000
-    SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@db/{DB_NAME}"
+    PORT = os.environ.get("PORT", 8080)
+    DB_HOST = os.environ.get("DB_HOST", "db")
+    SQLALCHEMY_DATABASE_URI = f"postgresql+pg8000://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
     LOG_LEVEL = logging.DEBUG
     DEBUG = True
     SECRET_KEY = "SECRET_KEY"
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5001",
+        "http://127.0.0.1:8000",
+        "http://localhost:3000",
+    ]
+    ALLOWED_ADMIN_DOMAINS = ["athelohealth.com", "gmail.com"]
     BASE_URL = "http://localhost:5001"
     ZOOM_CLIENT_ID = "uGg_8H7qSYmioNsz2I83aA"
     ZOOM_CLIENT_SECRET = "97TKYdJIh4QO8eBz1lj2okiDnSxcuw4q"

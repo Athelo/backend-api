@@ -1,4 +1,4 @@
-# Athelo Backend API
+# Athelo Backend and Websocket API
 
 A REST API to interact with symptom tracking and messaging.
 

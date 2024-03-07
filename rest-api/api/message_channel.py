@@ -15,6 +15,7 @@ from models.users import Users
 from repositories.utils import commit_entity
 from schemas.message_channel import MessageChannelRequestSchema, MessageChannelSchema
 
+from use_cases.message_channel_use_case import get_message_channel_details
 from api.utils import class_route, validate_json_body
 
 message_channel_endpoints = Blueprint(
@@ -103,3 +104,13 @@ def find_channel_by_members():
         .one_or_none()
     )
     return MessageChannelSchema().dump(channel)
+
+
+@message_channel_endpoints.get("/<message_channel_id>/")
+@jwt_authenticated
+def get_message_channel_detail(message_channel_id: int):
+    message_channel_id = int(message_channel_id)
+    current_user = get_user_from_request(request)
+
+    result = get_message_channel_details(current_user, message_channel_id)
+    return result

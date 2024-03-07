@@ -12,8 +12,21 @@ firebase-admin==6.2.0
 structlog==23.1.0
 urllib3<2.0.0 #https://stackoverflow.com/questions/76175361/firebase-authentication-httpresponse-object-has-no-attribute-strict-status
 Flask-Migrate==4.0.5
+Flask-Caching==2.1.0
+Flask-Cors==4.0.0
+redis==5.0.1
 inject==5.2.0
 
+bidict==0.22.0
+cachelib==0.9.0
+click==8.1.3
+importlib-metadata==4.12.0
+itsdangerous==2.1.2
+Jinja2==3.1.3
+MarkupSafe==2.1.1
+python-engineio
+six==1.11.0
+zipp==3.8.1
 #Video Appointment
 opentok>=3.0
 pytest
