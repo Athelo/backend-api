@@ -27,21 +27,6 @@ def class_route(self, rule, endpoint, **options):
     return decorator
 
 
-def generate_paginated_dict(api_results):
-    results = []
-
-    if isinstance(api_results, list):
-        results = api_results
-    elif api_results is not None:
-        results.append(api_results)
-
-    return {"count": len(results), "next": None, "previous": None, "results": results}
-
-
-def get_api_url():
-    return app.config.get("BASE_URL") + V1_API_PREFIX
-
-
 def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
     try:
         full_datetime = datetime.fromisoformat(
@@ -64,6 +49,26 @@ def convertDateToDatetimeIfNecessary(json_data: dict, field_name: str):
 def convertTimeStringToDateString(date_time_str: str):
     date_split = date_time_str.split("T")
     return date_split[0]
+
+
+def generate_paginated_dict(api_results):
+    results = []
+
+    if isinstance(api_results, list):
+        results = api_results
+    elif api_results is not None:
+        results.append(api_results)
+
+    return {"count": len(results), "next": None, "previous": None, "results": results}
+
+
+def get_api_url():
+    return app.config.get("BASE_URL") + V1_API_PREFIX
+
+
+def log_current_datetime(log_str: str):
+    now = datetime.datetime.now()
+    app.logger.info(log_str, " ", now)
 
 
 def require_json_body():

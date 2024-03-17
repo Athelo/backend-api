@@ -14,7 +14,7 @@ from schemas.community_thread import (
 )
 
 from api.constants import V1_API_PREFIX
-from api.utils import class_route, generate_paginated_dict, validate_json_body
+from api.utils import class_route, generate_paginated_dict, log_current_datetime, validate_json_body
 
 community_thread_endpoints = Blueprint(
     # "Community Threads", __name__, url_prefix=f"{V1_API_PREFIX}/community-threads"
@@ -28,13 +28,16 @@ community_thread_endpoints = Blueprint(
 class CommunityThreadListView(MethodView):
     @jwt_authenticated
     def get(self):
+        log_current_datetime('community thread list start')
         user = get_user_from_request(request)
         # TODO: optimize to pull the set of joined/unjoined from the db instead of filtering in python
+        log_current_datetime('retrieved user')
         user_threads = (
             db.session.query(ThreadParticipants.thread_id)
             .where(ThreadParticipants.user_profile_id == user.id)
             .all()
         )
+        log_current_datetime('retrieved user threads')
         user_thread_ids = [thread[0] for thread in user_threads]
         joined_community_threads = (
             db.session.query(CommunityThread)
@@ -42,12 +45,14 @@ class CommunityThreadListView(MethodView):
             .where(CommunityThread.active.is_(True))
             .all()
         )
+        log_current_datetime('retrieved user joined threads')
 
         unjoined_community_threads = (
             db.session.query(CommunityThread)
             .where(CommunityThread.id.notin_(user_thread_ids))
             .all()
         )
+        log_current_datetime('retrieved user unjoined threads')
 
         joined_group_messages = [
             group_message_schema_from_community_thread(thread, True)
@@ -58,6 +63,7 @@ class CommunityThreadListView(MethodView):
             for thread in unjoined_community_threads
         ]
         results = joined_group_messages + not_joined_group_messagees
+        log_current_datetime('build and return results')
         return generate_paginated_dict(results)
 
     @jwt_authenticated
