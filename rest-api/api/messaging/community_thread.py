@@ -58,10 +58,15 @@ class CommunityThreadListView(MethodView):
             group_message_schema_from_community_thread(thread, True)
             for thread in joined_community_threads
         ]
+
+        log_current_datetime('parse joined group messages')
+
         not_joined_group_messagees = [
             group_message_schema_from_community_thread(thread, False)
             for thread in unjoined_community_threads
         ]
+        log_current_datetime('parse non joined group messages')
+
         results = joined_group_messages + not_joined_group_messagees
         log_current_datetime('build and return results')
         return generate_paginated_dict(results)
