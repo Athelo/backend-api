@@ -67,8 +67,8 @@ def get_api_url():
 
 
 def log_current_datetime(log_str: str):
-    now = datetime.datetime.now()
-    app.logger.info(log_str, " ", now)
+    now = datetime.now()
+    app.logger.info(f"{now}: {log_str}")
 
 
 def require_json_body():
