@@ -10,12 +10,12 @@ from api.constants import V1_API_PREFIX
 main_endpoints = Blueprint("Main", __name__)
 
 
-@main_endpoints.route("/public/", methods=["GET"])
+@main_endpoints.route("{V1_API_PREFIX}/public/", methods=["GET"])
 def public():
     return f"This is Athelo Health's API, and it is {datetime.utcnow()}"
 
 
-@main_endpoints.route("/protected/", methods=["GET"])
+@main_endpoints.route("{V1_API_PREFIX}/protected/", methods=["GET"])
 @jwt_authenticated
 def protected():
     return f"{request.uid} ({request.email}) is authenticated at {datetime.utcnow()}"
