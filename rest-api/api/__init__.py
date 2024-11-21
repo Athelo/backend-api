@@ -3,7 +3,6 @@ from __future__ import annotations
 from http.client import REQUEST_ENTITY_TOO_LARGE, UNAUTHORIZED, UNPROCESSABLE_ENTITY
 
 from auth.exceptions import UnauthorizedException
-from flask import abort
 from flask import current_app as app
 from sqlalchemy.exc import DatabaseError, IntegrityError
 
@@ -18,6 +17,7 @@ from api.message_channel import message_channel_endpoints
 from api.messaging import messaging_blueprints
 from api.my_profile import my_profile_endpoints
 from api.saved_content import saved_content_endpoints
+from api.socket_connection import socket_endpoints
 from api.user_feeling import user_feeling_endpoints
 from api.user_feelings_and_symptoms import user_feeling_and_symptom_endpoints
 from api.user_profile import user_profile_endpoints
@@ -36,6 +36,7 @@ blueprints = (
         user_feeling_and_symptom_endpoints,
         user_profile_endpoints,
         image_endpoints,
+        socket_endpoints,
         webapp_endpoints,
     ]
     + appointment_blueprints

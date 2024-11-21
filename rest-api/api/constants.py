@@ -6,7 +6,6 @@ DEFAULT_DELAY_IN_MINUTES = 30
 V1_API_PREFIX = "/api/v1"
 
 
-
 # ------------------ Schemas ----------------------
 USER_PROFILE_RETURN_SCHEMA = {
     "id": 0,

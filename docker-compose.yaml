@@ -1,33 +1,95 @@
 version: '3.4'
 
 services:
-  athelo-backend-api:
+  rest-api:
+    build: ./rest-api
     restart: always
-    image: athelo-backend
+    image: rest-api
+    container_name: rest-api
     volumes: 
       - ./rest-api:/app
-      - ./application_default_credentials.json:/application_default_credentials.json
-    build:
-      context: .
-      dockerfile: ./Dockerfile
     ports:
-      - 5001:8080
+      - "8080:8080"
     environment:
-    - ENVIRONMENT=local
-    - GOOGLE_APPLICATION_CREDENTIALS=/application_default_credentials.json
-    - GOOGLE_CLOUD_PROJECT=test-deploy-402816
+      - ENVIRONMENT=local
+      - GOOGLE_APPLICATION_CREDENTIALS=application_default_credentials.json
+      - GOOGLE_CLOUD_PROJECT=test-deploy-402816
+      - REDIS_URL=redis://default:redispassword@redis:6379/0
     stdin_open: true
-    tty: true 
-    command: python3 app.py
+    tty: true
+#    command: python3 app.py
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - athelo_network
+  ws-api:
+    build: ./ws-api
+    image: ws-api
+    container_name: ws-api
+    restart: on-failure
+    depends_on:
+      - rest-api
+      - redis
+    volumes:
+      - ./ws-api:/app
+    networks:
+      - athelo_network
+    environment:
+      - REDIS_URL=redis://default:redispassword@redis:6379/0
   db:
     image: postgres:15
+    container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=athelo
       - POSTGRES_PASSWORD=athelo
       - POSTGRES_DB=athelo
+    networks:
+      - athelo_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U athelo" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: sameersbn/redis:4.0.9-3
+    container_name: redis
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: redispassword
+    volumes:
+      - redis_data:/var/lib/redis
+    restart: always
+    networks:
+      - athelo_network
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  nginx:
+    image: nginx:1.25.3-alpine
+    container_name: nginx
+    restart: on-failure
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - rest-api
+      - ws-api
+    networks:
+      - athelo_network
 
 volumes:
   postgres_data:
-  
+  redis_data:
+
+networks:
+  athelo_network:
+    driver: bridge
